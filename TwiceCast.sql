@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `rank` (
 
 -- Export de la structure de table twicecast. replay
 CREATE TABLE IF NOT EXISTS `replay` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `fk_channel` int(10) unsigned NOT NULL,
   `name` varchar(50) NOT NULL,
   `description` varchar(200) NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `replay` (
 
 -- Export de la structure de table twicecast. replay_categories
 CREATE TABLE IF NOT EXISTS `replay_categories` (
-  `fk_replay` varchar(11) NOT NULL,
+  `fk_replay` int(10) unsigned NOT NULL,
   `fk_category` int(10) unsigned NOT NULL,
   UNIQUE KEY `unique_index` (`fk_replay`,`fk_category`),
   KEY `FK_replay_categories_category` (`fk_category`),
