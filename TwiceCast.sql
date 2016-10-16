@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `rank` (
 
 -- Export de la structure de table twicecast. replay
 CREATE TABLE IF NOT EXISTS `replay` (
-  `id` varchar(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `fk_channel` int(10) unsigned NOT NULL,
   `name` varchar(50) NOT NULL,
   `description` varchar(200) NOT NULL,
