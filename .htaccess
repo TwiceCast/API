@@ -1,24 +1,26 @@
-ErrorDocument 404 /error/error.php
+#ErrorDocument 404 /error/error.php
 ErrorDocument 400 /error/error.php
 ErrorDocument 500 /error/error.php
 
 RewriteEngine on
 Options FollowSymLinks
 
-#http://api/user/[ID]/profil
-#http://api/user
 
-RewriteRule "^user(/(.*))?" "request/user"
-RewriteRule "^stream(/(.*))?" "request/stream"
-
+RewriteCond %{REQUEST_URI} !query
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^request/(.*)" "query/POST/$1"
+RewriteRule "^(.*)" "query/POST/$1"
 
+RewriteCond %{REQUEST_URI} !query
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^request/(.*)" "query/GET/$1"
+RewriteRule "^(.*)" "query/GET/$1"
 
+RewriteCond %{REQUEST_URI} !query
 RewriteCond %{REQUEST_METHOD} PUT
-RewriteRule "^request/(.*)" "query/PUT/$1"
+RewriteRule "^(.*)" "query/PUT/$1"
 
+RewriteCond %{REQUEST_URI} !query
 RewriteCond %{REQUEST_METHOD} REMOVE
-RewriteRule "^request/(.*)" "query/REMOVE/$1"
+RewriteRule "^(.*)" "query/REMOVE/$1"
+
+RewriteRule "^query/(POST|GET|PUT|REMOVE)/users/([0-9]+)" "query/$1/users/?id=$2"
+#RewriteRule "^query/users" "users/users.php"

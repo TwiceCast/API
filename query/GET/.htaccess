@@ -1,9 +1,10 @@
-RewriteRule "^user/([0-9]+)/profil" "user/profil.php?id=$1"
+#RewriteRule "^users/([0-9]+)" "users/?id=$1"
+#RewriteRule "^users" "users/users.php"
 
-RewriteCond %{HTTP_ACCEPT} "application/xml"
-RewriteCond %{QUERY_STRING} !accept
-RewriteRule ".*" $0?%{QUERY_STRING}&accept=xml
+#RewriteCond %{HTTP_ACCEPT} "application/json"
+#RewriteCond %{QUERY_STRING} !accept
+#RewriteRule ".*" $0?%{QUERY_STRING}&accept=json
 
-RewriteCond %{HTTP_ACCEPT} "application/json"
-RewriteCond %{QUERY_STRING} !accept
-RewriteRule ".*" $0?%{QUERY_STRING}&accept=json
+#RewriteCond %{HTTP_ACCEPT} "application/xml"
+#RewriteCond %{QUERY_STRING} !accept
+#RewriteRule ".*" $0?%{QUERY_STRING}&accept=xml
