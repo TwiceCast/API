@@ -10,7 +10,7 @@
 		function __construct($db = true, $ID = null, $title = null)
 		{
 			$this->setID($ID);
-			$this->setTitle($$title);
+			$this->setTitle($title);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -32,7 +32,7 @@
 		function getLink($db)
 		{
 			if ($this->db)
-				return $this->$db;
+				return $this->db;
 			else if ($db)
 				return $db;
 			else
@@ -74,7 +74,7 @@
 					rank.title AS rankTitle
 					FROM rank
 					WHERE rank.title = :title');
-				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
+				$link->bindParam(':title', $title, PDO::PARAM_STR);
 				$data = $link->fetch(true);
 				if ($data)
 				{
@@ -95,7 +95,7 @@
 			if ($link)
 			{
 				$link->prepare('
-					SELECT rank.id as rankID,
+					SELECT rank.id AS rankID,
 					rank.title AS rankTitle
 					FROM rank');
 				$data = $link->fetchAll(true);
