@@ -1,8 +1,9 @@
+ErrorDocument 404 /error/error.php
+ErrorDocument 400 /error/error.php
+ErrorDocument 500 /error/error.php
+
 RewriteEngine on
 Options FollowSymLinks
-
-#RewriteCond %{HTTP_ACCEPT} "application/xml"
-#RewriteRule ".*" $0?accept=xml
 
 #http://api/user/[ID]/profil
 #http://api/user
