@@ -1,0 +1,23 @@
+RewriteEngine on
+Options FollowSymLinks
+
+#RewriteCond %{HTTP_ACCEPT} "application/xml"
+#RewriteRule ".*" $0?accept=xml
+
+#http://api/user/[ID]/profil
+#http://api/user
+
+RewriteRule "^user(/(.*))?" "request/user"
+RewriteRule "^stream(/(.*))?" "request/stream"
+
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^request/(.*)" "query/POST/$1"
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^request/(.*)" "query/GET/$1"
+
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^request/(.*)" "query/PUT/$1"
+
+RewriteCond %{REQUEST_METHOD} REMOVE
+RewriteRule "^request/(.*)" "query/REMOVE/$1"
