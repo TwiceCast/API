@@ -25,6 +25,7 @@ paths:
       description: Return all users
       produces:
         - application/json
+        - application/xml
       responses:
         200:
           description: A list of users.
