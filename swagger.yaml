@@ -1,0 +1,83 @@
+swagger: "2.0"
+info:
+  title: TwiceCast API
+  description: TwiceCast api specification
+  version: "0.0.1"
+  contact:
+    name: mail list group
+    email: twicecast_2018@labeip.epitech.eu
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/mit-license.php
+
+host: eip.epitech.eu
+
+schemes:
+  - https
+
+produces:
+  - application/json
+  - application/xml
+
+paths:
+  /users:
+    get:
+      description: Return all users
+      produces:
+        - application/json
+      responses:
+        200:
+          description: A list of users.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/user"
+        404:
+          description: not found
+          schema:
+            $ref: "#/definitions/error"
+
+definitions:
+  user:
+    properties:
+      id:
+        type: string
+      nickname:
+        type: string
+      email:
+        type: string
+        format: email
+      country:
+        $ref: "#/definitions/country"
+      birthdate:
+        type: string
+        format: date
+      rank:
+        $ref: "#/definitions/rank"
+      register_date:
+        type: string
+        format: date
+      last_visit_date:
+        type: string
+        format: date
+
+  country:
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+
+  rank:
+   properties:
+    id:
+      type: string
+    title:
+      type: string
+
+  error:
+    properties:
+      error:
+        type: string
