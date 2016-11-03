@@ -2,9 +2,9 @@ swagger: "2.0"
 info:
   title: TwiceCast API
   description: TwiceCast api specification
-  version: "0.0.1"
+  version: 0.1.0
   contact:
-    name: mail list group
+    name: TwiceCast
     email: twicecast_2018@labeip.epitech.eu
   license:
     name: MIT
@@ -19,13 +19,24 @@ produces:
   - application/json
   - application/xml
 
+consumes:
+  - application/json
+  - application/xml
+
 paths:
+  /:
+    options:
+      description: Return description of API
+      responses:
+        200:
+          description: Return verbe suported in header
+          headers:
+            Allow:
+              description: list of method handle by /
+              type: string
   /users:
     get:
       description: Return all users
-      produces:
-        - application/json
-        - application/xml
       responses:
         200:
           description: A list of users.
@@ -37,6 +48,43 @@ paths:
           description: not found
           schema:
             $ref: "#/definitions/error"
+    post:
+      description: Create a user
+      responses:
+        200:
+          description: the new user create
+          schema:
+            $ref: "#/definitions/user"
+      parameters:
+
+
+
+  /users/{id}/:
+    get:
+      description: Ruten one user
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        200:
+          description: The user
+          schema:
+            $ref: "#/definitions/user"
+    parameters:
+      - $ref: "#/parameters/id"
+
+parameters:
+  id:
+    name: id
+    in: path
+    type: integer
+    required: true
+  user:
+    name: user
+    in: body
+    schemas:
+      $ref: "#/definitions/user"
+    required: true
 
 definitions:
   user:
