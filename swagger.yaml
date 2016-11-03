@@ -29,11 +29,7 @@ paths:
       description: Return description of API
       responses:
         200:
-          description: Return verbe suported in header
-          headers:
-            Allow:
-              description: list of method handle by /
-              type: string
+         $ref: "#/responses/option"
   /users:
     get:
       description: Return all users
@@ -56,35 +52,52 @@ paths:
           schema:
             $ref: "#/definitions/user"
       parameters:
-
-
+        - $ref: "#/parameters/user"
 
   /users/{id}/:
     get:
       description: Ruten one user
-      produces:
-        - application/json
-        - application/xml
       responses:
         200:
-          description: The user
-          schema:
-            $ref: "#/definitions/user"
+          $ref: "#/responses/user"
     parameters:
       - $ref: "#/parameters/id"
+    put:
+      description: replace one user
+      responses:
+        200:
+          $ref: "#/responses/user"
+    patch:
+      description: patch one user
+      responses:
+        200:
+          $ref: "#/responses/user"
+
+responses:
+  user:
+    description: The user
+    schema:
+      $ref: "#/definitions/user"
+  option:
+    description: return allow header
+    headers:
+      Allow:
+        description: list of method handle by /
+        type: string
 
 parameters:
   id:
     name: id
     in: path
-    type: integer
     required: true
+    type: integer
+
   user:
     name: user
     in: body
-    schemas:
-      $ref: "#/definitions/user"
     required: true
+    schema:
+      $ref: "#/definitions/user"
 
 definitions:
   user:
