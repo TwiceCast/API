@@ -17,5 +17,5 @@
 /streams/{id}:
   $ref: paths/streams/{id}.yaml
 
-/stream/{id}/replay:
+/streams/{id}/replay:
   $ref: paths/streams/{id}/replay.yaml
