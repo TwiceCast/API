@@ -25,3 +25,6 @@
 
 /users/{userId}/streams/{streamId}/chat:
   $ref: paths/usersUserIdStreamsStreamIdChat.yaml
+
+/users/{userId}/users:
+  $ref: paths/usersUserIdUsers.yaml
