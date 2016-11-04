@@ -17,5 +17,11 @@
 /users/{userId}/streams/{streamId}:
   $ref: paths/usersUserIdStreamsStreamId.yaml
 
-/users/{userId}/streams/{streamId}/replay:
-  $ref: paths/usersUserIdStreamsStreamIdReplay.yaml
+/users/{userId}/streams/{streamId}/replays:
+  $ref: paths/usersUserIdStreamsStreamIdReplays.yaml
+
+/users/{userId}/streams/{streamId}/users:
+  $ref: paths/usersUserIdStreamsStreamIdUsers.yaml
+
+/users/{userId}/streams/{streamId}/chat:
+  $ref: paths/usersUserIdStreamsStreamIdChat.yaml

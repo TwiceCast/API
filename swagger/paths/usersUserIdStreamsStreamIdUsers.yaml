@@ -1,8 +1,8 @@
 get:
-  description: lol
+  description: Get users right on the stream
   responses:
     200:
-      description: xd
+      description: todo
 parameters:
   - $ref: ../parameters.yaml#/streamId
   - $ref: ../parameters.yaml#/userId
