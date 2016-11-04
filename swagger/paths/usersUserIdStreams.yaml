@@ -12,3 +12,5 @@ post:
   responses:
     200:
       $ref: ../responses.yaml#/stream
+parameters:
+  - $ref: ../parameters.yaml#/userId

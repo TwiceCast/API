@@ -1,7 +1,7 @@
 properties:
   id:
     type: string
-  nickname:
+  pseudo:
     type: string
   email:
     type: string

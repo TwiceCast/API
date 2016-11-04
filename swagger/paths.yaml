@@ -8,14 +8,14 @@
 /users:
   $ref: paths/users.yaml
 
-/users/{id}:
-  $ref: paths/users/{id}.yaml
+/users/{userId}:
+  $ref: paths/usersUserId.yaml
 
-/streams:
-  $ref: paths/streams.yaml
+/users/{userId}/streams:
+  $ref: paths/usersUserIdStreams.yaml
 
-/streams/{id}:
-  $ref: paths/streams/{id}.yaml
+/users/{userId}/streams/{streamId}:
+  $ref: paths/usersUserIdStreamsStreamId.yaml
 
-/streams/{id}/replay:
-  $ref: paths/streams/{id}/replay.yaml
+/users/{userId}/streams/{streamId}/replay:
+  $ref: paths/usersUserIdStreamsStreamIdReplay.yaml

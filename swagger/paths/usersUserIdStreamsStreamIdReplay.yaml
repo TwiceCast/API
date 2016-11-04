@@ -1,0 +1,8 @@
+get:
+  description: lol
+  responses:
+    200:
+      description: xd
+parameters:
+  - $ref: ../parameters.yaml#/streamId
+  - $ref: ../parameters.yaml#/userId

@@ -1,7 +1,0 @@
-parameters:
-  - $ref: ../../parameters.yaml#/id
-get:
-  description: get info of a stream
-  responses:
-    200:
-      $ref: ../../responses.yaml#/stream

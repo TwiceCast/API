@@ -1,5 +1,6 @@
-id:
-  $ref: parameters/id.yaml
-
+userId:
+  $ref: parameters/userId.yaml
+streamId:
+  $ref: parameters/streamId.yaml
 user:
   $ref: parameters/user.yaml
