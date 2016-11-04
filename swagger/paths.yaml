@@ -14,17 +14,17 @@
 /users/{userId}/streams:
   $ref: paths/usersUserIdStreams.yaml
 
-/users/{userId}/streams/{streamId}:
-  $ref: paths/usersUserIdStreamsStreamId.yaml
-
-/users/{userId}/streams/{streamId}/replays:
-  $ref: paths/usersUserIdStreamsStreamIdReplays.yaml
-
-/users/{userId}/streams/{streamId}/users:
-  $ref: paths/usersUserIdStreamsStreamIdUsers.yaml
-
-/users/{userId}/streams/{streamId}/chat:
-  $ref: paths/usersUserIdStreamsStreamIdChat.yaml
-
 /users/{userId}/users:
   $ref: paths/usersUserIdUsers.yaml
+
+/streams/{streamId}:
+  $ref: paths/streamsStreamId.yaml
+
+/streams/{streamId}/replays:
+  $ref: paths/streamsStreamIdReplays.yaml
+
+/streams/{streamId}/users:
+  $ref: paths/streamsStreamIdUsers.yaml
+
+/streams/{streamId}/chat:
+  $ref: paths/streamsStreamIdChat.yaml
