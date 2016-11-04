@@ -1,4 +1,4 @@
-![validator_status](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/TwiceCast/API/master/swagger/swagger.json)
+[![validator_status](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/TwiceCast/API/master/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/TwiceCast/API/master/swagger/swagger.json)
 
 This is the TwiceCast API description. It's use swagger and his tools.
 You can look it with [swagger-ui](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/TwiceCast/API/master/swagger/swagger.json).
