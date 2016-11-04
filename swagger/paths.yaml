@@ -14,6 +14,9 @@
 /users/{userId}/streams:
   $ref: paths/usersUserIdStreams.yaml
 
+/users/{userId}/avatar:
+  $ref: paths/usersUserIdAvatar.yaml
+
 /users/{userId}/users:
   $ref: paths/usersUserIdUsers.yaml
 
