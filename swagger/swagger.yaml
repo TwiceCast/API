@@ -12,7 +12,7 @@ info:
 
 host: eip.epitech.eu
 
-#basePath: "v0.1.0"
+basePath: /0.1.0
 
 schemes:
   - https
