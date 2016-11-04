@@ -1,0 +1,21 @@
+/:
+  options:
+    description: Return description of API
+    responses:
+      200:
+       $ref: responses.yaml#/option
+
+/users:
+  $ref: paths/users.yaml
+
+/users/{id}:
+  $ref: paths/users/{id}.yaml
+
+/streams:
+  $ref: paths/streams.yaml
+
+/streams/{id}:
+  $ref: paths/streams/{id}.yaml
+
+/stream/{id}/replay:
+  $ref: paths/streams/{id}/replay.yaml

@@ -1,0 +1,14 @@
+get:
+  description: Return all stream
+  responses:
+    200:
+      description: array of streams
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/stream
+post:
+  description: Create a stream
+  responses:
+    200:
+      $ref: ../responses.yaml#/stream

@@ -1,0 +1,5 @@
+id:
+  $ref: parameters/id.yaml
+
+user:
+  $ref: parameters/user.yaml

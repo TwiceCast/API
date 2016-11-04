@@ -1,0 +1,6 @@
+stream:
+  $ref: responses/stream.yaml
+user:
+  $ref: responses/user.yaml
+option:
+  $ref: responses/option.yaml

@@ -1,0 +1,7 @@
+parameters:
+  - $ref: ../../../parameters.yaml#/id
+get:
+  description: lol
+  responses:
+    200:
+      description: xd
