@@ -1,0 +1,5 @@
+name: category
+in: body
+required: true
+schema:
+  $ref: ../definitions.yaml#/category

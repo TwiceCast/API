@@ -1,5 +1,5 @@
 get:
-  description: Ruten one user
+  description: Return one user
   responses:
     200:
       $ref: ../responses.yaml#/user

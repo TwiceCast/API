@@ -1,0 +1,7 @@
+properties:
+ id:
+   type: unsigned int
+ type:
+   type: short
+ name:
+   type: string
