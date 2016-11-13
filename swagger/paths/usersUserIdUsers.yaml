@@ -1,0 +1,7 @@
+get:
+  description: todo
+  responses:
+    200:
+      description: todo
+parameters:
+  - $ref: ../parameters.yaml#/userId

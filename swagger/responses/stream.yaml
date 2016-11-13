@@ -1,0 +1,3 @@
+description: the stream
+schema:
+  $ref: ../definitions.yaml#/stream

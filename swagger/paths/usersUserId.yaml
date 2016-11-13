@@ -1,0 +1,22 @@
+get:
+  description: Ruten one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+put:
+  description: replace one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+patch:
+  description: patch one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+delete:
+  description: delete a user
+  responses:
+    200:
+      description: done
+parameters:
+  - $ref: ../parameters.yaml#/userId
