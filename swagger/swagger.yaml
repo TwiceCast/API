@@ -114,11 +114,15 @@ paths:
       - $ref: "#/parameters/userId"
   /users/{userId}/avatar:
     get:
+      tags:
+        - user
       description: Return avatar
       responses:
         '200':
           description: todo
     put:
+      tags:
+        - user
       description: replace avatar
       responses:
         '200':
@@ -127,6 +131,8 @@ paths:
       - $ref: '#/parameters/userId'
   /users/{userId}/users:
     get:
+      tags:
+        - user
       description: todo
       responses:
         '200':
