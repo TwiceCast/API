@@ -1,4 +1,9 @@
+---
 swagger: '2.0'
+
+################################################################################
+#                              API Information                                 #
+################################################################################
 info:
   title: TwiceCast API
   description: TwiceCast api specification
@@ -9,6 +14,10 @@ info:
   license:
     name: MIT
     url: 'https://opensource.org/licenses/mit-license.php'
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
 host: eip.epitech.eu
 basePath: /0.1.0
 schemes:
@@ -20,6 +29,65 @@ consumes:
   - application/json
   - application/xml
 
+################################################################################
+#                                   Parameters                                 #
+################################################################################  
+parameters:
+  limit:
+    name: limit
+    in: path
+    description: Limit the number of result
+    type: integer
+    required: false
+  page:
+    name: page
+    in: path
+    description: Offset the results
+    type: number
+    required: false
+  userId:
+    name: userId
+    in: path
+    required: true
+    type: integer
+  streamId:
+    name: streamId
+    in: path
+    required: true
+    type: integer
+  categoryId:
+    name: categoryId
+    in: path
+    required: true
+    type: integer
+  user:
+    name: user
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/user"
+  category:
+    name: category
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/category"
+  stream:
+    name: stream
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/stream"
+  country:
+    name: country
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/country"
+
+################################################################################
+#                                           Paths                              #
+################################################################################
 paths:
   /:
     options:
@@ -324,64 +392,24 @@ responses:
       Allow:
         description: list of method handle by /
         type: string
-parameters:
-  limit:
-    description: Limit the number of result
-    name: limit
-    in: path
-    required: false
-    type: integer
-  page:
-    description: Offset the results
-    name: page
-    in: path
-    required: false
-    type: integer
-  userId:
-    name: userId
-    in: path
-    required: true
-    type: integer
-  streamId:
-    name: streamId
-    in: path
-    required: true
-    type: integer
-  categoryId:
-    name: categoryId
-    in: path
-    required: true
-    type: integer
-  user:
-    name: user
-    in: body
-    required: true
-    schema:
-      $ref: "#/definitions/user"
-  category:
-    name: category
-    in: body
-    required: true
-    schema:
-      $ref: "#/definitions/category"
-  stream:
-    name: stream
-    in: body
-    required: true
-    schema:
-      $ref: "#/definitions/stream"
-  country:
-    name: country
-    in: body
-    required: true
-    schema:
-      $ref: "#/definitions/country"
+
+################################################################################
+#                                 Definitions                                  #
+################################################################################
 definitions:
   stream:
     type: object
     properties:
       title:
         type: string
+  rank:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+        description: Name of the rank
   user:
     type: object
     properties:
@@ -430,14 +458,6 @@ definitions:
       name:
         type: string
         description: Country name
-  rank:
-    type: object
-    properties:
-      id:
-        type: integer
-      title:
-        type: string
-        description: Name of the rank
   error:
     type: object
     properties:
