@@ -43,6 +43,9 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/error"
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/page"
     post:
       tags:
         - user
@@ -97,6 +100,9 @@ paths:
             type: array
             items:
               $ref: "#/definitions/stream"
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/page"
     post:
       tags:
         - user
@@ -143,6 +149,9 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/error"
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/page"
     post:
       tags:
         - stream
@@ -154,6 +163,7 @@ paths:
             $ref: "#/definitions/stream"
       parameters:
         - $ref: '#/parameters/stream'
+        - $ref: '#/parameters/limit'
   /streams/{streamId}:
     get:
       tags:
@@ -174,6 +184,8 @@ paths:
           description: todo
     parameters:
       - $ref: "#/parameters/streamId"
+      - $ref: "#/parameters/limit"
+      - $ref: "#/parameters/page"
   /streams/{streamId}/users:
     get:
       tags:
@@ -184,6 +196,8 @@ paths:
           description: todo
     parameters:
       - $ref: "#/parameters/streamId"
+      - $ref: "#/parameters/limit"
+      - $ref: "#/parameters/page"
   /streams/{streamId}/chat:
     get:
       tags:
@@ -210,6 +224,9 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/error"
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/page"
     post:
       tags:
         - category
@@ -268,6 +285,9 @@ paths:
           description: not found
           schema:
             $ref: "#/definitions/error"
+      parameters:
+        - $ref: "#/parameters/limit"
+        - $ref: "#/parameters/page"
     post:
       tags:
         - country
@@ -292,10 +312,6 @@ responses:
     description: A category
     schema:
       $ref: "#/definitions/category"
-  country:
-    description: A country
-    schema:
-      $ref: "#/definitions/country"
   option:
     description: return allow header
     headers:
@@ -303,6 +319,18 @@ responses:
         description: list of method handle by /
         type: string
 parameters:
+  limit:
+    description: Limit the number of result
+    name: limit
+    in: path
+    required: false
+    type: integer
+  page:
+    description: Offset the results
+    name: page
+    in: path
+    required: false
+    type: integer
   userId:
     name: userId
     in: path
@@ -344,10 +372,12 @@ parameters:
       $ref: "#/definitions/country"
 definitions:
   stream:
+    type: object
     properties:
       title:
         type: string
   user:
+    type: object
     properties:
       id:
         type: string
@@ -370,29 +400,41 @@ definitions:
         type: string
         format: date
   category:
+    type: object
     properties:
       id:
-        type: int
+        type: integer
+        format: int64
       type:
-        type: short
+        type: integer
+        format: int32
+        description: Type of the category
       name:
         type: string
+        description: Name of the category
   country:
+    type: object
     properties:
       id:
-        type: int
+        type: integer
       code:
         type: string
         maxLength: 3
+        description: 3-length char country name representation
       name:
         type: string
+        description: Country name
   rank:
+    type: object
     properties:
       id:
-        type: string
+        type: integer
       title:
         type: string
+        description: Name of the rank
   error:
+    type: object
     properties:
       error:
         type: string
+        description: Error message
