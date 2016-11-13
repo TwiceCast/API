@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Stream
   description: todo
   responses:
     200:

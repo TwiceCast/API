@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Stream
   description: Get all replays
   responses:
     200:

@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Stream
   description: Get users right on the stream
   responses:
     200:

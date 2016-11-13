@@ -1,6 +1,6 @@
 get:
   tags:
-    - category
+    - Category
   description: Return all categories
   responses:
     200:
@@ -18,7 +18,7 @@ get:
     - $ref: ../parameters.yaml#/page
 post:
   tags:
-    - category
+    - Category
   description: Create a category
   responses:
     200:

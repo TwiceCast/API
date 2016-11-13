@@ -1,4 +1,6 @@
 get:
+  tags:
+    - Stream
   description: get info of a stream
   responses:
     200:

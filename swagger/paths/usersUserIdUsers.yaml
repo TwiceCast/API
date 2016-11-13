@@ -1,4 +1,6 @@
 get:
+  tags:
+    - User
   description: todo
   responses:
     200:

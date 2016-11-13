@@ -1,6 +1,6 @@
 get:
   tags:
-    - country
+    - Category
   description: Return all countries
   responses:
     200:
@@ -18,7 +18,7 @@ get:
     - $ref: ../parameters.yaml#/page
 post:
   tags:
-    - country
+    - Category
   description: Create a country
   responses:
     200:
