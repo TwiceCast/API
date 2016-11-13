@@ -20,6 +20,9 @@
 /users/{userId}/users:
   $ref: paths/usersUserIdUsers.yaml
 
+/streams:
+  $ref: paths/streams.yaml
+
 /streams/{streamId}:
   $ref: paths/streamsStreamId.yaml
 

@@ -7,6 +7,9 @@ streamId:
 user:
   $ref: parameters/user.yaml
 
+stream:
+  $ref: parameters/stream.yaml
+
 limit:
   $ref: parameters/limit.yaml
 
