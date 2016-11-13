@@ -31,3 +31,12 @@
 
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
+
+/categories:
+  $ref: paths/categories.yaml
+
+/categories/{categoryId}:
+  $ref: paths/categoriesCategoryId.yaml
+
+/countries:
+  $ref: paths/countries.yaml

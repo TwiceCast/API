@@ -1,22 +1,30 @@
 get:
+  tags:
+    - category
   description: Return one category
   responses:
     200:
       $ref: ../responses.yaml#/category
 put:
-  description: replace one category
+  tags:
+    - category
+  description: Replace one category
   responses:
     200:
       $ref: ../responses.yaml#/category
 patch:
-  description: patch one category
+  tags:
+    - category
+  description: Patch one category
   responses:
     200:
       $ref: ../responses.yaml#/category
 delete:
-  description: delete a category
+  tags:
+    - category
+  description: Delete a category
   responses:
     200:
-      description: done
+      description: Done
 parameters:
   - $ref: ../parameters.yaml#/categoryId

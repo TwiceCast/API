@@ -1,21 +1,28 @@
 get:
+  tags:
+    - category
   description: Return all categories
   responses:
     200:
-      description: A list of categories.
+      description: A list of categories
       schema:
         type: array
         items:
           $ref: ../definitions.yaml#/category
     404:
-      description: not found
+      description: Not found
       schema:
         $ref: ../definitions.yaml#/error
+  parameters:
+    - $ref: ../parameters.yaml#/limit
+    - $ref: ../parameters.yaml#/page
 post:
+  tags:
+    - category
   description: Create a category
   responses:
     200:
-      description: the new category created
+      description: The new category created
       schema:
         $ref: ../definitions.yaml#/category
   parameters:
