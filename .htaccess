@@ -19,8 +19,24 @@ RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^(.*)" "query/PUT/$1"
 
 RewriteCond %{REQUEST_URI} !query
-RewriteCond %{REQUEST_METHOD} REMOVE
-RewriteRule "^(.*)" "query/REMOVE/$1"
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^(.*)" "query/DELETE/$1"
 
-RewriteRule "^query/(POST|GET|PUT|REMOVE)/users/([0-9]+)" "query/$1/users/?id=$2"
+RewriteCond %{REQUEST_URI} !query
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^(.*)" "query/PATCH/$1"
+
+RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9]+)" "query/$1/users/index.php?id=$2"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9a-zA-Z]+)" "query/$1/users/index.php?nickname=$2"
+
 #RewriteRule "^query/users" "users/users.php"
+
+RewriteCond %{HTTP_ACCEPT} "application/json"
+RewriteCond %{QUERY_STRING} !accept
+RewriteRule ".*" $0?%{QUERY_STRING}&accept=json
+
+RewriteCond %{HTTP_ACCEPT} "application/xml"
+RewriteCond %{QUERY_STRING} !accept
+RewriteRule ".*" $0?%{QUERY_STRING}&accept=xml

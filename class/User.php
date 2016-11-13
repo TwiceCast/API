@@ -1,7 +1,7 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/DB.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/Country.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/Rank.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Country.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Rank.php');
 
 	class User
 	{
@@ -14,6 +14,7 @@
 		var $rank;
 		var $register_date;
 		var $last_visit_date;
+		var $avatar;
 		private $db;
 
 		function __construct($db = true, $ID = null, $email = null, $password = null, $nickname = null, $country = null, $birthdate = null, $rank = null, $register_date = null, $last_visit_date = null)
@@ -36,6 +37,11 @@
 		function setID($ID)
 		{
 			$this->ID = $ID;
+			$tmp = $_SERVER['DOCUMENT_ROOT'].'/avatar/'.$this->ID.'.png';
+			if (file_exists($tmp))
+				$this->avatar = $tmp;
+			else
+				$this->avatar = 'api/avatar/0.png';
 			return $this;
 		}
 
@@ -148,7 +154,7 @@
 				return false;
 		}
 
-		function getFromLogin($login, $db = null)
+		function getFromNickname($nickname, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
@@ -169,17 +175,17 @@
 					FROM user
 					LEFT JOIN country ON user.fk_country = country.id
 					LEFT JOIN rank ON user.fk_rank = rank.id
-					WHERE user.id = :ID');
-				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
+					WHERE user.nickname = :nickname');
+				$link->bindParam(':nickname', $nickname, PDO::PARAM_STR);
 				$data = $link->fetch(true);
 				if ($data)
 				{
 					$this->setID($data['userID']);
 					$this->setEmail(DB::fromDB($data['userEmail']));
-					$this->setPassword($data['userPassord']);
+					$this->setPassword($data['userPassword']);
 					$this->setNickname(DB::fromDB($data['userNickname']));
-					$this->setBrithdate($data['userBirthdate']);
-					$this->setRegisterDate($date['userRegisterDate']);
+					$this->setBirthdate($data['userBirthdate']);
+					$this->setRegisterDate($data['userRegisterDate']);
 					$this->setLastVisitDate($data['userLastVisitDate']);
 					$country = new Country(false);
 					$country->setID($data['countryID']);
@@ -212,11 +218,11 @@
 					user.birthdate AS userBirthdate,
 					user.register_date AS userRegisterDate,
 					user.last_visit_date AS userLastVisitDate,
-					contry.id AS countryID,
+					country.id AS countryID,
 					country.code AS countryCode,
 					country.name AS countryName,
 					rank.id AS rankID,
-					rank.title AS rankTitle,
+					rank.title AS rankTitle
 					FROM user
 					LEFT JOIN country ON user.fk_country = country.id
 					LEFT JOIN rank ON user.fk_rank = rank.id');
@@ -231,7 +237,7 @@
 						$user->setEmail(DB::fromDB($entry['userEmail']));
 						$user->setPassword($entry['userPassword']);
 						$user->setNickname(DB::fromDB($entry['userNickname']));
-						$user->setBirthdate($entry['userBrithdate']);
+						$user->setBirthdate($entry['userBirthdate']);
 						$user->setRegisterDate($entry['userRegisterDate']);
 						$user->setLastVisitDate($entry['userLastVisitDate']);
 						$country = new Country(false);
