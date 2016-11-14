@@ -26,12 +26,83 @@ RewriteCond %{REQUEST_URI} !query
 RewriteCond %{REQUEST_METHOD} PATCH
 RewriteRule "^(.*)" "query/PATCH/$1"
 
-RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9]+)" "query/$1/users/index.php?id=$2"
+#RewriteCond %{REQUEST_URI} !index
+#RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9]+)" "query/$1/users/index.php?id=$2" [L]
+
+#RewriteCond %{REQUEST_URI} !index
+#RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9a-zA-Z]+)" "query/$1/users/index.php?nickname=$2" [L]
 
 RewriteCond %{REQUEST_URI} !index
-RewriteRule "^query/(POST|GET|PUT|DELETE|PATCH)/users/([0-9a-zA-Z]+)" "query/$1/users/index.php?nickname=$2"
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9]+)/streams/" "query/GET/users/streams.php?userid=$1"
 
-#RewriteRule "^query/users" "users/users.php"
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9a-zA-Z]+)/streams/" "query/GET/users/streams.php?usernickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^query/POST/users/([0-9]+)/streams/" "query/POST/users/streams.php?userid=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^query/POST/users/([0-9a-zA-Z]+)/streams/" "query/POST/users/streams.php?usernickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9]+)/avatar/" "query/GET/users/avatar.php?userid=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9a-zA-Z]+)/avatar/" "query/GET/users/avatar.php?usernickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^query/PUT/users/([0-9]+)/avatar/" "query/PUT/users/avatar.php?userid=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^query/PUT/users/([0-9a-zA-Z]+)/avatar/" "query/PUT/users/avatar.php?usernickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9]+)/" "query/GET/users/index.php?id=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users/([0-9a-zA-Z]+)/" "query/GET/users/index.php?nickname=$1"
+
+#RewriteCond %{REQUEST_URI} !index
+#RewriteCond %{REQUEST_METHOD} POST
+#RewriteRule "^query/POST/users/" "query/POST/users/index.php"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^query/DELETE/users/([0-9]+)/" "query/DELETE/users/index.php?id=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^query/DELETE/users/([0-9a-zA-Z]+)/" "query/DELETE/users/index.php?nickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^query/PATCH/users/([0-9]+)/" "query/PATCH/users/index.php?id=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^query/PATCH/users/([0-9a-zA-Z]+)/" "query/PATCH/users/index.php?nickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^query/PATCH/users/([0-9]+)/" "query/PATCH/users/index.php?id=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^query/PUT/users/([0-9a-zA-Z]+)/" "query/PUT/users/index.php?nickname=$1"
+
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^query/POST/streams/" "query/POST/streams/index.php"
 
 RewriteCond %{HTTP_ACCEPT} "application/json"
 RewriteCond %{QUERY_STRING} !accept

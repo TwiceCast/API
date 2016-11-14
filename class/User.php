@@ -1,4 +1,5 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Country.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Rank.php');
@@ -469,24 +470,63 @@
 			$link = $this->getLink($db);
 			if ($link)
 			{
+				if ($this->checkForCreation($link) == ERR::SUCCESS)
+				{
+					$link->prepare('
+						INSERT INTO user(email, password, nickname, fk_country, birthdate, fk_rank)
+						VALUE(:email, :password, :nickname, :fk_country, :birthdate, :fk_rank)');
+					$tmpEmail = DB::toDB($this->email);
+					$tmpNickname = DB::toDB($this->nickname);
+					$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
+					$link->bindParam(':password', $this->password, PDO::PARAM_STR);
+					$link->bindParam(':nickname', $tmpNickname, PDO::PARAM_STR);
+					if ($this->country)
+						$link->bindParam(':fk_country', $this->country->ID, PDO::PARAM_INT);
+					else
+						$link->bindParam(':fk_country', 0, PDO::PARAM_INT);
+					if ($this->birthdate)
+						$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_STR);
+					else
+						$link->bindParam(':birthdate', NULL, PDO::PARAM_NULL);
+					if ($this->rank)
+						$link->bindParam(':fk_rank', $this->rank->ID, PDO::PARAM_INT);
+					else
+						$link->bindParam(':fk_rank', 0, PDO::PARAM_INT);
+					return $link->execute(true);
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function checkForCreation($db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
 				$link->prepare('
-					INSERT INTO user(email, password, nickname, fk_country, birthdate, fk_rank)
-					VALUE(:email, :password, :nickname, :fk_country, :birthdate, :fk_rank)');
-				$tmpEmail = DB::toDB($this->email);
-				$tmpNickname = DB::toDB($this->nickname);
-				$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
-				$link->bindParam(':password', $this->password, PDO::PARAM_STR);
-				$link->bindParam(':nickname', $tmpNickname, PDO::PARAM_STR);
-				if ($this->country)
-					$link->bindParam(':fk_country', $this->country->ID, PDO::PARAM_INT);
+					SELECT user.id AS userID
+					FROM user
+					WHERE user.nickname = :nickname');
+				$link->bindParam(':nickname', $this->nickname, PDO::PARAM_STR);
+				$data = $link->fetchAll(true);
+				if ($data)
+					return ERR::NICKUSED;
 				else
-					$link->bindParam(':fk_country', 0, PDO::PARAM_INT);
-				$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_STR);
-				if ($this->rank)
-					$link->bindParam(':fk_rank', $this->rank->ID, PDO::PARAM_INT);
-				else
-					$link->bindParam(':fk_rank', 0, PDO::PARAM_INT);
-				return $link->execute(true);
+				{
+					$link->prepare('
+						SELECT user.id AS userID
+						FROM user
+						WHERE user.email = :email');
+					$link->bindParam(':email', $this->email, PDO::PARAM_STR);
+					$data = $link->fetchAll(true);
+					if ($data)
+						return ERR::EMAILUSED;
+					else
+						return ERR::OK;
+				}
 			}
 			else
 				return false;
