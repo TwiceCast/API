@@ -41,14 +41,6 @@ RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^query/GET/users/([0-9a-zA-Z]+)/streams/" "query/GET/users/streams.php?usernickname=$1"
 
 RewriteCond %{REQUEST_URI} !index
-RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^query/POST/users/([0-9]+)/streams/" "query/POST/users/streams.php?userid=$1"
-
-RewriteCond %{REQUEST_URI} !index
-RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^query/POST/users/([0-9a-zA-Z]+)/streams/" "query/POST/users/streams.php?usernickname=$1"
-
-RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^query/GET/users/([0-9]+)/avatar/" "query/GET/users/avatar.php?userid=$1"
 

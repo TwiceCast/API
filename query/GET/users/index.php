@@ -39,7 +39,7 @@
 			if ($out)
 				echo json_encode($out);
 			else
-				echo '{"error":"This user doesn\'t exist."}';
+				echo '{"error":"This user does not exist."}';
 		}
 		else if ($_GET['accept'] == 'xml')
 		{
@@ -61,8 +61,7 @@
 		if ($out)
 			echo json_encode($out);
 		else
-			echo '{"error":"This user doesn\'t exist."}';
-
+			echo '{"error":"This user does not exist."}';
 	}
 
 	function toXML($obj)

@@ -20,9 +20,9 @@
 		if ($state == ERR::OK)
 		{
 			if ($newUser->create())
-				echo '{"error":"Account created successfully"}';
+				echo '{"error":"User created successfully"}';
 			else
-				echo '{"error":"1Something wrong append"}';
+				echo '{"error":"Something wrong append"}';
 		}
 		else
 		{
@@ -31,7 +31,7 @@
 			else if ($state == ERR::EMAILUSED)
 				echo '{"error":"Email already in use"}';
 			else
-				echo '{"error":"Something wrong appedn"}';
+				echo '{"error":"Something wrong append"}';
 		}
 	}
 ?>

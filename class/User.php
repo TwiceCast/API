@@ -345,9 +345,9 @@
 				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
 				if ($link->execute(true))
 				{
-					if (!$this->client)
-						$this->client = new Client(false);
-					$this->client->getFromID($newCountryID, $link);
+					if (!$this->country)
+						$this->country = new Country(false);
+					$this->country->getFromID($newCountryID, $link);
 					return true;
 				}
 				else
@@ -443,18 +443,31 @@
 					user.fk_rank = :rank,
 					user.last_visit_date = :lastVisitDate
 					WHERE user.ID = :ID');
-				$email = DB::toDB($this->login);
+				$email = DB::toDB($this->email);
 				$nickname = DB::toDB($this->nickname);
 				$link->bindParam(':email', $email, PDO::PARAM_STR);
 				$link->bindParam(':password', $this->password, PDO::PARAM_STR);
 				$link->bindParam(':nickname', $nickname, PDO::PARAM_STR);
 				if ($this->country)
-					$link->bindParam(':country', $this->country->ID, PDO::PARAM_INT);
+				{
+					if (is_int($this->country))
+						$link->bindParam(':country', $this->country, PDO::PARAM_INT);
+					else
+						$link->bindParam(':country', $this->country->ID, PDO::PARAM_INT);
+				}
 				else
 					$link->bindParam(':country', 0, PDO::PARAM_INT);
-				$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_STR);
+				if ($this->birthdate)
+					$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_STR);
+				else
+					$link->bindParam(':birthdate', null, PDO::PARAM_NULL);
 				if ($this->rank)
-					$link->bindParam(':rank', $this->rank->ID, PDO::PARAM_INT);
+				{
+					if (is_int($this->rank))
+						$link->bindParam(':rank', $this->rank, PDO::PARAM_INT);
+					else
+						$link->bindParam(':rank', $this->rank->ID, PDO::PARAM_INT);
+				}
 				else
 					$link->bindParam(':rank', 0, PDO::PARAM_INT);
 				$link->bindParam(':lastVisitDate', $this->last_visit_date, PDO::PARAM_INT);
@@ -487,7 +500,7 @@
 					if ($this->birthdate)
 						$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_STR);
 					else
-						$link->bindParam(':birthdate', NULL, PDO::PARAM_NULL);
+						$link->bindParam(':birthdate', null, PDO::PARAM_NULL);
 					if ($this->rank)
 						$link->bindParam(':fk_rank', $this->rank->ID, PDO::PARAM_INT);
 					else
