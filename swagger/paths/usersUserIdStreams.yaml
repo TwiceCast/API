@@ -18,3 +18,4 @@ post:
       $ref: ../responses.yaml#/stream
 parameters:
   - $ref: ../parameters.yaml#/userId
+  - $ref: ../parameters.yaml#/signature

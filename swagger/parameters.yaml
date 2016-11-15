@@ -10,6 +10,9 @@ user:
 stream:
   $ref: parameters/stream.yaml
 
+channel:
+  $ref: parameters/channel.yaml
+
 limit:
   $ref: parameters/limit.yaml
 
@@ -24,3 +27,6 @@ category:
 
 categoryId:
   $ref: parameters/categoryId.yaml
+
+signature:
+  $ref: parameters/signature.yaml

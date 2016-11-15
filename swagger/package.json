@@ -4,7 +4,7 @@
   "description": "Swagger API TwiceCast",
   "main": "swagger.yaml",
   "scripts": {
-    "build": "swagger bundle swagger.yaml -o swagger.json --format 0"
+    "build": "swagger validate swagger.yaml && swagger bundle swagger.yaml -o swagger.json --format 0"
   },
   "repository": {
     "type": "git",

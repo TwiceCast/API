@@ -17,8 +17,11 @@
 /users/{userId}/avatar:
   $ref: paths/usersUserIdAvatar.yaml
 
-/users/{userId}/users:
-  $ref: paths/usersUserIdUsers.yaml
+/users/{userId}/friends:
+  $ref: paths/usersUserIdFriends.yaml
+
+/users/{userId}/blocks:
+  $ref: paths/usersUserIdBlocks.yaml
 
 /streams:
   $ref: paths/streams.yaml
@@ -29,8 +32,11 @@
 /streams/{streamId}/replays:
   $ref: paths/streamsStreamIdReplays.yaml
 
-/streams/{streamId}/users:
-  $ref: paths/streamsStreamIdUsers.yaml
+/streams/{streamId}/Blocks:
+  $ref: paths/streamsStreamIdBlocks.yaml
+
+/streams/{streamId}/Folowers:
+  $ref: paths/streamsStreamIdFolowers.yaml
 
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
@@ -43,3 +49,6 @@
 
 /countries:
   $ref: paths/countries.yaml
+
+/channels:
+  $ref: paths/channels.yaml

@@ -27,3 +27,5 @@ post:
         $ref: ../definitions.yaml#/country
   parameters:
     - $ref: ../parameters.yaml#/country
+parameters:
+  - $ref: ../parameters.yaml#/signature

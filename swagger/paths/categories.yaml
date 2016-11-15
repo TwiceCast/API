@@ -27,3 +27,5 @@ post:
         $ref: ../definitions.yaml#/category
   parameters:
     - $ref: ../parameters.yaml#/category
+parameters:
+  - $ref: ../parameters.yaml#/signature

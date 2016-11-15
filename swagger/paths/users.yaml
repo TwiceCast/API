@@ -24,3 +24,5 @@ post:
         $ref: ../definitions.yaml#/user
   parameters:
     - $ref: ../parameters.yaml#/user
+parameters:
+  - $ref: ../parameters.yaml#/signature

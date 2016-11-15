@@ -1,0 +1,5 @@
+name: channel
+in: body
+required: true
+schema:
+  $ref: ../definitions.yaml#/channel

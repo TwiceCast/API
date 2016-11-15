@@ -24,3 +24,5 @@ post:
         $ref: ../definitions.yaml#/stream
   parameters:
     - $ref: ../parameters.yaml#/stream
+parameters:
+  - $ref: ../parameters.yaml#/signature

@@ -7,3 +7,4 @@ get:
       $ref: ../responses.yaml#/stream
 parameters:
   - $ref: ../parameters.yaml#/streamId
+  - $ref: ../parameters.yaml#/signature

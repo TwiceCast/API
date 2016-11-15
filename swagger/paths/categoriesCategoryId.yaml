@@ -28,3 +28,4 @@ delete:
       description: Done
 parameters:
   - $ref: ../parameters.yaml#/categoryId
+  - $ref: ../parameters.yaml#/signature

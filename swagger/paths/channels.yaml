@@ -1,0 +1,28 @@
+get:
+  tags:
+    - Channel
+  description: Return all channels
+  responses:
+    200:
+      description: A list of channels.
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/channel
+    404:
+      description: not found
+      schema:
+        $ref: ../definitions.yaml#/error
+post:
+  tags:
+    - channel
+  description: Create a channel
+  responses:
+    200:
+      description: the new channel created
+      schema:
+        $ref: ../definitions.yaml#/channel
+  parameters:
+    - $ref: ../parameters.yaml#/channel
+parameters:
+  - $ref: ../parameters.yaml#/signature
