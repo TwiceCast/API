@@ -1,29 +1,21 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	$out = null;
 	$user = new User();
-	if (isset($_GET))
+	if (isset($_GET['id']))
 	{
-		if (isset($_GET['id']))
-		{
-			if (!$user->getFromID($_GET['id']))
-				$out = false;
-			else
-				$out = $user;
-		}
-		else if (isset($_GET['nickname']))
-		{
-			if (!$user->getFromNickname($_GET['nickname']))
-				$out = false;
-			else
-				$out = $user;
-		}
+		if (!$user->getFromID($_GET['id']))
+			$out = false;
 		else
-		{
-			$users = $user->getAllUsers();
-			$out = $users;
-		}
+			$out = $user;
+	}
+	else if (isset($_GET['nickname']))
+	{
+		if (!$user->getFromNickname($_GET['nickname']))
+			$out = false;
+		else
+			$out = $user;
 	}
 	else
 	{
@@ -50,7 +42,7 @@
 			{
 				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 				echo "<error>\r\n";
-				echo "\tThis user doesn't exist\r\n";
+				echo "\tThis user does not exist.\r\n";
 				echo "</error>\r\n";
 			}
 		}

@@ -1,6 +1,6 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/DB.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	class Stream
 	{
@@ -280,7 +280,7 @@
 						$rank->setTitle(DB::fromDB($entry['rankTitle']));
 						$user->setRank($rank);
 						$this->setOwner($user);
-						$stream[] = $stream;
+						$streams[] = $stream;
 					}
 					return $streams;
 				}
@@ -324,7 +324,7 @@
 					INSERT INTO stream(title, fk_user)
 					VALUE(:title, :fk_user)');
 				$tmpTitle = DB::toDB($this->title);
-				$link->bindParam(':title', $tmpTitel, PDO::PARAM_STR);
+				$link->bindParam(':title', $tmpTitle, PDO::PARAM_STR);
 				$link->bindParam(':fk_user', $this->owner->ID, PDO::PARAM_INT);
 				return $link->execute(true);
 			}

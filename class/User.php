@@ -483,7 +483,7 @@
 			$link = $this->getLink($db);
 			if ($link)
 			{
-				if ($this->checkForCreation($link) == ERR::SUCCESS)
+				if ($this->checkForCreation($link) == ERR::OK)
 				{
 					$link->prepare('
 						INSERT INTO user(email, password, nickname, fk_country, birthdate, fk_rank)
@@ -542,7 +542,7 @@
 				}
 			}
 			else
-				return false;
+				return ERR::UNKNOW;
 		}
 
 		function delete($db = null)
