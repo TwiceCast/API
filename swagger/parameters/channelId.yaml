@@ -1,0 +1,4 @@
+name: channelId
+in: path
+required: true
+type: integer

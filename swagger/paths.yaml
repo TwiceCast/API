@@ -52,3 +52,9 @@
 
 /channels:
   $ref: paths/channels.yaml
+
+/channels/{channelId}:
+  $ref: paths/channelsChannelId.yaml
+
+/channels/{channelId}/streams:
+  $ref: paths/channelsChannelIdStreams.yaml

@@ -4,6 +4,9 @@ userId:
 streamId:
   $ref: parameters/streamId.yaml
 
+channelId:
+  $ref: parameters/channelId.yaml
+
 user:
   $ref: parameters/user.yaml
 
