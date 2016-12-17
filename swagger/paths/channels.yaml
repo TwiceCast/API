@@ -15,7 +15,7 @@ get:
         $ref: ../definitions.yaml#/error
 post:
   tags:
-    - channel
+    - Channel
   description: Create a channel
   responses:
     200:
