@@ -4,6 +4,9 @@ userId:
 streamId:
   $ref: parameters/streamId.yaml
 
+replayId:
+  $ref: parameters/replayId.yaml
+
 organizationId:
   $ref: parameters/organizationId.yaml
 

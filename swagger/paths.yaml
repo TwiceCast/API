@@ -49,8 +49,17 @@
 /streams/{streamId}/subscribers:
   $ref: paths/streamsStreamIdSubscribers.yaml
 
+/streams/{streamId}/members:
+  $ref: paths/streamsStreamIdmembers.yaml
+
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
+
+/streams/{streamId}/event:
+  $ref: paths/streamsStreamIdEvent.yaml
+
+/streams/{streamId}/project:
+  $ref: paths/streamsStreamIdProject.yaml
 
 /organizations:
   $ref: paths/organizations.yaml
@@ -63,7 +72,22 @@
 
 /organizations/{organizationId}/members:
   $ref: paths/organizationsOrganizationIdMembers.yaml
-  
+
+/replays:
+  $ref: paths/replays.yaml
+
+/replays/{replayId}:
+  $ref: paths/replaysReplayId.yaml
+
+/replays/{replayId}/chat:
+  $ref: paths/replaysReplayIdChat.yaml
+
+/replays/{replayId}/event:
+  $ref: paths/replaysReplayIdEvent.yaml
+
+/replays/{replayId}/project:
+  $ref: paths/replaysReplayIdProject.yaml
+
 /categories:
   $ref: paths/categories.yaml
 
