@@ -1,0 +1,21 @@
+get:
+  tags:
+    - User
+  description: Return all channel
+  responses:
+    200:
+      description: array of channels
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/channel
+post:
+  tags:
+    - User
+  description: Create a channel
+  responses:
+    200:
+      $ref: ../responses.yaml#/channel
+parameters:
+  - $ref: ../parameters.yaml#/userId
+  - $ref: ../parameters.yaml#/signature
