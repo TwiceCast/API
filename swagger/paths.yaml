@@ -1,7 +1,7 @@
 /:
-  tags:
-    - Options
   options:
+    tags:
+      - Options
     description: Return description of API
     responses:
       200:
