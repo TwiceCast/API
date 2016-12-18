@@ -1,3 +1,0 @@
-description: The channel
-schema:
-  $ref: ../definitions.yaml#/channel

@@ -1,0 +1,3 @@
+description: The organization
+schema:
+  $ref: ../definitions.yaml#/organization

@@ -4,8 +4,8 @@ userId:
 streamId:
   $ref: parameters/streamId.yaml
 
-channelId:
-  $ref: parameters/channelId.yaml
+organizationId:
+  $ref: parameters/organizationId.yaml
 
 user:
   $ref: parameters/user.yaml
@@ -13,8 +13,8 @@ user:
 stream:
   $ref: parameters/stream.yaml
 
-channel:
-  $ref: parameters/channel.yaml
+organization:
+  $ref: parameters/organization.yaml
 
 limit:
   $ref: parameters/limit.yaml

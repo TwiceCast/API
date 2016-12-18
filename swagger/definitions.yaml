@@ -1,8 +1,8 @@
 stream:
   $ref: definitions/stream.yaml
 
-channel:
-  $ref: definitions/channel.yaml
+organization:
+  $ref: definitions/organization.yaml
 
 user:
   $ref: definitions/user.yaml

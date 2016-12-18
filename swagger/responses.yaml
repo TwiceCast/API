@@ -4,8 +4,8 @@ stream:
 user:
   $ref: responses/user.yaml
 
-channel:
-  $ref: responses/channel.yaml
+organization:
+  $ref: responses/organization.yaml
 
 option:
   $ref: responses/option.yaml

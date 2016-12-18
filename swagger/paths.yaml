@@ -13,8 +13,8 @@
 /users/{userId}:
   $ref: paths/usersUserId.yaml
 
-/users/{userId}/channels:
-  $ref: paths/usersUserIdChannels.yaml
+/users/{userId}/organizations:
+  $ref: paths/usersUserIdOrganizations.yaml
 
 /users/{userId}/avatar:
   $ref: paths/usersUserIdAvatar.yaml
@@ -52,17 +52,18 @@
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
 
-/channels:
-  $ref: paths/channels.yaml
+/organizations:
+  $ref: paths/organizations.yaml
 
-/channels/{channelId}:
-  $ref: paths/channelsChannelId.yaml
+/organizations/{organizationId}:
+  $ref: paths/organizationsOrganizationId.yaml
 
-/channels/{channelId}/streams:
-  $ref: paths/channelsChannelIdStreams.yaml
+/organizations/{organizationId}/streams:
+  $ref: paths/organizationsOrganizationIdStreams.yaml
 
-/channels/{channelId}/members:
-  $ref: paths/channelsChannelIdMembers.yaml
+/organizations/{organizationId}/members:
+  $ref: paths/organizationsOrganizationIdMembers.yaml
+  
 /categories:
   $ref: paths/categories.yaml
 

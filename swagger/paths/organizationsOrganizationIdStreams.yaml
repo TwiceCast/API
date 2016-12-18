@@ -1,6 +1,6 @@
 get:
   tags:
-    - Channel
+    - Organization
   description: Return all stream
   responses:
     200:
@@ -11,11 +11,11 @@ get:
           $ref: ../definitions.yaml#/stream
 post:
   tags:
-    - Channel
+    - Organization
   description: Create a stream
   responses:
     200:
       $ref: ../responses.yaml#/stream
 parameters:
-  - $ref: ../parameters.yaml#/channelId
+  - $ref: ../parameters.yaml#/organizationId
   - $ref: ../parameters.yaml#/signature

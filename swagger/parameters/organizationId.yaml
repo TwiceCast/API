@@ -1,4 +1,4 @@
-name: channelId
+name: organizationId
 in: path
 required: true
 type: integer
