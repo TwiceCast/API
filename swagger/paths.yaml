@@ -1,4 +1,6 @@
 /:
+  tags:
+    - Options
   options:
     description: Return description of API
     responses:
