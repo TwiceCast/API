@@ -23,6 +23,12 @@
 /users/{userId}/blocks:
   $ref: paths/usersUserIdBlocks.yaml
 
+/users/{userId}/follows:
+  $ref: paths/usersUserIdFollows.yaml
+
+/users/{userId}/subscribes:
+  $ref: paths/usersUserIdSubscribes.yaml
+
 /streams:
   $ref: paths/streams.yaml
 
@@ -32,23 +38,17 @@
 /streams/{streamId}/replays:
   $ref: paths/streamsStreamIdReplays.yaml
 
-/streams/{streamId}/Blocks:
+/streams/{streamId}/blocks:
   $ref: paths/streamsStreamIdBlocks.yaml
 
-/streams/{streamId}/Folowers:
-  $ref: paths/streamsStreamIdFolowers.yaml
+/streams/{streamId}/followers:
+  $ref: paths/streamsStreamIdFollowers.yaml
+
+/streams/{streamId}/subscribers:
+  $ref: paths/streamsStreamIdSubscribers.yaml
 
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
-
-/categories:
-  $ref: paths/categories.yaml
-
-/categories/{categoryId}:
-  $ref: paths/categoriesCategoryId.yaml
-
-/countries:
-  $ref: paths/countries.yaml
 
 /channels:
   $ref: paths/channels.yaml
@@ -58,3 +58,14 @@
 
 /channels/{channelId}/streams:
   $ref: paths/channelsChannelIdStreams.yaml
+
+/channels/{channelId}/members:
+  $ref: paths/channelsChannelIdMembers.yaml
+/categories:
+  $ref: paths/categories.yaml
+
+/categories/{categoryId}:
+  $ref: paths/categoriesCategoryId.yaml
+
+/countries:
+  $ref: paths/countries.yaml

@@ -1,0 +1,10 @@
+get:
+  tags:
+    - Channel
+  description: Get users right on the stream
+  responses:
+    200:
+      description: todo
+parameters:
+  - $ref: ../parameters.yaml#/channelId
+  - $ref: ../parameters.yaml#/signature
