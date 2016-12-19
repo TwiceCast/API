@@ -10,5 +10,5 @@ organization:
 option:
   $ref: responses/option.yaml
 
-category:
-  $ref: responses/category.yaml
+tag:
+  $ref: responses/tag.yaml

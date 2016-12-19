@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Tag
+  description: Return one tag
+  responses:
+    200:
+      $ref: ../responses.yaml#/tag
+put:
+  tags:
+    - Tag
+  description: Replace one tag
+  responses:
+    200:
+      $ref: ../responses.yaml#/tag
+patch:
+  tags:
+    - Tag
+  description: Patch one tag
+  responses:
+    200:
+      $ref: ../responses.yaml#/tag
+delete:
+  tags:
+    - Tag
+  description: Delete a tag
+  responses:
+    200:
+      description: Done
+parameters:
+  - $ref: ../parameters.yaml#/tagId
+  - $ref: ../parameters.yaml#/signature

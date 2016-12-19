@@ -16,5 +16,5 @@ rank:
 error:
   $ref: definitions/error.yaml
 
-category:
-  $ref: definitions/category.yaml
+tag:
+  $ref: definitions/tag.yaml

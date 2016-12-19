@@ -88,11 +88,8 @@
 /replays/{replayId}/project:
   $ref: paths/replaysReplayIdProject.yaml
 
-/categories:
-  $ref: paths/categories.yaml
+/tags:
+  $ref: paths/tags.yaml
 
-/categories/{categoryId}:
-  $ref: paths/categoriesCategoryId.yaml
-
-/countries:
-  $ref: paths/countries.yaml
+/tags/{tagId}:
+  $ref: paths/tagsTagId.yaml

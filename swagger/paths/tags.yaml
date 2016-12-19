@@ -1,16 +1,16 @@
 get:
   tags:
-    - Category
-  description: Return all countries
+    - Tag
+  description: Return all categories
   responses:
     200:
-      description: A list of countries
+      description: A list of categories
       schema:
         type: array
         items:
-          $ref: ../definitions.yaml#/country
+          $ref: ../definitions.yaml#/tag
     404:
-      description: not found
+      description: Not found
       schema:
         $ref: ../definitions.yaml#/error
   parameters:
@@ -18,14 +18,14 @@ get:
     - $ref: ../parameters.yaml#/page
 post:
   tags:
-    - Category
-  description: Create a country
+    - Tag
+  description: Create a tag
   responses:
     200:
-      description: The new country created
+      description: The new tag created
       schema:
-        $ref: ../definitions.yaml#/country
+        $ref: ../definitions.yaml#/tag
   parameters:
-    - $ref: ../parameters.yaml#/country
+    - $ref: ../parameters.yaml#/tag
 parameters:
   - $ref: ../parameters.yaml#/signature

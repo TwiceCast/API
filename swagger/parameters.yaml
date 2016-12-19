@@ -28,11 +28,11 @@ country:
 page:
   $ref: parameters/page.yaml
 
-category:
-  $ref: parameters/category.yaml
+tag:
+  $ref: parameters/tag.yaml
 
-categoryId:
-  $ref: parameters/categoryId.yaml
+tagId:
+  $ref: parameters/tagId.yaml
 
 signature:
   $ref: parameters/signature.yaml
