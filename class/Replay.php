@@ -1,7 +1,7 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Language.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Rank.php');
+	require_once('/class/DB.php');
+	require_once('/class/Language.php');
+	require_once('/class/Rank.php');
 
 	class Replay
 	{
