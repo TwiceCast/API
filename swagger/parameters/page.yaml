@@ -1,5 +1,0 @@
-name: page
-in: query
-description: Offset the results
-type: number
-required: false

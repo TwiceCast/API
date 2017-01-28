@@ -1,4 +1,0 @@
-name: categoryId
-in: path
-required: true
-type: integer
