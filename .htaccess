@@ -59,6 +59,11 @@ RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^query/PUT/users/([0-9a-zA-Z]+)/avatar/" "query/PUT/users/avatar.php?usernickname=$1"
 
+	#-		GET /users/					-#
+RewriteCond %{REQUEST_URI} !index
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^query/GET/users$" "query/GET/users/index.php"
+
 	#-		GET /users/:id/				-#
 RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
@@ -109,7 +114,7 @@ RewriteRule "^query/PUT/users/([0-9a-zA-Z]+)/" "query/PUT/users/index.php?nickna
 	#-		GET /streams/				-#
 RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^query/GET/streams/$" "query/GET/streams/index.php"
+RewriteRule "^query/GET/streams$" "query/GET/streams/index.php"
 
 	#-		POST /streams/				-#
 RewriteCond %{REQUEST_URI} !index
