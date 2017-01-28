@@ -1,0 +1,4 @@
+name: userId
+in: path
+required: true
+type: integer

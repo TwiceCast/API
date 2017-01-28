@@ -1,0 +1,10 @@
+properties:
+  id:
+    type: integer
+  code:
+    type: string
+    maxLength: 3
+    description: 3-length char country name representation
+  name:
+    type: string
+    description: Country name

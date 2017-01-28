@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Tag
+  description: Return all categories
+  responses:
+    200:
+      description: A list of categories
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/tag
+    404:
+      description: Not found
+      schema:
+        $ref: ../definitions.yaml#/error
+  parameters:
+    - $ref: ../parameters.yaml#/limit
+    - $ref: ../parameters.yaml#/page
+post:
+  tags:
+    - Tag
+  description: Create a tag
+  responses:
+    200:
+      description: The new tag created
+      schema:
+        $ref: ../definitions.yaml#/tag
+  parameters:
+    - $ref: ../parameters.yaml#/tag
+parameters:
+  - $ref: ../parameters.yaml#/signature

@@ -1,0 +1,28 @@
+get:
+  tags:
+    - User
+  description: Return all users
+  responses:
+    200:
+      description: A list of users.
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/user
+    404:
+      description: not found
+      schema:
+        $ref: ../definitions.yaml#/error
+post:
+  tags:
+    - User
+  description: Create a user
+  responses:
+    200:
+      description: the new user create
+      schema:
+        $ref: ../definitions.yaml#/user
+  parameters:
+    - $ref: ../parameters.yaml#/user
+parameters:
+  - $ref: ../parameters.yaml#/signature

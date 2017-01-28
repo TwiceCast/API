@@ -1,0 +1,31 @@
+get:
+  tags:
+    - User
+  description: Return one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+put:
+  tags:
+    - User
+  description: replace one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+patch:
+  tags:
+    - User
+  description: patch one user
+  responses:
+    200:
+      $ref: ../responses.yaml#/user
+delete:
+  tags:
+    - User
+  description: delete a user
+  responses:
+    200:
+      description: done
+parameters:
+  - $ref: ../parameters.yaml#/userId
+  - $ref: ../parameters.yaml#/signature

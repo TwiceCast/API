@@ -1,0 +1,11 @@
+properties:
+  id:
+    type: integer
+    format: int64
+  type:
+    type: integer
+    format: int32
+    description: Type of the category
+  name:
+    type: string
+    description: Name of the category

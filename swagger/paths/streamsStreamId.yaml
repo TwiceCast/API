@@ -1,0 +1,10 @@
+get:
+  tags:
+    - Stream
+  description: get info of a stream
+  responses:
+    200:
+      $ref: ../responses.yaml#/stream
+parameters:
+  - $ref: ../parameters.yaml#/streamId
+  - $ref: ../parameters.yaml#/signature

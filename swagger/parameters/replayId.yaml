@@ -1,0 +1,4 @@
+name: replayId
+in: path
+required: true
+type: integer

@@ -1,0 +1,5 @@
+name: signature
+in: query
+description: signature
+type: string
+required: true

@@ -1,0 +1,21 @@
+properties:
+  id:
+    type: string
+  pseudo:
+    type: string
+  email:
+    type: string
+    format: email
+  country:
+    $ref: ../definitions.yaml#/country
+  birthdate:
+    type: string
+    format: date
+  rank:
+    $ref: ../definitions.yaml#/rank
+  register_date:
+    type: string
+    format: date
+  last_visit_date:
+    type: string
+    format: date
