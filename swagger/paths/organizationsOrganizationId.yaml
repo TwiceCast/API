@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Organization
+  description: Return one organization
+  responses:
+    200:
+      $ref: ../responses.yaml#/organization
+put:
+  tags:
+    - Organization
+  description: Replace one organization
+  responses:
+    200:
+      $ref: ../responses.yaml#/organization
+patch:
+  tags:
+    - Organization
+  description: Patch one organization
+  responses:
+    200:
+      $ref: ../responses.yaml#/organization
+delete:
+  tags:
+    - Organization
+  description: delete a organization
+  responses:
+    200:
+      description: done
+parameters:
+  - $ref: ../parameters.yaml#/organizationId
+  - $ref: ../parameters.yaml#/signature

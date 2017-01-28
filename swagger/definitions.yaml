@@ -1,0 +1,20 @@
+stream:
+  $ref: definitions/stream.yaml
+
+organization:
+  $ref: definitions/organization.yaml
+
+user:
+  $ref: definitions/user.yaml
+
+country:
+  $ref: definitions/country.yaml
+
+rank:
+  $ref: definitions/rank.yaml
+
+error:
+  $ref: definitions/error.yaml
+
+tag:
+  $ref: definitions/tag.yaml

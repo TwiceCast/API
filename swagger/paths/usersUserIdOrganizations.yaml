@@ -1,0 +1,21 @@
+get:
+  tags:
+    - User
+  description: Return all organization
+  responses:
+    200:
+      description: array of organizations
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/organization
+post:
+  tags:
+    - User
+  description: Create a organization
+  responses:
+    200:
+      $ref: ../responses.yaml#/organization
+parameters:
+  - $ref: ../parameters.yaml#/userId
+  - $ref: ../parameters.yaml#/signature

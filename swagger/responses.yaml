@@ -1,0 +1,14 @@
+stream:
+  $ref: responses/stream.yaml
+
+user:
+  $ref: responses/user.yaml
+
+organization:
+  $ref: responses/organization.yaml
+
+option:
+  $ref: responses/option.yaml
+
+tag:
+  $ref: responses/tag.yaml

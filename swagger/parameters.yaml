@@ -1,0 +1,38 @@
+userId:
+  $ref: parameters/userId.yaml
+
+streamId:
+  $ref: parameters/streamId.yaml
+
+replayId:
+  $ref: parameters/replayId.yaml
+
+organizationId:
+  $ref: parameters/organizationId.yaml
+
+user:
+  $ref: parameters/user.yaml
+
+stream:
+  $ref: parameters/stream.yaml
+
+organization:
+  $ref: parameters/organization.yaml
+
+limit:
+  $ref: parameters/limit.yaml
+
+country:
+  $ref: parameters/country.yaml
+
+page:
+  $ref: parameters/page.yaml
+
+tag:
+  $ref: parameters/tag.yaml
+
+tagId:
+  $ref: parameters/tagId.yaml
+
+signature:
+  $ref: parameters/signature.yaml

@@ -1,0 +1,32 @@
+swagger: "2.0"
+
+info:
+  title: TwiceCast API
+  description: TwiceCast api specification
+  version: 0.1.0
+  contact:
+    name: TwiceCast
+    email: twicecast_2018@labeip.epitech.eu
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/mit-license.php
+
+host: eip.epitech.eu
+basePath: /0.1.0
+schemes:
+  - https
+produces:
+  - application/json
+  - application/xml
+consumes:
+  - application/json
+  - application/xml
+
+paths:
+  $ref: paths.yaml
+parameters:
+  $ref: parameters.yaml
+responses:
+  $ref: responses.yaml
+definitions:
+  $ref: definitions.yaml

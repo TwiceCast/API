@@ -1,0 +1,5 @@
+name: organization
+in: body
+required: true
+schema:
+  $ref: ../definitions.yaml#/organization
