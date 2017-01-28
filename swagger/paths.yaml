@@ -50,7 +50,7 @@
   $ref: paths/streamsStreamIdSubscribers.yaml
 
 /streams/{streamId}/members:
-  $ref: paths/streamsStreamIdmembers.yaml
+  $ref: paths/streamsStreamIdMembers.yaml
 
 /streams/{streamId}/chat:
   $ref: paths/streamsStreamIdChat.yaml
