@@ -1,0 +1,28 @@
+get:
+  tags:
+    - Stream
+  description: Return all streams
+  responses:
+    200:
+      description: A list of streams.
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/stream
+    404:
+      description: not found
+      schema:
+        $ref: ../definitions.yaml#/error
+post:
+  tags:
+    - Stream
+  description: Create a stream
+  responses:
+    200:
+      description: the new stream created
+      schema:
+        $ref: ../definitions.yaml#/stream
+  parameters:
+    - $ref: ../parameters.yaml#/stream
+parameters:
+  - $ref: ../parameters.yaml#/signature

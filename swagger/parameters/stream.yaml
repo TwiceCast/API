@@ -1,0 +1,5 @@
+name: stream
+in: body
+required: true
+schema:
+  $ref: ../definitions.yaml#/stream

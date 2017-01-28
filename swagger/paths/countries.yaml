@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Category
+  description: Return all countries
+  responses:
+    200:
+      description: A list of countries
+      schema:
+        type: array
+        items:
+          $ref: ../definitions.yaml#/country
+    404:
+      description: not found
+      schema:
+        $ref: ../definitions.yaml#/error
+  parameters:
+    - $ref: ../parameters.yaml#/limit
+    - $ref: ../parameters.yaml#/page
+post:
+  tags:
+    - Category
+  description: Create a country
+  responses:
+    200:
+      description: The new country created
+      schema:
+        $ref: ../definitions.yaml#/country
+  parameters:
+    - $ref: ../parameters.yaml#/country
+parameters:
+  - $ref: ../parameters.yaml#/signature

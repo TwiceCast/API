@@ -1,4 +1,6 @@
 get:
+  tags:
+    - User
   description: Return all users
   responses:
     200:
@@ -12,6 +14,8 @@ get:
       schema:
         $ref: ../definitions.yaml#/error
 post:
+  tags:
+    - User
   description: Create a user
   responses:
     200:
@@ -20,3 +24,5 @@ post:
         $ref: ../definitions.yaml#/user
   parameters:
     - $ref: ../parameters.yaml#/user
+parameters:
+  - $ref: ../parameters.yaml#/signature
