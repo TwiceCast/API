@@ -1,6 +1,6 @@
 <?php
-	require_once('/class/Error.php');
-	require_once('/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	$out = null;
 	$user = new User();

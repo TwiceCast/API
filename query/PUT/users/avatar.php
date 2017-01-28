@@ -1,5 +1,5 @@
 <?php
-	require_once('/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	echo "PUT/USERS/ID/AVATAR";
 ?>

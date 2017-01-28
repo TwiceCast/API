@@ -1,6 +1,6 @@
 <?php
-	require_once('/class/DB.php');
-	require_once('/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	class Stream
 	{

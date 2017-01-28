@@ -1,5 +1,5 @@
 <?php
-	require_once('/class/Stream.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Stream.php');
 
 	$out = null;
 	$stream = new Stream();

@@ -1,8 +1,8 @@
 <?php
-	require_once('/class/Error.php');
-	require_once('/class/DB.php');
-	require_once('/class/Country.php');
-	require_once('/class/Rank.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Country.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Rank.php');
 
 	class User
 	{
