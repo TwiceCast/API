@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Replays.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Replay.php');
 
 	
 	echo "GET/STREAMS/REPLAYS.PHP";

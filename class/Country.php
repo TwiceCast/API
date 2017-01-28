@@ -128,7 +128,7 @@
 				return false;
 		}
 
-		function getAllRanks($db = null)
+		function getAllCountries($db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)

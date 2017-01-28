@@ -6,14 +6,14 @@
 	if (isset($_GET['id']))
 	{
 		if (!$stream->getFromID($_GET['id']))
-			$out = false
+			$out = false;
 		else
-			$out = $user;
+			$out = $stream;
 	}
 	else
 	{
-		$streams = $user->getAllStreams();
-		$out = $users;
+		$streams = $stream->getAllStreams();
+		$out = $streams;
 	}
 
 	if (isset($_GET['accept']))
@@ -21,7 +21,7 @@
 		if ($_GET['accept'] == 'json')
 		{
 			header('Content-Type: application/json');
-			if ($out);
+			if ($out)
 				echo json_encode($out);
 			else
 				echo '{"error":"This stream does not exist."}';
