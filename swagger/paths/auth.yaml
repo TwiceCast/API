@@ -1,6 +1,6 @@
 get:
   tags:
-    - Tag
+    - Auth
   description: Auth user based on signature
   responses:
     200:
