@@ -4,7 +4,6 @@ get:
   description: Auth user based on signature
   responses:
     200:
-      description: User authentified
       $ref: ../responses.yaml#/user
     401:
       description: unauthorized
