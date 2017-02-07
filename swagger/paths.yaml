@@ -7,6 +7,9 @@
       200:
        $ref: responses.yaml#/option
 
+/auth:
+  $ref: paths/auth.yaml
+
 /users:
   $ref: paths/users.yaml
 
