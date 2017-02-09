@@ -226,7 +226,8 @@
 					rank.title AS rankTitle
 					FROM user
 					LEFT JOIN country ON user.fk_country = country.id
-					LEFT JOIN rank ON user.fk_rank = rank.id');
+					LEFT JOIN rank ON user.fk_rank = rank.id
+					ORDER BY user.ID');
 				$data = $link->fetchAll(true);
 				if ($data)
 				{
