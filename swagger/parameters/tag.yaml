@@ -1,5 +1,0 @@
-name: tag
-in: body
-required: true
-schema:
-  $ref: ../definitions.yaml#/tag

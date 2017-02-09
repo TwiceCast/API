@@ -1,5 +1,0 @@
-name: country
-in: body
-required: true
-schema:
-  $ref: ../definitions.yaml#/country

@@ -1,3 +1,0 @@
-description: The user
-schema:
-  $ref: ../definitions.yaml#/user

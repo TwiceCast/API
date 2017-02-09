@@ -1,5 +1,0 @@
-description: return allow header
-headers:
-  Allow:
-    description: list of method handle by /
-    type: string
