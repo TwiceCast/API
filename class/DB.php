@@ -5,7 +5,7 @@
 		var $query;
 		var $executed;
 
-		function __construct($host = 'localhost', $dbname = 'twicecast', $user = 'root', $password = '')
+		function __construct($host = 'localhost', $dbname = 'twicecast', $user = 'api', $password = '')
 		{
 			$this->query = null;
 			$this->executed = false;
