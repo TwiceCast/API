@@ -141,16 +141,16 @@
 				$data = $link->fetchAll(true);
 				if ($data)
 				{
-					$countrys = array();
+					$countries = array();
 					foreach ($data as &$entry)
 					{
 						$country = new Country(false);
 						$country->setID($entry['countryID']);
 						$country->setCode($entry['countryCode']);
 						$country->setName($entry['countryName']);
-						$countrys[] = $country;
+						$countries[] = $country;
 					}
-					return $countrys;
+					return $countries;
 				}
 				else
 					return false;
@@ -227,7 +227,7 @@
 
 		function delete($db = null)
 		{
-			$linik = $this->getLink($db);
+			$link = $this->getLink($db);
 			if ($link)
 			{
 				$link->prepare('
