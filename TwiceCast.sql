@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
--- http://www.phpmyadmin.net
+-- version 4.6.6
+-- https://www.phpmyadmin.net/
 --
--- Client :  127.0.0.1
--- Généré le :  Sam 28 Janvier 2017 à 09:36
--- Version du serveur :  5.7.9
--- Version de PHP :  7.0.0
+-- Client :  localhost
+-- Généré le :  Mar 28 Février 2017 à 23:17
+-- Version du serveur :  10.1.21-MariaDB
+-- Version de PHP :  7.1.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,215 +23,160 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `category`
+-- Structure de la table `client`
 --
 
-DROP TABLE IF EXISTS `category`;
-CREATE TABLE IF NOT EXISTS `category` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `type` tinyint(3) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `KEY_type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `client` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `password` char(64) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `channel`
+-- Structure de la table `gl_client_role`
 --
 
-DROP TABLE IF EXISTS `channel`;
-CREATE TABLE IF NOT EXISTS `channel` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `fk_owner` int(10) UNSIGNED NOT NULL,
-  `title` varchar(50) DEFAULT NULL,
-  `description` varchar(250) DEFAULT NULL,
-  `fk_spoken_language` int(10) UNSIGNED NOT NULL,
-  `fk_project_view_level` tinyint(3) UNSIGNED NOT NULL,
-  `fk_project_edit_level` tinyint(3) UNSIGNED NOT NULL,
-  `fk_chat_level` tinyint(3) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_channel_user` (`fk_owner`),
-  KEY `FK_channel_rank` (`fk_project_view_level`),
-  KEY `FK_channel_rank_2` (`fk_project_edit_level`),
-  KEY `FK_channel_rank_3` (`fk_chat_level`),
-  KEY `FK_channel_language` (`fk_spoken_language`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `channel`
---
-
-INSERT INTO `channel` (`id`, `fk_owner`, `title`, `description`, `fk_spoken_language`, `fk_project_view_level`, `fk_project_edit_level`, `fk_chat_level`) VALUES
-(1, 1, 'Chanel', 'Chanel de test', 1, 1, 1, 1);
+CREATE TABLE `gl_client_role` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `id_role` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `channel_categories`
+-- Structure de la table `gl_privilege`
 --
 
-DROP TABLE IF EXISTS `channel_categories`;
-CREATE TABLE IF NOT EXISTS `channel_categories` (
-  `fk_channel` int(10) UNSIGNED NOT NULL,
-  `fk_category` int(10) UNSIGNED NOT NULL,
-  UNIQUE KEY `unique_index` (`fk_channel`,`fk_category`),
-  KEY `FK_channel_categories_category` (`fk_category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `gl_privilege` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `channel_ranks`
+-- Structure de la table `gl_role`
 --
 
-DROP TABLE IF EXISTS `channel_ranks`;
-CREATE TABLE IF NOT EXISTS `channel_ranks` (
-  `fk_channel` int(10) UNSIGNED NOT NULL,
-  `fk_user` int(10) UNSIGNED NOT NULL,
-  `fk_rank` tinyint(3) UNSIGNED NOT NULL,
-  UNIQUE KEY `unique_index` (`fk_channel`,`fk_user`),
-  KEY `FK_channel_ranks_user` (`fk_user`),
-  KEY `FK_channel_ranks_rank` (`fk_rank`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `gl_role` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `country`
+-- Structure de la table `gl_role_privilege`
 --
 
-DROP TABLE IF EXISTS `country`;
-CREATE TABLE IF NOT EXISTS `country` (
-  `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` varchar(3) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `country`
---
-
-INSERT INTO `country` (`id`, `code`, `name`) VALUES
-(0, 'NO', 'NONE'),
-(1, 'FRA', 'France'),
-(2, 'GBR', 'Royaume-Uni'),
-(3, 'USA', 'États-Unis');
+CREATE TABLE `gl_role_privilege` (
+  `id_role` bigint(20) NOT NULL,
+  `id_privilege` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `language`
+-- Structure de la table `gl_user_role`
 --
 
-DROP TABLE IF EXISTS `language`;
-CREATE TABLE IF NOT EXISTS `language` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `language`
---
-
-INSERT INTO `language` (`id`, `name`) VALUES
-(1, 'Français');
+CREATE TABLE `gl_user_role` (
+  `id_user` bigint(20) UNSIGNED NOT NULL,
+  `id_role` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `rank`
+-- Structure de la table `organization`
 --
 
-DROP TABLE IF EXISTS `rank`;
-CREATE TABLE IF NOT EXISTS `rank` (
-  `id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `rank`
---
-
-INSERT INTO `rank` (`id`, `title`) VALUES
-(0, 'NONE'),
-(1, 'Private'),
-(2, 'Private'),
-(3, 'Corporal'),
-(4, 'Sergeant'),
-(5, 'Master Sergeant'),
-(6, 'Sergeant Major'),
-(7, 'Knight'),
-(8, 'Knight-Lieutenant'),
-(9, 'Knight-Captain'),
-(10, 'Knight-Champion'),
-(11, 'Lieutenant Commander'),
-(12, 'Commander'),
-(13, 'Marshal'),
-(14, 'Field Marshal'),
-(15, 'Grand Marshal');
+CREATE TABLE `organization` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `replay`
+-- Structure de la table `or_client_role`
 --
 
-DROP TABLE IF EXISTS `replay`;
-CREATE TABLE IF NOT EXISTS `replay` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `fk_channel` int(10) UNSIGNED NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `description` varchar(200) NOT NULL,
-  `length` double UNSIGNED NOT NULL,
-  `fk_spoken_language` int(10) UNSIGNED NOT NULL,
-  `fk_visibility` tinyint(3) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_replay_rank` (`fk_visibility`),
-  KEY `FK_replay_channel` (`fk_channel`),
-  KEY `FK_replay_language` (`fk_spoken_language`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `replay`
---
-
-INSERT INTO `replay` (`id`, `fk_channel`, `name`, `description`, `length`, `fk_spoken_language`, `fk_visibility`) VALUES
-(2, 1, 'TestingReplay', 'Ceci est un replay de test', 0.1, 1, 1);
+CREATE TABLE `or_client_role` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `id_role` bigint(20) UNSIGNED NOT NULL,
+  `id_organization` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `replay_categories`
+-- Structure de la table `or_privilege`
 --
 
-DROP TABLE IF EXISTS `replay_categories`;
-CREATE TABLE IF NOT EXISTS `replay_categories` (
-  `fk_replay` int(10) UNSIGNED NOT NULL,
-  `fk_category` int(10) UNSIGNED NOT NULL,
-  UNIQUE KEY `unique_index` (`fk_replay`,`fk_category`),
-  KEY `FK_replay_categories_category` (`fk_category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `or_privilege` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `session_token`
+-- Structure de la table `or_role`
 --
 
-DROP TABLE IF EXISTS `session_token`;
-CREATE TABLE IF NOT EXISTS `session_token` (
-  `token` varchar(20) NOT NULL,
-  `fk_user` int(10) UNSIGNED NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `end_date` timestamp NOT NULL,
-  PRIMARY KEY (`token`),
-  KEY `FK_session_token_user` (`fk_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Store all tokens generated for sessions';
+CREATE TABLE `or_role` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `id_organization` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `or_role_privilege`
+--
+
+CREATE TABLE `or_role_privilege` (
+  `id_role` bigint(20) UNSIGNED NOT NULL,
+  `id_privilege` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `or_user_role`
+--
+
+CREATE TABLE `or_user_role` (
+  `id_user` bigint(20) UNSIGNED NOT NULL,
+  `id_role` bigint(20) UNSIGNED NOT NULL,
+  `id_organization` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `server`
+--
+
+CREATE TABLE `server` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(31) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `ipv4` varchar(15) DEFAULT NULL,
+  `ipv6` varchar(45) DEFAULT NULL,
+  `port` smallint(5) UNSIGNED NOT NULL,
+  `type` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -239,117 +184,259 @@ CREATE TABLE IF NOT EXISTS `session_token` (
 -- Structure de la table `stream`
 --
 
-DROP TABLE IF EXISTS `stream`;
-CREATE TABLE IF NOT EXISTS `stream` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` text NOT NULL,
-  `fk_user` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
-
---
--- Contenu de la table `stream`
---
-
-INSERT INTO `stream` (`id`, `title`, `fk_user`) VALUES
-(1, 'Stream1', 5),
-(2, 'Stream2', 5),
-(3, 'Stream3', 5),
-(4, 'Stream4', 5);
+CREATE TABLE `stream` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Structure de la table `st_client_role`
 --
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email` varchar(150) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `nickname` varchar(50) NOT NULL,
-  `fk_country` smallint(5) UNSIGNED NOT NULL,
-  `birthdate` date DEFAULT NULL,
-  `fk_rank` tinyint(3) UNSIGNED NOT NULL,
-  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_visit_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_email` (`email`),
-  UNIQUE KEY `unique_nickname` (`nickname`),
-  KEY `FK_user_rank` (`fk_rank`),
-  KEY `FK_user_country` (`fk_country`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `st_client_role` (
+  `id_client` bigint(20) NOT NULL,
+  `id_role` bigint(20) NOT NULL,
+  `id_stream` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
--- Contenu de la table `user`
+-- Structure de la table `st_follower`
 --
 
-INSERT INTO `user` (`id`, `email`, `password`, `nickname`, `fk_country`, `birthdate`, `fk_rank`, `register_date`, `last_visit_date`) VALUES
-(1, 'email@example.fr', 'hash', 'Guest1', 1, '2016-10-02', 2, '2016-10-16 19:10:16', '2016-11-14 17:04:58'),
-(2, 'email@example.gb', 'hash', 'Guest2', 2, '2016-10-01', 2, '2016-10-16 19:10:16', '2016-11-14 22:28:15'),
-(5, 'email@email.com', 'aplzpelapzelapzel', 'TestingUser', 0, NULL, 14, '2016-11-14 17:55:58', '2016-11-14 17:55:58'),
-(7, 'FXZdqphq9Q@email.com', '3LPcAEo0', 'zeYEX8', 0, NULL, 0, '2016-12-09 12:35:37', '2016-12-09 12:35:37'),
-(8, 'GazX49Irea@email.com', '72KlGtgk', 'WoHn9E', 0, NULL, 0, '2016-12-14 22:33:54', '2016-12-14 22:33:54'),
-(9, 'cOzIF4Zui3@email.com', 'gnzPwZSd', '9nG40M', 0, NULL, 0, '2017-01-13 17:51:30', '2017-01-13 17:51:30');
+CREATE TABLE `st_follower` (
+  `id_client` bigint(20) NOT NULL,
+  `id_stream` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
--- Contraintes pour les tables exportées
+-- Structure de la table `st_organization_role`
+--
+
+CREATE TABLE `st_organization_role` (
+  `id_role` bigint(20) NOT NULL,
+  `id_stream` bigint(20) NOT NULL,
+  `id_organization` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_privilege`
+--
+
+CREATE TABLE `st_privilege` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_role`
+--
+
+CREATE TABLE `st_role` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(15) CHARACTER SET utf8 NOT NULL,
+  `description` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `id_stream` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_role_privilege`
+--
+
+CREATE TABLE `st_role_privilege` (
+  `id_role` bigint(20) UNSIGNED NOT NULL,
+  `id_privilege` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_subscribe`
+--
+
+CREATE TABLE `st_subscribe` (
+  `id_client` int(11) NOT NULL,
+  `id_stream` int(11) NOT NULL,
+  `end` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_tag`
+--
+
+CREATE TABLE `st_tag` (
+  `id_stream` bigint(20) NOT NULL,
+  `id_tag` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `st_user_role`
+--
+
+CREATE TABLE `st_user_role` (
+  `id_user` bigint(20) NOT NULL,
+  `id_role` bigint(20) NOT NULL,
+  `id_stream` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tag`
+--
+
+CREATE TABLE `tag` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `short_description` varchar(255) NOT NULL,
+  `full_description` varchar(1023) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tag_linked`
+--
+
+CREATE TABLE `tag_linked` (
+  `id_tag_a` bigint(20) UNSIGNED NOT NULL,
+  `id_tag_b` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Index pour les tables exportées
 --
 
 --
--- Contraintes pour la table `channel`
+-- Index pour la table `client`
 --
-ALTER TABLE `channel`
-  ADD CONSTRAINT `FK_channel_language` FOREIGN KEY (`fk_spoken_language`) REFERENCES `language` (`id`),
-  ADD CONSTRAINT `FK_channel_rank` FOREIGN KEY (`fk_project_view_level`) REFERENCES `rank` (`id`),
-  ADD CONSTRAINT `FK_channel_rank_2` FOREIGN KEY (`fk_project_edit_level`) REFERENCES `rank` (`id`),
-  ADD CONSTRAINT `FK_channel_rank_3` FOREIGN KEY (`fk_chat_level`) REFERENCES `rank` (`id`),
-  ADD CONSTRAINT `FK_channel_user` FOREIGN KEY (`fk_owner`) REFERENCES `user` (`id`);
+ALTER TABLE `client`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `channel_categories`
+-- Index pour la table `gl_privilege`
 --
-ALTER TABLE `channel_categories`
-  ADD CONSTRAINT `FK_channel_categories_category` FOREIGN KEY (`fk_category`) REFERENCES `category` (`id`),
-  ADD CONSTRAINT `FK_channel_categories_channel` FOREIGN KEY (`fk_channel`) REFERENCES `channel` (`id`);
+ALTER TABLE `gl_privilege`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `channel_ranks`
+-- Index pour la table `gl_role`
 --
-ALTER TABLE `channel_ranks`
-  ADD CONSTRAINT `FK_channel_ranks_channel` FOREIGN KEY (`fk_channel`) REFERENCES `channel` (`id`),
-  ADD CONSTRAINT `FK_channel_ranks_rank` FOREIGN KEY (`fk_rank`) REFERENCES `rank` (`id`),
-  ADD CONSTRAINT `FK_channel_ranks_user` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id`);
+ALTER TABLE `gl_role`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `replay`
+-- Index pour la table `organization`
 --
-ALTER TABLE `replay`
-  ADD CONSTRAINT `FK_replay_channel` FOREIGN KEY (`fk_channel`) REFERENCES `channel` (`id`),
-  ADD CONSTRAINT `FK_replay_language` FOREIGN KEY (`fk_spoken_language`) REFERENCES `language` (`id`),
-  ADD CONSTRAINT `FK_replay_rank` FOREIGN KEY (`fk_visibility`) REFERENCES `rank` (`id`);
+ALTER TABLE `organization`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `replay_categories`
+-- Index pour la table `or_privilege`
 --
-ALTER TABLE `replay_categories`
-  ADD CONSTRAINT `FK_replay_categories_category` FOREIGN KEY (`fk_category`) REFERENCES `category` (`id`),
-  ADD CONSTRAINT `FK_replay_categories_replay` FOREIGN KEY (`fk_replay`) REFERENCES `replay` (`id`);
+ALTER TABLE `or_privilege`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `session_token`
+-- Index pour la table `or_role`
 --
-ALTER TABLE `session_token`
-  ADD CONSTRAINT `FK_session_token_user` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id`);
+ALTER TABLE `or_role`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
--- Contraintes pour la table `user`
+-- Index pour la table `server`
 --
-ALTER TABLE `user`
-  ADD CONSTRAINT `FK_user_country` FOREIGN KEY (`fk_country`) REFERENCES `country` (`id`),
-  ADD CONSTRAINT `FK_user_rank` FOREIGN KEY (`fk_rank`) REFERENCES `rank` (`id`);
+ALTER TABLE `server`
+  ADD UNIQUE KEY `id` (`id`);
 
+--
+-- Index pour la table `stream`
+--
+ALTER TABLE `stream`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Index pour la table `st_privilege`
+--
+ALTER TABLE `st_privilege`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Index pour la table `tag`
+--
+ALTER TABLE `tag`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `client`
+--
+ALTER TABLE `client`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `gl_privilege`
+--
+ALTER TABLE `gl_privilege`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `gl_role`
+--
+ALTER TABLE `gl_role`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `organization`
+--
+ALTER TABLE `organization`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `or_privilege`
+--
+ALTER TABLE `or_privilege`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `or_role`
+--
+ALTER TABLE `or_role`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `server`
+--
+ALTER TABLE `server`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `stream`
+--
+ALTER TABLE `stream`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `st_privilege`
+--
+ALTER TABLE `st_privilege`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `tag`
+--
+ALTER TABLE `tag`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
