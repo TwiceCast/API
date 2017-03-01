@@ -11,121 +11,153 @@ RewriteRule ".*" "$0/"
 				###		USERS		###
 
 	#-		GET /users/:id/streams				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9]+)/streams/" "query/GET/users/streams.php?userid=$1"
 
 	#-		GET /users/:nickname/streams/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9a-zA-Z]+)/streams/" "query/GET/users/streams.php?usernickname=$1"
 
 	#-		GET /users/:id/avatar/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9]+)/avatar/" "query/GET/users/avatar.php?userid=$1"
 
 	#-		GET /users/:nickname/avatar/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9a-zA-Z]+)/avatar/" "query/GET/users/avatar.php?usernickname=$1"
 
 	#-		PUT /users/:id/avatar/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^users/([0-9]+)/avatar/" "query/PUT/users/avatar.php?userid=$1"
 
 	#-		PUT /users/:nickname/avatar/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^users/([0-9a-zA-Z]+)/avatar/" "query/PUT/users/avatar.php?usernickname=$1"
 
 	#-		GET /users/:id/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9]+)/" "query/GET/users/index.php?id=$1"
 
 	#-		GET /users/:nickname/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/([0-9a-zA-Z]+)/" "query/GET/users/index.php?nickname=$1"
 
 	#-		GET /users/					-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/" "query/GET/users/index.php"
 
 	#-		POST /users/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^users/" "query/POST/users/index.php"
 
 	#-		DELETE /users/:id/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} DELETE
 RewriteRule "^users/([0-9]+)/" "query/DELETE/users/index.php?id=$1"
 
 	#-		DELETE /users/:nickname/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} DELETE
 RewriteRule "^users/([0-9a-zA-Z]+)/" "query/DELETE/users/index.php?nickname=$1"
 
 	#-		PATCH /users/:id/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PATCH
 RewriteRule "^users/([0-9]+)/" "query/PATCH/users/index.php?id=$1"
 
 	#-		PATCH /users/:nickname/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PATCH
 RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PATCH/users/index.php?nickname=$1"
 
 	#-		PUT /users/:id/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^users/([0-9]+)/" "query/PUT/users/index.php?id=$1"
 
 	#-		PUT /users/:nickname/				-#
-RewriteCond %{REQUEST_URI} !index
+
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PUT/users/index.php?nickname=$1"
 
 				###		STREAMS		###
 
-	#-		GET /streams/				-#
-RewriteCond %{REQUEST_URI} !index
-RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^streams$" "query/GET/streams/index.php"
-
-	#-		POST /streams/				-#
-RewriteCond %{REQUEST_URI} !index
-RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^streams/$" "query/POST/streams/index.php"
-
-	#-		GET /streams/:id			-#
-RewriteCond %{REQUEST_URI} !index
-RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^streams/([0-9]+)/$" "query/GET/streams/index.php?id=$1"
-
 	#-		GET /streams/:id/replays	-#
-RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/replays/" "query/GET/streams/replays.php?id=$1"
 
 	#-		GET /streams/:id/blocks		-#
-RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/blocks/" "query/GET/streams/blocks.php?id=$1"
 
 	#-		GET /streams/:id/followers	-#
-RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/followers/" "query/GET/streams/followers.php?id=$1"
 
 	#-		GET /streams/:id/chat		-#
-RewriteCond %{REQUEST_URI} !index
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/chat/" "query/GET/streams/chat.php?id=$1"
+
+	#-		GET /streams/:id			-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/([0-9]+)/" "query/GET/streams/index.php?id=$1"
+
+	#-		GET /streams/				-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/" "query/GET/streams/index.php"
+
+	#-		POST /streams/				-#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^streams/" "query/POST/streams/index.php"
+
+				###		ORGANIZATIONS		###
+
+	#-		GET /organizations/:id/streams			-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^organizations/([0-9]+)/streams/" "query/GET/organizations/streams.php?id=$1"
+
+	#-		POST /organizations/:id/streams			-#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^organizations/([0-9]+)/streams/" "query/POST/organizations/streams.php?id=$1"
+
+	#-		GET /organizations/:id/members			-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^organizations/([0-9]+)/members/" "query/GET/organizations/members.php?id=$1"
+
+	#-		GET /organizations/:id					-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^organizations/([0-9]+)/" "query/GET/organizations/index.php?id=$1"
+
+	#-		DELETE /organizations/:id				-#
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^organizations/([0-9]+)/" "query/DELETE/organizations/index.php?id=$1"
+
+	#-		PATCH /organizations/:id				-#
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^organizations/([0-9]+)/" "query/PATCH/organizations/index.php?id=$1"
+
+	#-		PUT /organizations/:id					-#
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^organizations/([0-9]+)/" "query/PUT/organizations/index.php?id=$1"
+
+	#-		GET /organizations/						-#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^organizations/" "query/GET/organizations/index.php"
+
+	#-		POST /organizations/					-#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^organizations/" "query/POST/organizations/index.php"
+
 
 				###		QUERY_STRING		###
 
