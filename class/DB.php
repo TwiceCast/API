@@ -11,6 +11,7 @@
 			$this->executed = false;
 			try
 			{
+				// $this->link = new PDO('pgsql:host='.$host.';dbname='.$dbname, $user, $password);
 				$this->link = new PDO('mysql:host='.$host.';dbname='.$dbname, $user, $password);
 			}
 			catch(Exception $e)
