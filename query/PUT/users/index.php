@@ -36,21 +36,21 @@
 	{
 		if (isset($post['nickname']) and isset($post['password']) and isset($post['email']))
 		{
-			$user->setNickname($post['nickname']);
+			$user->setName($post['nickname']);
 			$user->setEmail($post['email']);
 			$user->setPassword($post['password']);
-			if (isset($post['country']))
-				$user->setCountry((int)$post['country']);
-			else
-				$user->setCountry(null);
-			if (isset($post['birthdate']))
-				$user->setBirthdate($post['birthdate']);
-			else
-				$user->setBirthdate(null);
-			if (isset($post['rank']))
-				$user->setRank((int)$post['rank']);
-			else
-				$user->setRank(null);
+			// if (isset($post['country']))
+				// $user->setCountry((int)$post['country']);
+			// else
+				// $user->setCountry(null);
+			// if (isset($post['birthdate']))
+				// $user->setBirthdate($post['birthdate']);
+			// else
+				// $user->setBirthdate(null);
+			// if (isset($post['rank']))
+				// $user->setRank((int)$post['rank']);
+			// else
+				// $user->setRank(null);
 			if ($user->update())
 				$out = Err::SUCCESS;
 			else

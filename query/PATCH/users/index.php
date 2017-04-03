@@ -59,32 +59,32 @@
 		}
 		if (isset($post['nickname']))
 		{
-			if ($user->changeNickname($post['nickname']))
+			if ($user->changeName($post['nickname']))
 				$out[] = array('nickname', Err::SUCCESS);
 			else
 				$out[] = array('nickname', Err::UNKNOW);
 		}
-		if (isset($post['country']))
-		{
-			if ($user->changeCountry($post['country']))
-				$out[] = array('country', Err::SUCCESS);
-			else
-				$out[] = array('country', Err::UNKNOW);
-		}
-		if (isset($post['birthdate']))
-		{
-			if ($user->changeBirthdate($post['birhdate']))
-				$out[] = array('birthdate', Err::SUCCESS);
-			else
-				$out[] = array('birthdate', Err::UNKNOW);
-		}
-		if (isset($post['rank']))
-		{
-			if ($user->changeRank($post['rank']))
-				$out[] = array('rank', Err::SUCCESS);
-			else
-				$out[] = array('rank', Err::UNKNOW);
-		}
+		// if (isset($post['country']))
+		// {
+			// if ($user->changeCountry($post['country']))
+				// $out[] = array('country', Err::SUCCESS);
+			// else
+				// $out[] = array('country', Err::UNKNOW);
+		// }
+		// if (isset($post['birthdate']))
+		// {
+			// if ($user->changeBirthdate($post['birhdate']))
+				// $out[] = array('birthdate', Err::SUCCESS);
+			// else
+				// $out[] = array('birthdate', Err::UNKNOW);
+		// }
+		// if (isset($post['rank']))
+		// {
+			// if ($user->changeRank($post['rank']))
+				// $out[] = array('rank', Err::SUCCESS);
+			// else
+				// $out[] = array('rank', Err::UNKNOW);
+		// }
 	}
 	else
 	{

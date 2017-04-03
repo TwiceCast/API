@@ -4,15 +4,15 @@
 	if (isset($_POST['nickname']) and isset($_POST['password']) and isset($_POST['email']))
 	{
 		$newUser = new User();
-		$newUser->setNickname($_POST['nickname']);
+		$newUser->setName($_POST['nickname']);
 		$newUser->setEmail($_POST['email']);
 		$newUser->setPassword($_POST['password']);
-		if (isset($_POST['country']))
-			$newUser->setCountry($_POST['country']);
-		if (isset($_POST['birthdate']))
-			$newUser->setBirthdate($_POST['birthdate']);
-		if (isset($_POST['rank']))
-			$newUser->setRank($_POST['rank']);
+		// if (isset($_POST['country']))
+			// $newUser->setCountry($_POST['country']);
+		// if (isset($_POST['birthdate']))
+			// $newUser->setBirthdate($_POST['birthdate']);
+		// if (isset($_POST['rank']))
+			// $newUser->setRank($_POST['rank']);
 		$state = $newUser->checkForCreation();
 		
 		

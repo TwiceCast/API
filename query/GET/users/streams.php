@@ -48,7 +48,7 @@
 				echo toXML($streams);
 			else
 			{
-				echo "<?xml version=\"1.0\# encoding=\"UTF-8\"?>\r\n";
+				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 				echo "<error>\r\n";
 				switch ($out)
 				{
