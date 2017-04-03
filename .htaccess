@@ -40,6 +40,16 @@ RewriteRule "^users/([0-9]+)/avatar/" "query/PUT/users/avatar.php?userid=$1"
 RewriteCond %{REQUEST_METHOD} PUT
 RewriteRule "^users/([0-9a-zA-Z]+)/avatar/" "query/PUT/users/avatar.php?usernickname=$1"
 
+	#-		GET /users/:id/organizations/				-#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^users/([0-9a-zA-Z]+)/organizations/" "query/GET/users/organizations.php?userid=$1"
+
+	#-		POST /users/:id/organizations/				-#
+
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^users/([0-9a-zA-Z]+)/organizations/" "query/POST/users/organizations.php?userid=$1"
+
 	#-		GET /users/:id/				-#
 
 RewriteCond %{REQUEST_METHOD} GET
@@ -54,6 +64,11 @@ RewriteRule "^users/([0-9a-zA-Z]+)/" "query/GET/users/index.php?nickname=$1"
 
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/" "query/GET/users/index.php"
+
+	#-		GET /user/					-#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^user/" "query/GET/users/user.php"
 
 	#-		POST /users/				-#
 
