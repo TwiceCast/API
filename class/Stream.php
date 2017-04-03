@@ -165,7 +165,7 @@
 				return false;
 		}
 
-	function getFromUserNickname($nickname, $db = null)
+		function getFromUserNickname($nickname, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)

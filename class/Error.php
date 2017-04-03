@@ -9,5 +9,6 @@ class ERR
 	const DOESNOTEXIST	=	16;			//0b00001000;
 	const NORIGHT		=	32;			//0b00010000;
 	const UNKNOW		=	64;			//0b00100000;
+	const ORGNAMEUSED	=	128;		//0b01000000;
 }
 ?>
