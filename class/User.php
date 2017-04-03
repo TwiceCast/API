@@ -18,7 +18,7 @@
 			$this->setPassword($password);
 			$this->setName($name);
 			$this->setRegisterDate($register_date);
-			if ($db)	
+			if ($db)
 				$this->db = new DB();
 			else
 				$this->db = null;
