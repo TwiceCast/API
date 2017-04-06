@@ -365,6 +365,7 @@
 					FROM organization
 					WHERE organization.id = :ID');
 				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+				//Ajouter la suppression des rôles pour l'organization en question
 				return $link->execute(true);
 			}
 			else
