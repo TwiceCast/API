@@ -46,7 +46,7 @@
 		if ($out)
 			echo json_encode($out);
 		else
-			echo '{"error":"This user does not exist."}';
+			echo '{"error":"This stream does not exist."}';
 	}
 
 	function toXML($obj)
