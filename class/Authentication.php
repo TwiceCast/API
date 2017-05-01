@@ -144,7 +144,7 @@
 			}
 			catch(Exception $e)
 			{
-				echo '{"error":"JWTlib raised an exception"}';
+				echo '{"error":"JWTlib raised an exception: "'.$e->getMessage().'}';
 				return false;
 			}
 		}
