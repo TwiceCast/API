@@ -116,7 +116,10 @@
 				return $this->verifyJWT($jwt);
 			}
 			else
+			{
+				echo '{"error":"Authorization header not found"}';
 				return false;
+			}
 		}
 
 		function verifyJWT($token)
@@ -134,10 +137,14 @@
 					return $token->validate($data);
 				}
 				else
+				{
+					echo '{"error":"Invalid token"}';
 					return false;
+				}
 			}
 			catch(Exception $e)
 			{
+				echo '{"error":"JWTlib raised an exception"}';
 				return false;
 			}
 		}

@@ -6,7 +6,7 @@
 	$auth = new Authentication();
 
 	if (!$auth->verify())
-		die ('{"error":"Authentication required"}');
+		die ('');
 
 	$out = null;
 	$user = new User();
