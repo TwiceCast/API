@@ -1,12 +1,13 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
-	if (isset($_POST['nickname']) and isset($_POST['password']) and isset($_POST['email']))
+	$postdata = json_decode(file_get_contents('php://input'));
+	if (isset($postdata->name) and isset($postdata->password) and isset($postdata->email))
 	{
 		$newUser = new User();
-		$newUser->setName($_POST['nickname']);
-		$newUser->setEmail($_POST['email']);
-		$newUser->setPassword($_POST['password']);
+		$newUser->setName($postdata->name);
+		$newUser->setEmail($postdata->email);
+		$newUser->setPassword($postdata->password);
 		// if (isset($_POST['country']))
 			// $newUser->setCountry($_POST['country']);
 		// if (isset($_POST['birthdate']))
@@ -34,4 +35,6 @@
 				echo '{"error":"Something wrong append"}';
 		}
 	}
+	else
+		echo '{"error":"Missing parameters"}';
 ?>
