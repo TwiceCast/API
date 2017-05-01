@@ -1,6 +1,12 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
+
+	$auth = new Authentication();
+
+	if (!$auth->verify())
+		die ('{"error":"Authentication required"}');
 
 	$out = null;
 	$user = new User();
