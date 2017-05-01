@@ -194,7 +194,8 @@
 					UPDATE client
 					SET client.password = :password
 					WHERE client.id = :ID');
-				$link->bindParam(':password', $newPassword, PDO::PARAM_STR);
+				$password = hash('sha256', $newPassword);
+				$link->bindParam(':password', $password, PDO::PARAM_STR);
 				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
 				if ($link->execute(true))
 				{
@@ -244,9 +245,10 @@
 					client.name = :name
 					WHERE client.id = :ID');
 				$email = DB::toDB($this->email);
+				$password = hash('sha256', $this->password);
 				$name = DB::toDB($this->name);
 				$link->bindParam(':email', $email, PDO::PARAM_STR);
-				$link->bindParam(':password', $this->password, PDO::PARAM_STR);
+				$link->bindParam(':password', $password, PDO::PARAM_STR);
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
 				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
 				return $link->execute(true);
@@ -267,8 +269,9 @@
 						VALUE (:email, :password, :name)');
 					$tmpEmail = DB::toDB($this->email);
 					$tmpName = DB::toDB($this->name);
+					$tmpPassword = hash('sha256', $this->password);
 					$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
-					$link->bindParam(':password', $this->password, PDO::PARAM_STR);
+					$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 					$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
 					return $link->execute(true);
 				}
