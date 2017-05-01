@@ -1,9 +1,6 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
-	// require_once($_SERVER['DOCUMENT_ROOT'].'/jwt/Builder.php');
-	// require_once($_SERVER['DOCUMENT_ROOT'].'/jwt/ValidationData.php');
-	// require_once($_SERVER['DOCUMENT_ROOT'].'/jwt/Signer/Hmac/Sha256.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
 	use Lcobucci\JWT\Builder;
 	use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -69,8 +66,9 @@
 					FROM client
 					WHERE client.email = :mail AND client.password = :password');
 				$tmpMail = DB::toDB($this->mail);
+				$tmpPassword = hash('sha256', $this->password);
 				$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
-				$link->bindParam(':password', $this->password, PDO::PARAM_STR);
+				$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 				$data = $link->fetch(true);
 				if ($data)
 				{
@@ -104,6 +102,18 @@
 										->sign($signer, 'TwiceCastAPIKeyForJWT')
 										->getToken();
 				return $token;
+			}
+			else
+				return false;
+		}
+
+		function verify()
+		{
+			$headers = getallheaders();
+			if (isset($headers['Authorization']))
+			{
+				$jwt = str_replace("Bearer ", "", $headers['Authorization']);
+				return $this->verifyJWT($jwt);
 			}
 			else
 				return false;
