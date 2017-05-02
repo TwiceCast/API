@@ -109,10 +109,15 @@
 
 		function verify()
 		{
-			$headers = getallheaders();
-			if (isset($headers['Authorization']))
+			$headers = array_change_key_case(getallheaders());
+			if ($headers === false)
 			{
-				$jwt = str_replace("Bearer ", "", $headers['Authorization']);
+				echo '{"error":"Authorization header not found"}';
+				return false;
+			}
+			if (isset($headers['authorization']))
+			{
+				$jwt = str_replace("Bearer ", "", $headers['authorization']);
 				return $this->verifyJWT($jwt);
 			}
 			else
