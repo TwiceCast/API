@@ -13,6 +13,8 @@
 
 	if (isset($_GET['id']))
 	{
+		if (!$auth->isUserID($_GET['id']))
+			die ('You can not delete someone else\'s account');
 		if ($user->getFromID($_GET['id']))
 		{
 			if ($user->delete())
@@ -25,6 +27,8 @@
 	}
 	else if (isset($_GET['nickname']))
 	{
+		if (!$auth->isUserName($_GET['nickname']))
+			die ('You can not delete someone else\'s account');
 		if ($user->getFromNickname($_GET['nickname']))
 		{
 			if ($user->delete())

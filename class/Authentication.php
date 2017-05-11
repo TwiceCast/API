@@ -12,6 +12,7 @@
 		var $mail;
 		var $password;
 		var $user;
+		var $token;
 		private $db;
 
 		function __construct($db = true, $mail = null, $password = null, $user = null)
@@ -40,6 +41,50 @@
 		{
 			$this->user = $user;
 			return $this;
+		}
+
+		function getUserFromToken()
+		{
+			if ($this->token)
+			{
+				$this->user = new User();
+				$this->user->getFromID($this->token->getClaim('uid'));
+			}
+		}
+
+		function isUserID($ID)
+		{
+			if (!$this->user)
+				$this->getUserFromToken();
+			return $this->user->ID == $ID;
+		}
+
+		function isUserName($name)
+		{
+			if (!$this->user)
+				$this->getUserFromToken();
+			return $this->user->name == $name;
+		}
+
+		function userHasRights($right, $type = "organization")
+		{
+			if ($type == "organization")
+			{
+				//check for organization right to match $right
+				return true;
+			}
+			else if ($type == "stream")
+			{
+				//check for stream right to match $right
+				return true;
+			}
+			else if ($type == "site")
+			{
+				//check for site(global) right to match $right
+				return true;
+			}
+			else
+				return false;
 		}
 
 		function getLink($db = null)
@@ -133,6 +178,7 @@
 			try
 			{
 				$token = (new Parser())->parse((string) $token);
+				$this->token = $token;
 				if ($token->verify($signer, 'TwiceCastAPIKeyForJWT'))
 				{
 					$data = new ValidationData();
