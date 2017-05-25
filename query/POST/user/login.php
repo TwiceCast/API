@@ -9,10 +9,15 @@
 		$auth->setPassword($postdata->password);
 		$token = $auth->generateJWT();
 		if ($token !== false)
-			echo $token;
-		else
-			echo '{"error":"Something wrong append"}';
+			echo '{"token":"'.$token.'"}';
 	}
 	else
 		echo '{"error":"Missing parameters"}';
+/*		echo
+			'{
+				"url": "/user/login",
+				"method":"POST",
+				"code": 0,
+				"description": "Missing parameters"
+			}';*/
 ?>
