@@ -1,4 +1,4 @@
-#ErrorDocument 404 /error/error.php
+ErrorDocument 404 /error/404.php
 ErrorDocument 400 /error/error.php
 ErrorDocument 500 /error/error.php
 
@@ -69,6 +69,11 @@ RewriteRule "^users/" "query/GET/users/index.php"
 
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^user/login" "query/POST/user/login.php"
+
+ #-  GET /user/     -#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^user/" "query/GET/user/index.php"
 
  #-  POST /users/    -#
 
@@ -184,7 +189,7 @@ RewriteCond %{HTTP_ACCEPT} "application/xml"
 RewriteCond %{QUERY_STRING} !accept
 RewriteRule ".*" $0?%{QUERY_STRING}&accept=xml
 
-Header always set Access-Control-Allow-Origin "*"
-Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
-Header always set Access-Control-Max-Age "1000"
-Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+#Header always set Access-Control-Allow-Origin "*"
+#Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+#Header always set Access-Control-Max-Age "1000"
+#Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
