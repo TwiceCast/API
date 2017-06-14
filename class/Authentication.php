@@ -19,6 +19,7 @@
 		{
 			$this->setMail($mail);
 			$this->setPassword($password);
+			$this->setUser($user);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -49,7 +50,9 @@
 			{
 				$this->user = new User();
 				$this->user->getFromID($this->token->getClaim('uid'));
+				return $this->user;
 			}
+			return false;
 		}
 
 		function isUserID($ID)
@@ -155,21 +158,13 @@
 		function verify()
 		{
 			$headers = array_change_key_case(getallheaders());
-			if ($headers === false)
-			{
-				echo '{"error":"Authorization header not found"}';
-				return false;
-			}
-			if (isset($headers['authorization']))
+			if ($header !== false && isset($headers['authorization']))
 			{
 				$jwt = str_replace("Bearer ", "", $headers['authorization']);
 				return $this->verifyJWT($jwt);
 			}
 			else
-			{
-				echo '{"error":"Authorization header not found"}';
-				return false;
-			}
+				return array("error" => "Authorization header not found");
 		}
 
 		function verifyJWT($token)
@@ -188,15 +183,11 @@
 					return $token->validate($data);
 				}
 				else
-				{
-					echo '{"error":"Invalid token"}';
-					return false;
-				}
+					return array("error"=>"Invalid token");
 			}
 			catch(Exception $e)
 			{
-				echo '{"error":"JWTlib raised an exception: "'.$e->getMessage().'}';
-				return false;
+				return array("error" => "JWTlib raised an exception: '".$e->getMessage()."'");
 			}
 		}
 	}

@@ -1,6 +1,11 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Organization.php');
 
+	$response = new Response(Response::OK);
+	
+	if (isset($_GET['accept']))
+		$response->setContentType($_GET['accept']);
 	if (isset($_POST['name']) and isset($_GET['userid']))
 	{
 		$newOrganization = new Organization();
@@ -10,7 +15,8 @@
 		
 		$state = $newOrganization->checkForCreation();
 		
-		if ($state == ERR::OK)
+		$response->setResponseType($state);
+		if ($state == Response::OK)
 		{
 			if ($newOrganization->create())
 			{
@@ -24,19 +30,18 @@
 				$newOrganization->addPrivForRole($founderID, 7);
 				$memberID = $newOrganization->createRole("Member");
 				$newOrganization->addRoleToUser($founderID, $_GET['userid']);
-				echo '{"error":"Organization created successfully"}';
+				$response->setMessage(["message" => "Organization created successfully"]);
 			}
 			else
-				echo '{"error":"Something wrong append"}';
+				$response->setMessage(["error" => "Something wrong happened"]);
 		}
+		else if ($state == ERR::ORGNAMEUSED)
+			$response->setMessage(["error" => "Organization name already in use"]);
 		else
-		{
-			if ($state == ERR::ORGNAMEUSED)
-				echo '{"error":"Organization name already in use"}';
-			else
-				echo '{"error":"Something wrong append"}';
-		}
+			$response->setMessage(["error" => "Something wrong happened"]);
 	}
 	else
-		echo '{"error":"Missing parameters"}';
+		$response->setMessage(["error" => "Missing parameters"]);
+	
+	$response->send();
 ?>

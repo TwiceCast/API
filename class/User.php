@@ -1,5 +1,4 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 
 	class User
@@ -22,6 +21,10 @@
 				$this->db = new DB();
 			else
 				$this->db = null;
+		}
+		
+		public function __toString() {
+			return "user";
 		}
 
 		function setID($ID)
@@ -294,7 +297,7 @@
 				$link->bindParam(':name', $this->name, PDO::PARAM_STR);
 				$data = $link->fetchAll(true);
 				if ($data)
-					return ERR::NICKUSED;
+					return Response::NICKUSED;
 				else
 				{
 					$link->prepare('
@@ -304,13 +307,13 @@
 					$link->bindParam(':email', $this->email, PDO::PARAM_STR);
 					$data = $link->fetchAll(true);
 					if ($data)
-						return ERR::EMAILUSED;
+						return Response::EMAILUSED;
 					else
-						return ERR::OK;
+						return Response::OK;
 				}
 			}
 			else
-				return ERR::UNKNOW;
+				return Response::UNKNOWN;
 		}
 
 		function delete($db = null)

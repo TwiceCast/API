@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	function getRealPOST()
@@ -16,21 +16,23 @@
 		return $vars;
 	}
 	$post = getRealPOST();
-	$out = Err::OK;
+	$response = new Response(Response::OK);
 	$user = new User();
 
+	if (isset($_GET['accept']))
+		$response->setContentType($_GET['accept']);
 	if (isset($_GET['id']))
 	{
 		if (!$user->getFromID($_GET['id']))
-			$out = Err::DOESNOTEXIST;
+			$response->setMessage(["error" => "This user does not exist"], Response::DOESNOTEXIST);
 	}
 	else if (isset($_GET['nickname']))
 	{
 		if (!$user->getFromNickname($_GET['nickname']))
-			$out = Err::DOESNOTEXIST;
+			$response->setMessage(["error" => "This user does not exist"], Response::DOESNOTEXIST);
 	}
 	else
-		$out = Err::MISSPARAM;
+		$response->setMessage(["error" => "Missing parameters to proceed"], Response::MISSPARAM);
 
 	// For this part, we need to check all paramters like:
 	//   - email: Must be valid and unique
@@ -40,29 +42,29 @@
 	//   - rank: Must exist
 	
 	// If there is too much SQL Query here we can stop using cangeXXX() function and use setXXX() then update()
-	if ($out == Err::OK)
+	if ($response->getResponseType() == Response::OK)
 	{
 		$out = array();
 		if (isset($post['email']))
 		{
 			if ($user->changeEmail($post['email']))
-				$out[] = array('email', Err::SUCCESS);
+				$out['email'] = true;
 			else
-				$out[] = array('email', Err::UNKNOW);
+				$out['email'] = false;
 		}
 		if (isset($post['password']))
 		{
 			if ($user->changePassword($post['password']))
-				$out[] = array('password', Err::SUCCESS);
+				$out['password'] = true;
 			else
-				$out[] = array('password', Err::UNKNOW);
+				$out['password'] = false;
 		}
 		if (isset($post['nickname']))
 		{
 			if ($user->changeName($post['nickname']))
-				$out[] = array('nickname', Err::SUCCESS);
+				$out['nickname'] = true;
 			else
-				$out[] = array('nickname', Err::UNKNOW);
+				$out['nickname'] = false;
 		}
 		// if (isset($post['country']))
 		// {
@@ -85,96 +87,8 @@
 			// else
 				// $out[] = array('rank', Err::UNKNOW);
 		// }
-	}
-	else
-	{
-		switch ($out)
-		{
-			case Err::DOESNOTEXIST;
-				echo '{"error":"This user does not exist"}';
-				break;
-			case Err::MISSPARAM;
-				echo '{"error":"Missing parameters to proceed"}';
-				break;
-			default:
-				echo '{"error":"Something wrong append"}';
-		}
-		$out = null;
+		$response->setMessage($out);
 	}
 
-	if ($out)
-	{
-		if (isset($_GET['accept']))
-		{
-			if ($_GET['accept'] == 'json')
-			{
-				header('Content-Type: application/json');
-				$first = true;
-				echo '[';
-				foreach ($out as &$change)
-				{
-					if (!$first)
-						echo ',';
-					echo '{"item":"'.$change[0].'", "error":';
-					switch ($change[1])
-					{
-						case Err::SUCCESS:
-							echo '"Item patched successfully"}';
-							break;
-						default:
-							echo '"Something wrong append"}';
-					}
-					$first = false;
-				}
-				echo ']';
-			}
-			else if ($_GET['accept'] == 'xml')
-			{
-				header('Content-Type: application/xml');
-				echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-				echo "<items>\r\n";
-				foreach ($out as &$change)
-				{
-					echo "\t<item>\r\n";
-					echo "\t\t<name>\r\n";
-					echo "\t\t\t".$change[0]."\r\n";
-					echo "\t\t</name>\r\n";
-					echo "\t\t<error>\r\n";
-					switch ($change[1])
-					{
-						case Err::SUCCESS:
-							echo "\t\t\tItem patched successfully\r\n";
-							break;
-						default:
-							echo "\t\t\tSomething wrong append\r\n";
-					}
-					echo "\t\t</error>\r\n";
-					echo "\t</item>\r\n";
-				}
-				echo "</items>\r\n";
-			}
-		}
-		else
-		{
-			header('Content-Type: application/json');
-			$first = true;
-			echo '[';
-			foreach ($out as &$change)
-			{
-				if (!$first)
-					echo ',';
-				echo '{"item":"'.$change[0].'", "error":';
-				switch ($change[1])
-				{
-					case Err::SUCCESS:
-						echo '"Item patched successfully"}';
-						break;
-					default:
-						echo '"Something wrong append"}';
-				}
-				$first = false;
-			}
-			echo ']';
-		}
-	}
+	$response->send();
 ?>

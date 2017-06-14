@@ -18,6 +18,11 @@
 			else
 				$this->db = null;
 		}
+		
+		public function __toString()
+		{
+			return "organization";
+		}
 
 		function setID($ID)
 		{
@@ -256,12 +261,12 @@
 				$link->bindParam(':name', $this->name, PDO::PARAM_STR);
 				$data = $link->fetchAll(true);
 				if ($data)
-					return ERR::ORGNAMEUSED;
+					return Response::ORGNAMEUSED;
 				else
-					return ERR::OK;
+					return Response::OK;
 			}
 			else
-				return ERR::UNKNOW;
+				return Response::UNKNOW;
 		}
 
 		function createRole($name, $desc = "", $db = null)

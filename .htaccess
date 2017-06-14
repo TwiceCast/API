@@ -65,10 +65,10 @@ RewriteRule "^users/([0-9a-zA-Z]+)/" "query/GET/users/index.php?nickname=$1"
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/" "query/GET/users/index.php"
 
- #-  GET /user/login     -#
+ #-  POST /login     -#
 
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^user/login" "query/POST/user/login.php"
+RewriteRule "^login/" "query/POST/users/login.php"
 
  #-  POST /users/    -#
 

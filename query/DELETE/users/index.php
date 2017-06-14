@@ -1,114 +1,50 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
 	$auth = new Authentication();
-
-	if (!$auth->verify())
-		die ('');
-
 	$out = null;
-	$user = new User();
-
-	if (isset($_GET['id']))
-	{
-		if (!$auth->isUserID($_GET['id']))
-			die ('You can not delete someone else\'s account');
-		if ($user->getFromID($_GET['id']))
-		{
-			if ($user->delete())
-				$out = Err::SUCCESS;
-			else
-				$out = Err::UNKNOW;
-		}
-		else
-			$out = Err::DOESNOTEXIST;
-	}
-	else if (isset($_GET['nickname']))
-	{
-		if (!$auth->isUserName($_GET['nickname']))
-			die ('You can not delete someone else\'s account');
-		if ($user->getFromNickname($_GET['nickname']))
-		{
-			if ($user->delete())
-				$out = Err::SUCCESS;
-			else
-				$out = Err::UNKNOW;
-		}
-		else
-			$out = Err::DOESNOTEXIST;
-	}
-	else
-		$out = Err::MISSPARAM;
+	$response = new Response(Response::OK);
 
 	if (isset($_GET['accept']))
-	{
-		if ($_GET['accept'] == 'json')
+		$response->setContentType($_GET['accept']);
+	$verify = $auth->verify();
+	if ($verify !== true)
+		$response->setMessage($verify, Reponse::NOTAUTH);
+	else {
+		$user = new User();
+
+		if (isset($_GET['id']))
 		{
-			header('Content-Type: application/json');
-			switch ($out)
+			if (!$auth->isUserID($_GET['id']))
+				$response->setMessage(["error" => 'You can not delete someone else\'s account'], Response::NORIGHT);
+			if ($user->getFromID($_GET['id']))
 			{
-				case Err::SUCCESS:
-					echo '{"error":"User deleted successfully"}';
-					break;
-				case Err::UNKNOW:
-					echo '{"error":"Something wrong append"}';
-					break;
-				case Err::DOESNOTEXIST:
-					echo '{"error":"This user does not exist"}';
-					break;
-				case Err::MISSPARAM:
-					echo '{"error":"Missing parameters to proceed"}';
-					break;
-				default:
-					echo '{"error":"Something wrong append"}';
+				if ($user->delete())
+					$response->setMessage(["message" : "User deleted successfully"], Response::SUCCESS);
+				else
+					$response->setMessage(["error" : "Something wrong happened"], Response::UNKNOWN);
 			}
+			else
+				$response->setMessage(["error" : "This user does not exist"], Response::DOESNOTEXIST);
 		}
-		else if ($_GET['accept'] == 'xml')
+		else if (isset($_GET['nickname']))
 		{
-			header('Content-Type: application/xml');
-			echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-			echo "<error>\r\n";
-			switch ($out)
+			if (!$auth->isUserName($_GET['nickname']))
+				die ('You can not delete someone else\'s account');
+			if ($user->getFromNickname($_GET['nickname']))
 			{
-				case Err::SUCCESS:
-					echo "\tUser deleted successfully\r\n";
-					break;
-				case Err::UNKNOW:
-					echo "\tSomething wrong append\r\n";
-					break;
-				case Err::DOESNOTEXIST:
-					echo "\tThis user does not exist\r\n";
-					break;
-				case Err::MISSPARAM:
-					echo "\tMissing parameters to proceed\r\n";
-					break;
-				default:
-					echo "\tSomething wrong append\r\n";
+				if ($user->delete())
+					$response->setMessage(["message" : "User deleted successfully"], Response::SUCCESS);
+				else
+					$response->setMessage(["error" : "Something wrong happened"], Response::UNKNOWN);
 			}
-			echo "</error>\r\n";
+			else
+				$response->setMessage(["error" : "This user does not exist"], Response::DOESNOTEXIST);
 		}
+		else
+			$response->setMessage(["error" : "Missing parameters to proceed"], Response::MISSPARAM);
 	}
-	else
-	{
-		header('Content-Type: application/json');
-		switch ($out)
-		{
-			case Err::SUCCESS:
-				echo '{"error":"User deleted successfully"}';
-				break;
-			case Err::UNKNOW:
-				echo '{"error":"Something wrong append"}';
-				break;
-			case Err::DOESNOTEXIST:
-				echo '{"error":"This user does not exist"}';
-				break;
-			case Err::MISSPARAM:
-				echo '{"error":"Missing parameters to proceed"}';
-				break;
-			default:
-				echo '{"error":"Something wrong append"}';
-		}
-	}
+	$response.send();
 ?>
