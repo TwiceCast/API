@@ -50,9 +50,8 @@
 			{
 				$this->user = new User();
 				$this->user->getFromID($this->token->getClaim('uid'));
-				return $this->user;
 			}
-			return false;
+			return $this->user;
 		}
 
 		function isUserID($ID)
@@ -129,10 +128,16 @@
 					return true;
 				}
 				else
+				{
+					echo '{"error":"Authentication failed"}';
 					return false;
+				}
 			}
 			else
+			{
+				echo '{"error":"Unable to connect to the DB"}';
 				return false;
+			}
 		}
 
 		function generateJWT()
