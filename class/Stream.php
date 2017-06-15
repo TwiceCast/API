@@ -19,6 +19,11 @@
 			else
 				$this->db = null;
 		}
+		
+		public function __toString()
+		{
+			return "stream";
+		}
 
 		function setID($ID)
 		{
@@ -165,7 +170,7 @@
 				return false;
 		}
 
-	function getFromUserNickname($nickname, $db = null)
+		function getFromUserNickname($nickname, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)

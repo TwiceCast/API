@@ -5,12 +5,13 @@
 		var $query;
 		var $executed;
 
-		function __construct($host = 'localhost', $dbname = 'twicecast', $user = 'root', $password = '')
+		function __construct($host = 'localhost', $dbname = 'twicecast', $user = 'api', $password = '')
 		{
 			$this->query = null;
 			$this->executed = false;
 			try
 			{
+				// $this->link = new PDO('pgsql:host='.$host.';dbname='.$dbname, $user, $password);
 				$this->link = new PDO('mysql:host='.$host.';dbname='.$dbname, $user, $password);
 			}
 			catch(Exception $e)

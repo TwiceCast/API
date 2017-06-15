@@ -1,4 +1,0 @@
-name: tagId
-in: path
-required: true
-type: integer
