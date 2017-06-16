@@ -99,7 +99,7 @@
 					$this->setName($data['replayName']);
 					$this->setDescription($data['replayDescription']);
 					$this->setLength($data['replayLength']);
-					$this->setSpokenLanguage(new Language($data['langageID'], $data['languageName']));
+					$this->setSpokenLanguage(new Language($data['languageID'], $data['languageName']));
 					$this->setVisibility(new Rank(false, $data['rankID'], $data['rankTitle']));
 					return true;
 				}
@@ -121,12 +121,12 @@
 					replay.description AS replayDescription,
 					replay.length AS replayLength,
 					language.id AS languageID,
-					langauge.name AS languageName,
+					language.name AS languageName,
 					rank.id AS rankID,
 					rank.title AS rankTitle
 					FROM replay
 					LEFT JOIN language ON replay.fk_spoken_language = language.id
-					LEFT JOIN rank ON replay.fk_visivilitu = rank.id');
+					LEFT JOIN rank ON replay.fk_visibility = rank.id');
 				$data = $link->fetchAll(true);
 				if ($data)
 				{

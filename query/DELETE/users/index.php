@@ -1,104 +1,32 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/Error.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
-	$out = null;
-	$user = new User();
+	$response = new Response(Response::OK);
+	try {
+		$auth = new Authentication();
+		$out = null;
 
-	if (isset($_GET['id']))
-	{
-		if ($user->getFromID($_GET['id']))
-		{
-			if ($user->delete())
-				$out = Err::SUCCESS;
-			else
-				$out = Err::UNKNOW;
-		}
-		else
-			$out = Err::DOESNOTEXIST;
-	}
-	else if (isset($_GET['nickname']))
-	{
-		if ($user->getFromNickname($_GET['nickname']))
-		{
-			if ($user->delete())
-				$out = Err::SUCCESS;
-			else
-				$out = Err::UNKNOW;
-		}
-		else
-			$out = Err::DOESNOTEXIST;
-	}
-	else
-		$out = Err::MISSPARAM;
+		if (isset($_GET['accept']))
+			$response->setContentType($_GET['accept']);
+		$auth->verify();
+		$user = new User();
 
-	if (isset($_GET['accept']))
-	{
-		if ($_GET['accept'] == 'json')
-		{
-			header('Content-Type: application/json');
-			switch ($out)
-			{
-				case Err::SUCCESS:
-					echo '{"error":"User deleted successfully"}';
-					break;
-				case Err::UNKNOW:
-					echo '{"error":"Something wrong append"}';
-					break;
-				case Err::DOESNOTEXIST:
-					echo '{"error":"This user does not exist"}';
-					break;
-				case Err::MISSPARAM:
-					echo '{"error":"Missing parameters to proceed"}';
-					break;
-				default:
-					echo '{"error":"Something wrong append"}';
-			}
-		}
-		else if ($_GET['accept'] == 'xml')
-		{
-			header('Content-Type: application/xml');
-			echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-			echo "<error>\r\n";
-			switch ($out)
-			{
-				case Err::SUCCESS:
-					echo "\tUser deleted successfully\r\n";
-					break;
-				case Err::UNKNOW:
-					echo "\tSomething wrong append\r\n";
-					break;
-				case Err::DOESNOTEXIST:
-					echo "\tThis user does not exist\r\n";
-					break;
-				case Err::MISSPARAM:
-					echo "\tMissing parameters to proceed\r\n";
-					break;
-				default:
-					echo "\tSomething wrong append\r\n";
-			}
-			echo "</error>\r\n";
-		}
-	}
-	else
-	{
-		header('Content-Type: application/json');
-		switch ($out)
-		{
-			case Err::SUCCESS:
-				echo '{"error":"User deleted successfully"}';
-				break;
-			case Err::UNKNOW:
-				echo '{"error":"Something wrong append"}';
-				break;
-			case Err::DOESNOTEXIST:
-				echo '{"error":"This user does not exist"}';
-				break;
-			case Err::MISSPARAM:
-				echo '{"error":"Missing parameters to proceed"}';
-				break;
-			default:
-				echo '{"error":"Something wrong append"}';
-		}
+		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) === false)
+			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
+		if (($id == "id" && !$auth->isUserID($_GET[$id])) || ($id == "nickname" && !$auth->isUserName($_GET[$id])))
+			throw new RightsException('You can not delete someone else\'s account', Response::NORIGHT);
+		$user = ($id == "id" ? $user->getFromID($_GET[$id]) : $user->getFromNickname($_GET[$id]));
+		if (!$user)
+			throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
+		if (!$user->delete())
+			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+		$response->setMessage(["message" : "User deleted successfully"], Response::SUCCESS);
+	} catch (CustomException $e) {
+		$response->setError($e);
+	} finally {
+		$response.send();
 	}
 ?>

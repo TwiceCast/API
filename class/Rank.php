@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'./class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 
 	class Rank
 	{
