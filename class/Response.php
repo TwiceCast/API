@@ -62,7 +62,7 @@ class Response
 	
 	function setError($e)
 	{
-		$this->setMessage(["url" => "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]", "method" => "$_SERVER[REQUEST_METHOD]", "code" => $e->getCode(), "description" => $e->getMessage()], $e->getCode());
+		$this->setMessage(["url" => "$_SERVER[REQUEST_URI]", "method" => "$_SERVER[REQUEST_METHOD]", "code" => $e->getCode(), "description" => $e->getMessage()], $e->getCode());
 	}
 	
 	function send()
