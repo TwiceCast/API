@@ -1,12 +1,24 @@
 <?php
+	include($_SERVER['DOCUMENT_ROOT'].'/class/config.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+
 	class DB
 	{
 		var $link;
 		var $query;
 		var $executed;
 
-		function __construct($host = 'localhost', $dbname = 'twicecast', $user = 'api', $password = '')
+		function __construct($host = null, $dbname = null, $user = null, $password = null)
 		{
+			$config = $_SESSION["config"];
+			if ($host == null) {
+				$host = $config["db_host"];
+				if (isset($config["db_port"]))
+					$host = $host.":".$config["db_port"];
+			}
+			$dbname = $dbname != null ? $dbname : $config["db_name"];
+			$user = $user != null ? $user : $config["db_user"];
+			$password = $password != null ? $password : $config["db_password"];
 			$this->query = null;
 			$this->executed = false;
 			try
@@ -16,7 +28,7 @@
 			}
 			catch(Exception $e)
 			{
-				die('Error :'.$e->getMessage());
+				throw new DatabaseException("Something wrong happened", 503, $e);
 			}
 		}
 

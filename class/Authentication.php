@@ -1,5 +1,7 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/config.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
 	use Lcobucci\JWT\Builder;
@@ -19,6 +21,7 @@
 		{
 			$this->setMail($mail);
 			$this->setPassword($password);
+			$this->setUser($user);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -49,8 +52,9 @@
 			{
 				$this->user = new User();
 				$this->user->getFromID($this->token->getClaim('uid'));
+				return ($this->user);
 			}
-			return $this->user;
+			return false;
 		}
 
 		function isUserID($ID)
@@ -141,6 +145,7 @@
 
 		function generateJWT()
 		{
+			$config = $_SESSION["config"];
 			if ($this->connect())
 			{
 				$signer = new Sha256();
@@ -151,7 +156,7 @@
 										->setNotBefore(time())
 										->setExpiration(time() + 3600)
 										->set('uid', $this->user->ID)
-										->sign($signer, 'TwiceCastAPIKeyForJWT')
+										->sign($signer, $config["token_secret"])
 										->getToken();
 				return $token;
 			}
@@ -162,48 +167,31 @@
 		function verify()
 		{
 			$headers = array_change_key_case(getallheaders());
-			if ($headers === false)
-			{
-				echo '{"error":"Authorization header not found"}';
-				return false;
-			}
-			if (isset($headers['authorization']))
-			{
-				$jwt = str_replace("Bearer ", "", $headers['authorization']);
-				return $this->verifyJWT($jwt);
-			}
-			else
-			{
-				echo '{"error":"Authorization header not found"}';
-				return false;
-			}
+			if ($headers === false || !isset($headers["authorization"]))
+				throw new AuthenticationException("Authorization header not found", 401);
+			$jwt = str_replace("Bearer ", "", $headers['authorization']);
+			return $this->verifyJWT($jwt);
 		}
 
 		function verifyJWT($token)
 		{
+			$config = $_SESSION["config"];
 			$signer = new Sha256();
 			try
 			{
 				$token = (new Parser())->parse((string) $token);
 				$this->token = $token;
-				if ($token->verify($signer, 'TwiceCastAPIKeyForJWT'))
-				{
-					$data = new ValidationData();
-					$data->setIssuer('http://api.twicecast.com');
-					$data->setAudience('http://twicecast.com');
-					$data->setId('4f1g23a12aa');
-					return $token->validate($data);
-				}
-				else
-				{
-					echo '{"error":"Invalid token"}';
-					return false;
-				}
+				if (!$token->verify($signer, $config["token_secret"]))
+					throw new AuthenticationException("Invalid token", 401);
+				$data = new ValidationData();
+				$data->setIssuer('http://api.twicecast.com');
+				$data->setAudience('http://twicecast.com');
+				$data->setId('4f1g23a12aa');
+				return $token->validate($data);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				echo '{"error":"JWTlib raised an exception: "'.$e->getMessage().'}';
-				return false;
+				throw new AuthenticationException("Invalid token", 401, $e);
 			}
 		}
 	}

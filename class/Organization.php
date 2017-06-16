@@ -18,6 +18,11 @@
 			else
 				$this->db = null;
 		}
+		
+		public function __toString()
+		{
+			return "organization";
+		}
 
 		function setID($ID)
 		{
@@ -247,21 +252,16 @@
 		function checkForCreation($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					SELECT organization.id AS organizationID
-					FROM organization
-					WHERE organization.name = :name');
-				$link->bindParam(':name', $this->name, PDO::PARAM_STR);
-				$data = $link->fetchAll(true);
-				if ($data)
-					return ERR::ORGNAMEUSED;
-				else
-					return ERR::OK;
-			}
-			else
-				return ERR::UNKNOW;
+			if (!$link)
+				throw new UnknownException('Something wrong append', Response::UNKNOWN);
+			$link->prepare('
+				SELECT organization.id AS organizationID
+				FROM organization
+				WHERE organization.name = :name');
+			$link->bindParam(':name', $this->name, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Organization name already in use", Response::ORGNAMEUSED);
 		}
 
 		function createRole($name, $desc = "", $db = null)

@@ -44,3 +44,5 @@ Temporary Items
 
 
 *.old
+
+config.ini*

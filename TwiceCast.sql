@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 -- Base de données :  `twicecast`
 --
 
+CREATE DATABASE IF NOT EXISTS twicecast;
+
+USE twicecast;
 -- --------------------------------------------------------
 
 --

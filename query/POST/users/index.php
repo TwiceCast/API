@@ -1,9 +1,16 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 
-	$postdata = json_decode(file_get_contents('php://input'));
-	if (isset($postdata->name) and isset($postdata->password) and isset($postdata->email))
-	{
+	$response = new Response(Response::OK);
+	try {
+		$postdata = file_get_contents('php://input');
+
+		if (isset($_GET['accept']))
+			$response->setContentType($_GET['accept']);
+		if (!isset($postdata->name) or !isset($postdata->password) or !isset($postdata->email))
+			throw new ParametersException("Missing parameters", Response::MISSPARAM);
 		$newUser = new User();
 		$newUser->setName($postdata->name);
 		$newUser->setEmail($postdata->email);
@@ -14,27 +21,14 @@
 			// $newUser->setBirthdate($_POST['birthdate']);
 		// if (isset($_POST['rank']))
 			// $newUser->setRank($_POST['rank']);
-		$state = $newUser->checkForCreation();
+		$newUser->checkForCreation();
 		
-		
-		// Part to move in the Error class inside an error generating function.
-		if ($state == ERR::OK)
-		{
-			if ($newUser->create())
-				echo '{"error":"User created successfully"}';
-			else
-				echo '{"error":"Something wrong append"}';
-		}
-		else
-		{
-			if ($state == ERR::NICKUSED)
-				echo '{"error":"Nickname already in use"}';
-			else if ($state == ERR::EMAILUSED)
-				echo '{"error":"Email already in use"}';
-			else
-				echo '{"error":"Something wrong append"}';
-		}
+		if (!$newUser->create())
+			throw new UnknownException("Something wrong append", Response::UNKNOWN);
+		$response->setMessage(["message" => "User created successfully"], Response::SUCCESS);
+	} catch (CustomException $e) {
+		$response->setError($e);
+	} finally {
+		$response->send();
 	}
-	else
-		echo '{"error":"Missing parameters"}';
 ?>

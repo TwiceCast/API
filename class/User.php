@@ -1,5 +1,4 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Error.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 
 	class User
@@ -22,6 +21,10 @@
 				$this->db = new DB();
 			else
 				$this->db = null;
+		}
+		
+		public function __toString() {
+			return "user";
 		}
 
 		function setID($ID)
@@ -285,32 +288,24 @@
 		function checkForCreation($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					SELECT client.id AS clientID
-					FROM client
-					WHERE client.name = :name');
-				$link->bindParam(':name', $this->name, PDO::PARAM_STR);
-				$data = $link->fetchAll(true);
-				if ($data)
-					return ERR::NICKUSED;
-				else
-				{
-					$link->prepare('
-						SELECT client.id AS clientID
-						FROM client
-						WHERE client.email = :email');
-					$link->bindParam(':email', $this->email, PDO::PARAM_STR);
-					$data = $link->fetchAll(true);
-					if ($data)
-						return ERR::EMAILUSED;
-					else
-						return ERR::OK;
-				}
-			}
-			else
-				return ERR::UNKNOW;
+			if (!$link)
+				throw new UnknownException('Something wrong append', Response::UNKNOWN);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.name = :name');
+			$link->bindParam(':name', $this->name, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Nickname already in use", Response::NICKUSED);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.email = :email');
+			$link->bindParam(':email', $this->email, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Email already in use", Response::EMAILUSED);
 		}
 
 		function delete($db = null)

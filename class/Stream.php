@@ -19,6 +19,11 @@
 			else
 				$this->db = null;
 		}
+		
+		public function __toString()
+		{
+			return "stream";
+		}
 
 		function setID($ID)
 		{
