@@ -105,42 +105,30 @@
 		function connect($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					SELECT client.id AS clientID,
-					client.email AS clientEmail,
-					client.password AS clientPassword,
-					client.name AS clientName,
-					client.register_date AS clientRegisterDate
-					FROM client
-					WHERE client.email = :mail AND client.password = :password');
-				$tmpMail = DB::toDB($this->mail);
-				$tmpPassword = hash('sha256', $this->password);
-				$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
-				$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
-				$data = $link->fetch(true);
-				if ($data)
-				{
-					$this->user = new User();
-					$this->user->setID($data['clientID']);
-					$this->user->setEmail(DB::fromDB($data['clientEmail']));
-					$this->user->setPassword($data['clientPassword']);
-					$this->user->setName(DB::fromDB($data['clientName']));
-					$this->user->setRegisterDate($data['clientRegisterDate']);
-					return true;
-				}
-				else
-				{
-					echo '{"error":"Authentication failed"}';
-					return false;
-				}
-			}
-			else
-			{
-				echo '{"error":"Unable to connect to the DB"}';
-				return false;
-			}
+			if (!$link)
+				throw new DatabaseException("Unable to connect to the DB", Response::UNKNOWN);
+			$link->prepare('
+				SELECT client.id AS clientID,
+				client.email AS clientEmail,
+				client.password AS clientPassword,
+				client.name AS clientName,
+				client.register_date AS clientRegisterDate
+				FROM client
+				WHERE client.email = :mail AND client.password = :password');
+			$tmpMail = DB::toDB($this->mail);
+			$tmpPassword = hash('sha256', $this->password);
+			$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
+			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
+			$data = $link->fetch(true);
+			if (!$data)
+				throw new ParametersException("Authentication failed");;
+			$this->user = new User();
+			$this->user->setID($data['clientID']);
+			$this->user->setEmail(DB::fromDB($data['clientEmail']));
+			$this->user->setPassword($data['clientPassword']);
+			$this->user->setName(DB::fromDB($data['clientName']));
+			$this->user->setRegisterDate($data['clientRegisterDate']);
+			return true;
 		}
 
 		function generateJWT()
@@ -168,7 +156,7 @@
 		{
 			$headers = array_change_key_case(getallheaders());
 			if ($headers === false || !isset($headers["authorization"]))
-				throw new AuthenticationException("Authorization header not found", 401);
+				throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
 			$jwt = str_replace("Bearer ", "", $headers['authorization']);
 			return $this->verifyJWT($jwt);
 		}
@@ -182,7 +170,7 @@
 				$token = (new Parser())->parse((string) $token);
 				$this->token = $token;
 				if (!$token->verify($signer, $config["token_secret"]))
-					throw new AuthenticationException("Invalid token", 401);
+					throw new AuthenticationException("Invalid token", Response::NOTAUTH);
 				$data = new ValidationData();
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
@@ -191,7 +179,7 @@
 			}
 			catch (Exception $e)
 			{
-				throw new AuthenticationException("Invalid token", 401, $e);
+				throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 			}
 		}
 	}
