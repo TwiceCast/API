@@ -1,31 +1,24 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Stream.php');
 
 	$response = new Response(Response::OK);
-	$stream = new Stream();
-	$streams = null;
+	try {
+		$stream = new Stream();
+		$streams = null;
 
-	if (isset($_GET['accept']))
-		$response->setContentType($_GET['accept']);
-	if (isset($_GET['userid']))
-	{
-		$streams = $stream->getFromUserID($_GET['userid']);
-		if ($streams === false)
-			$response->setMessage(["error", "Something wrong happened"], Response::UNKNOWN);
-		else
-			$response->setMessage(["streams" => $streams]);
+		if (isset($_GET['accept']))
+			$response->setContentType($_GET['accept']);
+		if (($id = (isset($_GET['userid']) ? 'userid' : (isset($_GET['usernickname']) ? 'usernickname' : false))) === false)
+			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
+		$streams = ($id == "userid" ? $streams->getFromUserID($_GET[$id]) : $streams->getFromUserNickname($_GET[$id]));
+		if (!$streams)
+			throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
+		$response->setMessage(["streams" => $streams]);
+	} catch (CustomException $e) {
+		$response->setError($e);
+	} finally {
+		$response.send();
 	}
-	else if (isset($_GET['usernickname']))
-	{
-		$streams = $stream->getFromUserNickname($_GET['usernickname']);
-		if ($streams === false)
-			$response->setMessage(["error", "Something wrong happened"], Response::UNKNOWN);
-		else
-			$response->setMessage(["streams" => $streams]);
-	}
-	else
-		$response->setMessage(["error" => "Missing parameters to proceed"], Response::MISSPARAM);
-
-	$response->send();
 ?>

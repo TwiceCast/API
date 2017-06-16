@@ -288,32 +288,24 @@
 		function checkForCreation($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					SELECT client.id AS clientID
-					FROM client
-					WHERE client.name = :name');
-				$link->bindParam(':name', $this->name, PDO::PARAM_STR);
-				$data = $link->fetchAll(true);
-				if ($data)
-					return Response::NICKUSED;
-				else
-				{
-					$link->prepare('
-						SELECT client.id AS clientID
-						FROM client
-						WHERE client.email = :email');
-					$link->bindParam(':email', $this->email, PDO::PARAM_STR);
-					$data = $link->fetchAll(true);
-					if ($data)
-						return Response::EMAILUSED;
-					else
-						return Response::OK;
-				}
-			}
-			else
-				return Response::UNKNOWN;
+			if (!$link)
+				throw new UnknownException('Something wrong append', Response::UNKNOWN);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.name = :name');
+			$link->bindParam(':name', $this->name, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Nickname already in use", Response::NICKUSED);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.email = :email');
+			$link->bindParam(':email', $this->email, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Email already in use", Response::EMAILUSED);
 		}
 
 		function delete($db = null)

@@ -1,27 +1,30 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Organization.php');
 
-	$out = null;
 	$response = new Response();
-	$organization = new Organization();
+	try {
+		$out = null;
+		$organization = new Organization();
 
-	if (isset($_GET['accept']))
-		$response->setContentType($_GET['accept']);
-	if (isset($_GET['id']))
-	{
+		if (isset($_GET['accept']))
+			$response->setContentType($_GET['accept']);
+		if (!isset($_GET['id']))
+			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 		if ($organization->getFromID($_GET['id']))
 		{
 			if ($organization->delete())
 				$response->setMessage(["message" => "Organization deleted successfully"], Response::SUCCESS);
 			else
-				$response->setMessage(["error" => "Something wrong happened"], Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 		}
 		else
-			$response->setMessage(["error" => "This organization does not exist"], Response::DOESNOTEXIST);
+			throw new ParametersException("This organization does not exist", Response::DOESNOTEXIST);
+	} catch (CustomException $e) {
+		$response->setError($e);
+	} finally {
+		$response->send();
 	}
-	else
-		$response->setMessage(["error" => "Missing parameters to proceed"], Response::MISSPARAM);
-
-	$response->send();
 ?>
