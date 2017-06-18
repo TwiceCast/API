@@ -121,18 +121,15 @@
 			$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
 			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 			$data = $link->fetch(true);
-			if ($data)
-			{
-				$this->user = new User();
-				$this->user->setID($data['clientID']);
-				$this->user->setEmail(DB::fromDB($data['clientEmail']));
-				$this->user->setPassword($data['clientPassword']);
-				$this->user->setName(DB::fromDB($data['clientName']));
-				$this->user->setRegisterDate($data['clientRegisterDate']);
-				return true;
-			}
-			else
-				throw new AuthenticationException("Authentication failed", Response::NOTAUTH);
+			if (!$data)
+				throw new ParametersException("Authentication failed", Response::MISSPARAM);
+			$this->user = new User();
+			$this->user->setID($data['clientID']);
+			$this->user->setEmail(DB::fromDB($data['clientEmail']));
+			$this->user->setPassword($data['clientPassword']);
+			$this->user->setName(DB::fromDB($data['clientName']));
+			$this->user->setRegisterDate($data['clientRegisterDate']);
+			return true;
 		}
 
 		function generateJWT()
