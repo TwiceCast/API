@@ -9,6 +9,7 @@ class Response
 	const DOESNOTEXIST		=	400;
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
+	const NOTFOUND			=	404;
 	const UNKNOWN			=	501;
 	const UNAVAILABLE		=	503;
 	const ORGNAMEUSED		=	410;

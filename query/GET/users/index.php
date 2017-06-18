@@ -2,6 +2,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/functions.php');
 
 	$response = new Response(Response::OK);
 	try {
@@ -10,15 +11,10 @@
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		$headers = array_change_key_case(getallheaders());
-		if (isset($headers["authorization"])) {
-			$jwt = str_replace("Bearer ", "", $headers['authorization']);
-			$authentication = new Authentication();
-			$authentication->verifyJWT($jwt);
-		}
+		$_GET["nickname"] = checkTokenMe($_GET["nickname"]);
 		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
 		{
-			if (!($id == "id" ? $user->getFromID($_GET["id"]) : ($authentication && $_GET["nickname"] == "me" ? ($user = $authentication->getUserFromToken()) : $user->getFromName($_GET["nickname"]))))
+			if (!($id == "id" ? $user->getFromID($_GET["id"]) : $user->getFromName($_GET["nickname"])))
 				throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
 			$response->setMessage($user);
 		}

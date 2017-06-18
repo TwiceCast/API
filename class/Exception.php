@@ -30,6 +30,8 @@
 	class AuthenticationException extends CustomException {}
 	class DatabaseException extends CustomException {}
 	class UnknownException extends CustomException {}
+	class NotImplementedException extends CustomException {}
 	class ParametersException extends CustomException {}
 	class RightsException extends CustomException {}
+	class NotFoundException extends CustomException {}
 ?>
