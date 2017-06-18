@@ -13,7 +13,7 @@
 			$config = $_SESSION["config"];
 			if ($host == null) {
 				$host = $config["db_host"];
-				if (isset($config["db_port"]))
+				if (isset($config["db_port"]) && $config["db_port"] != "")
 					$host = $host.":".$config["db_port"];
 			}
 			$dbname = $dbname != null ? $dbname : $config["db_name"];
