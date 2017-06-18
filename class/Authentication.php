@@ -2,6 +2,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/config.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
 	use Lcobucci\JWT\Builder;
@@ -106,7 +107,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new DatabaseException("Unable to connect to the DB", Response::UNKNOWN);
+				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
 			$link->prepare('
 				SELECT client.id AS clientID,
 				client.email AS clientEmail,
@@ -121,7 +122,7 @@
 			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 			$data = $link->fetch(true);
 			if (!$data)
-				throw new ParametersException("Authentication failed");;
+				throw new ParametersException("Authentication failed", Response::MISSPARAM);
 			$this->user = new User();
 			$this->user->setID($data['clientID']);
 			$this->user->setEmail(DB::fromDB($data['clientEmail']));

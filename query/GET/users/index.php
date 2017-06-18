@@ -25,7 +25,10 @@
 		else
 		{
 			$users = $user->getAllUsers();
-			$response->setMessage(["users" => $users]);
+			$rep = new stdClass();
+			$rep->user_list = $users;
+			$rep->user_total = count($users);
+			$response->setMessage($rep);
 		}
 	} catch (CustomException $e) {
 		$response->setError($e);
