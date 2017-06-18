@@ -2,15 +2,16 @@
 class Response
 {
 	const SUCCESS			=	200;	
-	const OK						=	200;
+	const OK				=	200;
 	const NICKUSED			=	400;
-	const EMAILUSED		=	400;
-	const MISSPARAM		=	400;
-	const DOESNOTEXIST	=	400;
+	const EMAILUSED			=	400;
+	const MISSPARAM			=	400;
+	const DOESNOTEXIST		=	400;
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
 	const UNKNOWN			=	501;
-	const ORGNAMEUSED	=	410;
+	const UNAVAILABLE		=	503;
+	const ORGNAMEUSED		=	410;
 	
 	var $code;
 	var $message;
