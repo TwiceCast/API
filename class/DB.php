@@ -1,6 +1,7 @@
 <?php
 	include($_SERVER['DOCUMENT_ROOT'].'/class/config.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 
 	class DB
 	{
@@ -28,7 +29,7 @@
 			}
 			catch(Exception $e)
 			{
-				throw new DatabaseException("Something wrong happened", 503, $e);
+				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE, $e);
 			}
 		}
 
