@@ -3,40 +3,36 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 
-	$verify = true;
-	$user = new User();
 	$response = new Response(Response::OK);
-	$authentication = null;
+	try {
+		$user = new User();
+		$authentication = null;
 
-	if (isset($_GET['accept']))
-		$response->setContentType($_GET['accept']);
-	if (isset(getallheaders()["authorization"])) {
-		$authentication = new Authentication();
-		$verify = $authentication->verifyJWT(getallheaders()["token"]);
-		if (!$verify)
-			$response->setMessage(["message" => "Wrong token or token expired"], Response::NOTAUTH);
-	}
-	if ($verify) {
-		if (isset($_GET['id']))
-		{
-			if (!$user->getFromID($_GET['id']))
-				$response->setMessage(["message" => "User not found"], Response::DOESNOTEXIST);
-			else
-				$response->setMessage($user);
+		if (isset($_GET['accept']))
+			$response->setContentType($_GET['accept']);
+		$headers = array_change_key_case(getallheaders());
+		if (isset($headers["authorization"])) {
+			$jwt = str_replace("Bearer ", "", $headers['authorization']);
+			$authentication = new Authentication();
+			$authentication->verifyJWT($jwt);
 		}
-		else if (isset($_GET['nickname']))
+		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
 		{
-			if ((!$_GET['nickname'] == "me" || !$authentication || !($user = $authentication->getUserFromToken())) && !$user->getFromName($_GET['nickname']))
-				$response->setMessage(["message" => "User not found"], Response::DOESNOTEXIST);
-			else
-				$response->setMessage($user);
+			if (!($id == "id" ? $user->getFromID($_GET["id"]) : ($authentication && $_GET["nickname"] == "me" ? ($user = $authentication->getUserFromToken()) : $user->getFromName($_GET["nickname"]))))
+				throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
+			$response->setMessage($user);
 		}
 		else
 		{
 			$users = $user->getAllUsers();
-			$response->setMessage(["users" => $users]);
+			$rep = new stdClass();
+			$rep->user_list = $users;
+			$rep->user_total = count($users);
+			$response->setMessage($rep);
 		}
+	} catch (CustomException $e) {
+		$response->setError($e);
+	} finally {
+		$response->send();
 	}
-
-	$response->send();
 ?>

@@ -2,24 +2,25 @@
 class Response
 {
 	const SUCCESS			=	200;	
-	const OK						=	200;
+	const OK				=	200;
 	const NICKUSED			=	400;
-	const EMAILUSED		=	400;
-	const MISSPARAM		=	400;
-	const DOESNOTEXIST	=	400;
+	const EMAILUSED			=	400;
+	const MISSPARAM			=	400;
+	const DOESNOTEXIST		=	400;
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
 	const UNKNOWN			=	501;
-	const ORGNAMEUSED	=	410;
+	const UNAVAILABLE		=	503;
+	const ORGNAMEUSED		=	410;
 	
-	var $type;
+	var $code;
 	var $message;
 	var $encoding;
 	var $contentType;
 	
-	function __construct($type = Response::UNKNOWN, $message = null)
+	function __construct($code = Response::UNKNOWN, $message = null)
 	{
-		$this->setResponseType($type);
+		$this->setResponseCode($code);
 		$this->setMessage($message);
 		$this->encoding = null;
 		$this->contentType = "json";
@@ -30,22 +31,22 @@ class Response
 		return ($this->message);
 	}
 	
-	function getResponseType()
+	function getResponseCode()
 	{
-		return ($this->type);
+		return ($this->code);
 	}
 	
-	function setMessage($message, $type = null)
+	function setMessage($message, $code = null)
 	{
 		$this->message = $message;
-		if ($type !== null)
-			$this->setResponseType($type);
+		if ($code !== null)
+			$this->setResponseCode($code);
 		return $this;
 	}
 	
-	function setResponseType($type)
+	function setResponseCode($code)
 	{
-		$this->type = $type;
+		$this->code = $code;
 		return $this;
 	}
 	
@@ -60,9 +61,14 @@ class Response
 		return $this;
 	}
 	
+	function setError($e)
+	{
+		$this->setMessage(["url" => "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]", "method" => "$_SERVER[REQUEST_METHOD]", "code" => $e->getCode(), "description" => $e->getMessage()], $e->getCode());
+	}
+	
 	function send()
 	{
-		http_response_code($this->type);
+		http_response_code($this->code);
 		header('Content-Type: ' . ($this->contentType == 'json' ? 'application/json' : ($this->contentType == "xml" ? 'application/xml' : 'text/html')));
 		
 		$final = ($this->contentType == "json" ? json_encode($this->message) : $this->toXML($this->message));

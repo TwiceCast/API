@@ -1,5 +1,8 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/config.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
 	use Lcobucci\JWT\Builder;
@@ -50,7 +53,7 @@
 			{
 				$this->user = new User();
 				$this->user->getFromID($this->token->getClaim('uid'));
-				return $this->user;
+				return ($this->user);
 			}
 			return false;
 		}
@@ -103,40 +106,38 @@
 		function connect($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
+			if (!$link)
+				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
+			$link->prepare('
+				SELECT client.id AS clientID,
+				client.email AS clientEmail,
+				client.password AS clientPassword,
+				client.name AS clientName,
+				client.register_date AS clientRegisterDate
+				FROM client
+				WHERE client.email = :mail AND client.password = :password');
+			$tmpMail = DB::toDB($this->mail);
+			$tmpPassword = hash('sha256', $this->password);
+			$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
+			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
+			$data = $link->fetch(true);
+			if ($data)
 			{
-				$link->prepare('
-					SELECT client.id AS clientID,
-					client.email AS clientEmail,
-					client.password AS clientPassword,
-					client.name AS clientName,
-					client.register_date AS clientRegisterDate
-					FROM client
-					WHERE client.email = :mail AND client.password = :password');
-				$tmpMail = DB::toDB($this->mail);
-				$tmpPassword = hash('sha256', $this->password);
-				$link->bindParam(':mail', $tmpMail, PDO::PARAM_STR);
-				$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
-				$data = $link->fetch(true);
-				if ($data)
-				{
-					$this->user = new User();
-					$this->user->setID($data['clientID']);
-					$this->user->setEmail(DB::fromDB($data['clientEmail']));
-					$this->user->setPassword($data['clientPassword']);
-					$this->user->setName(DB::fromDB($data['clientName']));
-					$this->user->setRegisterDate($data['clientRegisterDate']);
-					return true;
-				}
-				else
-					return false;
+				$this->user = new User();
+				$this->user->setID($data['clientID']);
+				$this->user->setEmail(DB::fromDB($data['clientEmail']));
+				$this->user->setPassword($data['clientPassword']);
+				$this->user->setName(DB::fromDB($data['clientName']));
+				$this->user->setRegisterDate($data['clientRegisterDate']);
+				return true;
 			}
 			else
-				return false;
+				throw new AuthenticationException("Authentication failed", Response::NOTAUTH);
 		}
 
 		function generateJWT()
 		{
+			$config = $_SESSION["config"];
 			if ($this->connect())
 			{
 				$signer = new Sha256();
@@ -147,7 +148,7 @@
 										->setNotBefore(time())
 										->setExpiration(time() + 3600)
 										->set('uid', $this->user->ID)
-										->sign($signer, 'TwiceCastAPIKeyForJWT')
+										->sign($signer, $config["token_secret"])
 										->getToken();
 				return $token;
 			}
@@ -158,36 +159,31 @@
 		function verify()
 		{
 			$headers = array_change_key_case(getallheaders());
-			if ($header !== false && isset($headers['authorization']))
-			{
-				$jwt = str_replace("Bearer ", "", $headers['authorization']);
-				return $this->verifyJWT($jwt);
-			}
-			else
-				return array("error" => "Authorization header not found");
+			if ($headers === false || !isset($headers["authorization"]))
+				throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
+			$jwt = str_replace("Bearer ", "", $headers['authorization']);
+			return $this->verifyJWT($jwt);
 		}
 
 		function verifyJWT($token)
 		{
+			$config = $_SESSION["config"];
 			$signer = new Sha256();
 			try
 			{
 				$token = (new Parser())->parse((string) $token);
 				$this->token = $token;
-				if ($token->verify($signer, 'TwiceCastAPIKeyForJWT'))
-				{
-					$data = new ValidationData();
-					$data->setIssuer('http://api.twicecast.com');
-					$data->setAudience('http://twicecast.com');
-					$data->setId('4f1g23a12aa');
-					return $token->validate($data);
-				}
-				else
-					return array("error"=>"Invalid token");
+				if (!$token->verify($signer, $config["token_secret"]))
+					throw new AuthenticationException("Invalid token", Response::NOTAUTH);
+				$data = new ValidationData();
+				$data->setIssuer('http://api.twicecast.com');
+				$data->setAudience('http://twicecast.com');
+				$data->setId('4f1g23a12aa');
+				return $token->validate($data);
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
-				return array("error" => "JWTlib raised an exception: '".$e->getMessage()."'");
+				throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 			}
 		}
 	}
