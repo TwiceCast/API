@@ -5,7 +5,7 @@
 
 	$response = new Response(Response::OK);
 	try {
-		$postdata = file_get_contents('php://input');
+		$postdata = json_decode(file_get_contents('php://input'));
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
@@ -15,13 +15,8 @@
 		$newUser->setName($postdata->name);
 		$newUser->setEmail($postdata->email);
 		$newUser->setPassword($postdata->password);
-		// if (isset($_POST['country']))
-			// $newUser->setCountry($_POST['country']);
-		// if (isset($_POST['birthdate']))
-			// $newUser->setBirthdate($_POST['birthdate']);
-		// if (isset($_POST['rank']))
-			// $newUser->setRank($_POST['rank']);
-		$newUser->checkForCreation();
+		if (isset($postdata->language))
+			$newUser->setLanguage($postdata->language->code);
 		
 		if (!$newUser->create())
 			throw new UnknownException("Something wrong append", Response::UNKNOWN);

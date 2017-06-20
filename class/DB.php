@@ -108,7 +108,10 @@
 							return true;
 					}
 					else
-						return false;
+					{
+						// Throw DatabaseException($this->query->errorInfo());
+						return false;				
+					}
 				}
 				else
 					return false;
