@@ -331,7 +331,13 @@
 					$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 					$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
 					$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
-					return $link->execute(true);
+					if ($link->execute(true))
+					{
+						$this->getFromName($this->name);
+						return true;
+					}
+					else
+						return false;
 				}
 				else
 					return false;
