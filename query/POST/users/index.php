@@ -20,7 +20,7 @@
 		
 		if (!$newUser->create())
 			throw new UnknownException("Something wrong append", Response::UNKNOWN);
-		$response->setMessage(["message" => "User created successfully"], Response::SUCCESS);
+		$response->setMessage($newUser);
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {
