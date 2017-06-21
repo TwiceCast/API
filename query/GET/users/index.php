@@ -20,7 +20,15 @@
 		}
 		else
 		{
-			$users = $user->getAllUsers();
+			if (isset($_GET['limit']))
+			{
+				if (isset($_GET['start']))
+					$users = $user->getAllUsers($_GET['limit'], $_GET['start']);
+				else
+					$users = $user->getAllUsers($_GET['limit']);
+			}
+			else
+				$users = $user->getAllUsers();
 			$rep = new stdClass();
 			if ($users === false)
 			{
