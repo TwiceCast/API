@@ -142,12 +142,12 @@
 				return false;
 		}
 
-		function getAllUsers($db = null)
+		function getAllUsers($limit = null, $offset = null, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
 			{
-				$link->prepare('
+				$query = '
 					SELECT client.id AS clientID,
 					client.email AS clientEmail,
 					client.password AS clientPassword,
@@ -155,7 +155,19 @@
 					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage
 					FROM client
-					ORDER BY client.ID');
+					ORDER BY client.ID';
+				if ($limit)
+				{
+					$limit = (int) $limit;
+					if ($offset)
+					{
+						$offset = (int) $offset;
+						$query .= " LIMIT ".$limit." OFFSET ".$offset;
+					}
+					else
+						$query .= " LIMIT ".$limit;
+				}
+				$link->prepare($query);
 				$data = $link->fetchAll(true);
 				if ($data)
 				{
