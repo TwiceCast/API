@@ -36,7 +36,7 @@
 
 		if (!$user->update())
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
-		$response->setMessage(["message" => "User overwrited successfully"], Response::SUCCESS);
+		$response->setMessage($user);
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {
