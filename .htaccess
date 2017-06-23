@@ -126,15 +126,15 @@ RewriteRule "^streams/([0-9]+)/chat/" "query/GET/streams/chat.php?id=$1"
 
  #-  GET /streams/:id   -#
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^streams/([0-9]+)/" "query/GET/streams/index.php?id=$1"
+RewriteRule "^streams/([0-9]+)/" "query/GET/streams/streams.php?id=$1"
 
  #-  GET /streams/    -#
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^streams/" "query/GET/streams/index.php"
+RewriteRule "^streams/" "query/GET/streams/streams.php"
 
  #-  POST /streams/    -#
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^streams/" "query/POST/streams/index.php"
+RewriteRule "^streams/" "query/POST/streams/streams.php"
 
     ###  ORGANIZATIONS  ###
 

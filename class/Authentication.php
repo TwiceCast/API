@@ -159,7 +159,7 @@
 			if ($headers === false || !isset($headers["authorization"]))
 				throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
 			$jwt = str_replace("Bearer ", "", $headers['authorization']);
-			return $this->verifyJWT($jwt);
+			$this->verifyJWT($jwt);
 		}
 
 		function verifyJWT($token)
@@ -176,12 +176,13 @@
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
-				return $token->validate($data);
 			}
 			catch (Exception $e)
 			{
 				throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 			}
+			if (!$token->validate($data))
+				throw new AuthenticationException("Token is expired", Response::NOTAUTH);
 		}
 	}
 ?>

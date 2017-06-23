@@ -263,26 +263,19 @@
 		function create($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				if ($this->checkForCreation($link) == ERR::OK)
-				{
-					$link->prepare('
-						INSERT INTO client(email, password, name)
-						VALUE (:email, :password, :name)');
-					$tmpEmail = DB::toDB($this->email);
-					$tmpName = DB::toDB($this->name);
-					$tmpPassword = hash('sha256', $this->password);
-					$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
-					$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
-					$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
-					return $link->execute(true);
-				}
-				else
-					return false;
-			}
-			else
+			if (!$link)
 				return false;
+			$this->checkForCreation($link);
+			$link->prepare('
+				INSERT INTO client(email, password, name, language)
+				VALUE(:email, :password, :name, "FR")');
+			$tmpEmail = DB::toDB($this->email);
+			$tmpName = DB::toDB($this->name);
+			$tmpPassword = hash('sha256', $this->password);
+			$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
+			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
+			$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
+			return $link->execute(true);
 		}
 
 		function checkForCreation($db = null)
