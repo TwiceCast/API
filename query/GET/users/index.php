@@ -12,6 +12,8 @@
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
 		$_GET["nickname"] = checkTokenMe($_GET["nickname"]);
+		$authentication = new Authentication();
+		$authentication->verify(false);
 		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
 		{
 			if (!($id == "id" ? $user->getFromID($_GET["id"]) : $user->getFromName($_GET["nickname"])))
@@ -20,10 +22,26 @@
 		}
 		else
 		{
-			$users = $user->getAllUsers();
+			if (isset($_GET['limit']))
+			{
+				if (isset($_GET['start']))
+					$users = $user->getAllUsers($_GET['limit'], $_GET['start']);
+				else
+					$users = $user->getAllUsers($_GET['limit']);
+			}
+			else
+				$users = $user->getAllUsers();
 			$rep = new stdClass();
-			$rep->user_list = $users;
-			$rep->user_total = count($users);
+			if ($users === false)
+			{
+				$rep->user_list = null;
+				$rep->user_total = 0;
+			}
+			else
+			{
+				$rep->user_list = $users;
+				$rep->user_total = count($users);
+			}
 			$response->setMessage($rep);
 		}
 	} catch (CustomException $e) {

@@ -1,4 +1,5 @@
 <?php
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 
 	class User
@@ -8,15 +9,17 @@
 		private $password;
 		var $name;
 		var $register_date;
+		var $language;
 		private $db;
 
-		function __construct($db = true, $ID = null, $email = null, $password = null, $name = null, $register_date = null)
+		function __construct($db = true, $ID = null, $email = null, $password = null, $name = null, $register_date = null, $language = null)
 		{
 			$this->setID($ID);
 			$this->setEmail($email);
 			$this->setPassword($password);
 			$this->setName($name);
 			$this->setRegisterDate($register_date);
+			$this->setLanguage($language);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -57,6 +60,12 @@
 			return $this;
 		}
 
+		function setLanguage($language)
+		{
+			$this->language = $language;
+			return $this;
+		}
+
 		function getLink($db)
 		{
 			if ($this->db)
@@ -77,7 +86,8 @@
 					client.email AS clientEmail,
 					client.password AS clientPassword,
 					client.name AS clientName,
-					client.register_date AS clientRegisterDate
+					client.register_date AS clientRegisterDate,
+					client.language AS clientLanguage
 					FROM client
 					WHERE client.id = :ID');
 				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
@@ -89,6 +99,7 @@
 					$this->setPassword($data['clientPassword']);
 					$this->setName(DB::fromDB($data['clientName']));
 					$this->setRegisterDate($data['clientRegisterDate']);
+					$this->setLanguage(DB::fromDB($data['clientLanguage']));
 					return true;
 				}
 				else
@@ -108,7 +119,8 @@
 					client.email AS clientEmail,
 					client.password AS clientPassword,
 					client.name AS clientName,
-					client.register_date AS clientRegisterDate
+					client.register_date AS clientRegisterDate,
+					client.language AS clientLanguage
 					FROM client
 					WHERE client.name = :name');
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
@@ -120,6 +132,7 @@
 					$this->setPassword($data['clientPassword']);
 					$this->setName(DB::fromDB($data['clientName']));
 					$this->setRegisterDate($data['clientRegisterDate']);
+					$this->setLanguage(DB::fromDB($data['clientLanguage']));
 					return true;
 				}
 				else
@@ -129,19 +142,32 @@
 				return false;
 		}
 
-		function getAllUsers($db = null)
+		function getAllUsers($limit = null, $offset = null, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
 			{
-				$link->prepare('
+				$query = '
 					SELECT client.id AS clientID,
 					client.email AS clientEmail,
 					client.password AS clientPassword,
 					client.name AS clientName,
-					client.register_date AS clientRegisterDate
+					client.register_date AS clientRegisterDate,
+					client.language AS clientLanguage
 					FROM client
-					ORDER BY client.ID');
+					ORDER BY client.ID';
+				if ($limit)
+				{
+					$limit = (int) $limit;
+					if ($offset)
+					{
+						$offset = (int) $offset;
+						$query .= " LIMIT ".$limit." OFFSET ".$offset;
+					}
+					else
+						$query .= " LIMIT ".$limit;
+				}
+				$link->prepare($query);
 				$data = $link->fetchAll(true);
 				if ($data === false)
 					return false;
@@ -154,6 +180,7 @@
 					$client->setPassword($entry['clientPassword']);
 					$client->setName(DB::fromDB($entry['clientName']));
 					$client->setRegisterDate($entry['clientRegisterDate']);
+					$client->setLanguage(DB::fromDB($entry['clientLanguage']));
 					$clients[] = $client;
 				}
 				return $clients;
@@ -233,6 +260,29 @@
 				return false;
 		}
 
+		function changeLang($newLanguage, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.language = :language
+					WHERE client.id = :ID');
+				$tmp = DB::toDB($newLanguage);
+				$link->bindParam(':language', $tmp, PDO::PARAM_STR);
+				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->language = $newLanguage;
+					return true;
+				}
+				else
+					return false;
+			}
+			return false;
+		}
+
 		function update($db = null)
 		{
 			$link = $this->getLink($db);
@@ -242,14 +292,17 @@
 					UPDATE client
 					SET client.email = :email,
 					client.password = :password,
-					client.name = :name
+					client.name = :name,
+					client.language = :language
 					WHERE client.id = :ID');
 				$email = DB::toDB($this->email);
 				$password = hash('sha256', $this->password);
 				$name = DB::toDB($this->name);
+				$language = DB::toDB($this->language);
 				$link->bindParam(':email', $email, PDO::PARAM_STR);
 				$link->bindParam(':password', $password, PDO::PARAM_STR);
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
+				$link->bindParam(':language', $language, PDO::PARAM_STR);
 				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
 				return $link->execute(true);
 			}
@@ -264,15 +317,19 @@
 				return false;
 			$this->checkForCreation($link);
 			$link->prepare('
-				INSERT INTO client(email, password, name, language)
-				VALUE(:email, :password, :name, "FR")');
+					INSERT INTO client(email, password, name, language)
+					VALUE (:email, :password, :name, :language)');
 			$tmpEmail = DB::toDB($this->email);
 			$tmpName = DB::toDB($this->name);
 			$tmpPassword = hash('sha256', $this->password);
 			$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
 			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 			$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
-			return $link->execute(true);
+			$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
+			if (!$link->execute(true))
+				return false;
+			$this->getFromName($this->name);
+			return true;
 		}
 
 		function checkForCreation($db = null)
@@ -296,6 +353,7 @@
 			$data = $link->fetchAll(true);
 			if ($data)
 				throw new ParametersException("Email already in use", Response::EMAILUSED);
+			return true;
 		}
 
 		function delete($db = null)

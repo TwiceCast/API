@@ -10,12 +10,13 @@
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		if (!isset($postdata["name"]) or !isset($postdata["password"]) or !isset($postdata["email"]))
+		if (!isset($postdata["name"]) or !isset($postdata["password"]) or !isset($postdata["email"]) or !isset($postdata["language"]))
 			throw new ParametersException("Missing parameters", Response::MISSPARAM);
 		$newUser = new User();
 		$newUser->setName($postdata["name"]);
 		$newUser->setEmail($postdata["email"]);
 		$newUser->setPassword($postdata["password"]);
+		$newUser->setLanguage($postdata->language->code);
 		// if (isset($_POST['country']))
 			// $newUser->setCountry($_POST['country']);
 		// if (isset($_POST['birthdate']))
@@ -26,7 +27,7 @@
 		
 		if (!$newUser->create())
 			throw new UnknownException("Something wrong append", Response::UNKNOWN);
-		$response->setMessage(["message" => "User created successfully"], Response::SUCCESS);
+		$response->setMessage($newUser);
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {

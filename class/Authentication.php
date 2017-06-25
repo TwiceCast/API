@@ -186,11 +186,14 @@
 			return $token;
 		}
 
-		function verify()
+		function verify($forceAuth = true)
 		{
 			$headers = array_change_key_case(getallheaders());
 			if ($headers === false || !isset($headers["authorization"]))
-				throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
+				if ($forceAuth === true)
+					throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
+				else
+					return true;
 			$jwt = str_replace("Bearer ", "", $headers['authorization']);
 			$this->verifyJWT($jwt);
 		}
@@ -209,7 +212,10 @@
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
+				if ($token->validate($data) === true)
+					throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 				$this->getUserFromToken();
+				return true;
 			}
 			catch (Exception $e)
 			{
