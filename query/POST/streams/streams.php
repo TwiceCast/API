@@ -9,13 +9,12 @@
 	try {
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		// throw new NotImplementedException("This feature is not implemented yet", 501);
 		$postdata = getPostData();
 		$authentication = new Authentication();
 		$authentication->verify();
 		if (!isset($postdata["title"]) || !isset($postdata["lang"]) || !isset($postdata["private"]))
 			throw new ParametersException("Parameters missing to proceed", Response::MISSPARAM);
-		if ($postdata["private"] == true)
+		if ($postdata["private"] === true)
 			throw new RightsException("You don't have the rights to create a private stream", Response::NORIGHT);
 		$stream = new Stream();
 		$stream->setOwner($authentication->getUserFromToken());

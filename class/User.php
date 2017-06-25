@@ -143,23 +143,20 @@
 					FROM client
 					ORDER BY client.ID');
 				$data = $link->fetchAll(true);
-				if ($data)
-				{
-					$clients = array();
-					foreach ($data as &$entry)
-					{
-						$client = new User(false);
-						$client->setID($entry['clientID']);
-						$client->setEmail(DB::fromDB($entry['clientEmail']));
-						$client->setPassword($entry['clientPassword']);
-						$client->setName(DB::fromDB($entry['clientName']));
-						$client->setRegisterDate($entry['clientRegisterDate']);
-						$clients[] = $client;
-					}
-					return $clients;
-				}
-				else
+				if ($data === false)
 					return false;
+				$clients = array();
+				foreach ($data as &$entry)
+				{
+					$client = new User(false);
+					$client->setID($entry['clientID']);
+					$client->setEmail(DB::fromDB($entry['clientEmail']));
+					$client->setPassword($entry['clientPassword']);
+					$client->setName(DB::fromDB($entry['clientName']));
+					$client->setRegisterDate($entry['clientRegisterDate']);
+					$clients[] = $client;
+				}
+				return $clients;
 			}
 			return false;
 		}

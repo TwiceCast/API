@@ -66,8 +66,8 @@
 					client.name AS userNickname,
 					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN st_client_role ON stream.id = st_client_role.id_stream
-					LEFT JOIN client ON st_client_role.id_client = client.id
+					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE stream.id = :ID');
 				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
 				$data = $link->fetch(true);
@@ -129,26 +129,19 @@
 			{
 				$link->prepare('
 					SELECT stream.id AS streamID,
-					stream.title AS streamTitle,
-					user.id AS userID,
-					user.email AS userEmail,
-					user.password AS userPassword,
-					user.nickname AS userNickname,
-					user.birthdate AS userBirthdate,
-					user.register_date AS userRegisterDate,
-					user.last_visit_date AS userLastVisitDate,
-					country.id AS countryID,
-					country.code AS countryCode,
-					country.name AS countryName,
-					rank.id AS rankID,
-					rank.title AS rankTitle
+					stream.name AS streamTitle,
+					client.id AS userID,
+					client.email AS userEmail,
+					client.name AS userNickname,
+					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN user ON stream.fk_user = user.id
-					LEFT JOIN country ON user.fk_country = country.id
-					LEFT JOIN rank ON user.fk_rank = rank.id
-					WHERE stream.fk_user = :ID');
+					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client ON client_role.id_client = client.id
+					WHERE client.id = :ID');
 				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
 				$data = $link->fetchAll(true);
+				if ($data === false)
+					return false;
 				$streams = array();
 				foreach ($data as &$entry)
 				{
@@ -188,24 +181,15 @@
 			{
 				$link->prepare('
 					SELECT stream.id AS streamID,
-					stream.title AS streamTitle,
-					user.id AS userID,
-					user.email AS userEmail,
-					user.password AS userPassword,
-					user.nickname AS userNickname,
-					user.birthdate AS userBirthdate,
-					user.register_date AS userRegisterDate,
-					user.last_visit_date AS userLastVisitDate,
-					country.id AS countryID,
-					country.code AS countryCode,
-					country.name AS countryName,
-					rank.id AS rankID,
-					rank.title AS rankTitle
+					stream.name AS streamTitle,
+					client.id AS userID,
+					client.email AS userEmail,
+					client.name AS userNickname,
+					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN user ON stream.fk_user = user.id
-					LEFT JOIN country ON user.fk_country = country.id
-					LEFT JOIN rank ON user.fk_rank = rank.id
-					WHERE user.nickname = :nickname');
+					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client ON client_role.id_client = client.id
+					WHERE client.name = :nickname');
 				$link->bindParam(':nickname', $nickname, PDO::PARAM_INT);
 				$data = $link->fetchAll(true);
 				if ($data)
@@ -253,13 +237,14 @@
 			$link->prepare('
 				SELECT stream.id AS streamID,
 				stream.name AS streamTitle,
-				client_role.id_client AS userID,
+				client.id AS userID,
 				client.email AS userEmail,
 				client.name AS userNickname,
 				client.register_date AS userRegisterDate
 				FROM stream
 				LEFT JOIN client_role ON stream.id = client_role.id_target
 				LEFT JOIN client ON client_role.id_client = client.id
+				ORDER BY stream.id
 				');
 			$data = $link->fetchAll(true);
 			if ($data === false)
@@ -326,8 +311,8 @@
 				BEGIN;
 				INSERT INTO stream(name)
 				VALUE(:title);
-				INSERT INTO client_role(id_client, id_role, categorie, id_target)
-				VALUE(:id_user, 8, "Stream", LAST_INSERT_ID());
+				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
+				VALUE(:id_user, (SELECT id FROM role WHERE name = "Guest" AND categorie = "Stream"), "Stream", LAST_INSERT_ID());
 				COMMIT
 				');
 			$link->bindParam(':title', DB::toDB($this->title), PDO::PARAM_STR);

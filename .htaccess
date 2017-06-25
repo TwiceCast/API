@@ -124,6 +124,10 @@ RewriteRule "^streams/([0-9]+)/followers/" "query/GET/streams/followers.php?id=$
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/chat/" "query/GET/streams/chat.php?id=$1"
 
+ #-  GET /streams/:id/repository  -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/([0-9]+)/repository/" "query/GET/streams/repository.php?id=$1"
+
  #-  GET /streams/:id   -#
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/" "query/GET/streams/streams.php?id=$1"
