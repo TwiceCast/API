@@ -109,7 +109,7 @@
 					}
 					else
 					{
-						// Throw DatabaseException($this->query->errorInfo());
+						throw new DatabaseException("Query error: ".$this->query->errorInfo(), Response::UNAVAILABLE);
 						return false;				
 					}
 				}
