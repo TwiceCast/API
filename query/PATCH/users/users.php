@@ -3,6 +3,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/functions.php');
 
 	$response = new Response(Response::OK);
 	try {
@@ -27,8 +28,8 @@
 			$user->changeEmail($post['email']);
 		if (isset($post['password']))
 			$user->changePassword($post['password']);
-		if (isset($post['nickname']))
-			$user->changeName($post['nickname']);
+		if (isset($post['name']))
+			$user->changeName($post['name']);
 		if (isset($post['language']))
 			$user->changeLanguage($post['language']['code']);
 		
