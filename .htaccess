@@ -49,62 +49,62 @@ RewriteRule "^users/([0-9a-zA-Z]+)/organizations/" "query/POST/users/organizatio
  #-  GET /users/:id/    -#
 
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^users/([0-9]+)/" "query/GET/users/index.php?id=$1"
+RewriteRule "^users/([0-9]+)/" "query/GET/users/users.php?id=$1"
 
  #-  GET /users/:nickname/    -#
 
-RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^users/([0-9a-zA-Z]+)/" "query/GET/users/index.php?nickname=$1"
+#RewriteCond %{REQUEST_METHOD} GET
+#RewriteRule "^users/([0-9a-zA-Z]+)/" "query/GET/users/users.php?nickname=$1"
 
  #-  GET /users/     -#
 
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^users/" "query/GET/users/index.php"
+RewriteRule "^users/" "query/GET/users/users.php"
 
  #-  POST /login     -#
 
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^login/" "query/POST/users/login.php"
+RewriteRule "^login/" "query/POST/login/login.php"
 
  #-  GET /user/     -#
 
-RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^user/" "query/GET/user/index.php"
+#RewriteCond %{REQUEST_METHOD} GET
+#RewriteRule "^user/" "query/GET/user/index.php"
 
  #-  POST /users/    -#
 
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^users/" "query/POST/users/index.php"
+RewriteRule "^users/" "query/POST/users/users.php"
 
  #-  DELETE /users/:id/    -#
 
 RewriteCond %{REQUEST_METHOD} DELETE
-RewriteRule "^users/([0-9]+)/" "query/DELETE/users/index.php?id=$1"
+RewriteRule "^users/([0-9]+)/" "query/DELETE/users/users.php?id=$1"
 
  #-  DELETE /users/:nickname/    -#
 
-RewriteCond %{REQUEST_METHOD} DELETE
-RewriteRule "^users/([0-9a-zA-Z]+)/" "query/DELETE/users/index.php?nickname=$1"
+#RewriteCond %{REQUEST_METHOD} DELETE
+#RewriteRule "^users/([0-9a-zA-Z]+)/" "query/DELETE/users/users.php?nickname=$1"
 
  #-  PATCH /users/:id/    -#
 
 RewriteCond %{REQUEST_METHOD} PATCH
-RewriteRule "^users/([0-9]+)/" "query/PATCH/users/index.php?id=$1"
+RewriteRule "^users/([0-9]+)/" "query/PATCH/users/users.php?id=$1"
 
  #-  PATCH /users/:nickname/    -#
 
-RewriteCond %{REQUEST_METHOD} PATCH
-RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PATCH/users/index.php?nickname=$1"
+#RewriteCond %{REQUEST_METHOD} PATCH
+#RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PATCH/users/users.php?nickname=$1"
 
  #-  PUT /users/:id/    -#
 
 RewriteCond %{REQUEST_METHOD} PUT
-RewriteRule "^users/([0-9]+)/" "query/PUT/users/index.php?id=$1"
+RewriteRule "^users/([0-9]+)/" "query/PUT/users/users.php?id=$1"
 
  #-  PUT /users/:nickname/    -#
 
-RewriteCond %{REQUEST_METHOD} PUT
-RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PUT/users/index.php?nickname=$1"
+#RewriteCond %{REQUEST_METHOD} PUT
+#RewriteRule "^users/([0-9a-zA-Z]+)/" "query/PUT/users/users.php?nickname=$1"
 
     ###  STREAMS  ###
 
