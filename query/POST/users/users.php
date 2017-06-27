@@ -17,14 +17,7 @@
 		$newUser->setEmail($postdata["email"]);
 		$newUser->setPassword($postdata["password"]);
 		$newUser->setLanguage($postdata->language->code);
-		// if (isset($_POST['country']))
-			// $newUser->setCountry($_POST['country']);
-		// if (isset($_POST['birthdate']))
-			// $newUser->setBirthdate($_POST['birthdate']);
-		// if (isset($_POST['rank']))
-			// $newUser->setRank($_POST['rank']);
-		// $newUser->checkForCreation();
-		
+	
 		if (!$newUser->create())
 			throw new UnknownException("Something wrong append", Response::UNKNOWN);
 		$response->setMessage($newUser);
