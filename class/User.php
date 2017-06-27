@@ -190,97 +190,68 @@
 
 		function changeEmail($newEmail, $db = null)
 		{
+			$this->checkEmail($newEmail);
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					UPDATE client
-					SET client.email = :email
-					WHERE client.id = :ID');
-				$tmp = DB::toDB($newEmail);
-				$link->bindParam(':email', $tmp, PDO::PARAM_STR);
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
-				if ($link->execute(true))
-				{
-					$this->email = $newEmail;
-					return true;
-				}
-				else
-					return false;
-			}
-			else
-				return false;
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				UPDATE client
+				SET client.email = :email
+				WHERE client.id = :ID');
+			$tmp = DB::toDB($newEmail);
+			$link->bindParam(':email', $tmp, PDO::PARAM_STR);
+			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+			$link->execute(true);
+			$this->email = $newEmail;
 		}
 
 		function changePassword($newPassword, $db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					UPDATE client
-					SET client.password = :password
-					WHERE client.id = :ID');
-				$password = hash('sha256', $newPassword);
-				$link->bindParam(':password', $password, PDO::PARAM_STR);
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
-				if ($link->execute(true))
-				{
-					$this->password = $newPassword;
-					return true;
-				}
-				else
-					return false;
-			}
-			else
-				return false;
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				UPDATE client
+				SET client.password = :password
+				WHERE client.id = :ID');
+			$password = hash('sha256', $newPassword);
+			$link->bindParam(':password', $password, PDO::PARAM_STR);
+			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+			$link->execute(true);
+			$this->password = $newPassword;
 		}
 
 		function changeName($newName, $db = null)
 		{
+			$this->checkName($newName);
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					UPDATE client
-					SET client.name = :name
-					WHERE client.id = :ID');
-				$tmp = DB::toDB($newName);
-				$link->bindParam(':name', $tmp, PDO::PARAM_STR);
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
-				if ($link->execute(true))
-				{
-					$this->name = $newName;
-					return true;
-				}
-				else
-					return false;
-			}
-			else
-				return false;
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				UPDATE client
+				SET client.name = :name
+				WHERE client.id = :ID');
+			$tmp = DB::toDB($newName);
+			$link->bindParam(':name', $tmp, PDO::PARAM_STR);
+			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+			$link->execute(true);
+			$this->name = $newName;
 		}
 
-		function changeLang($newLanguage, $db = null)
+		function changeLanguage($newLanguage, $db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					UPDATE client
-					SET client.language = :language
-					WHERE client.id = :ID');
-				$tmp = DB::toDB($newLanguage);
-				$link->bindParam(':language', $tmp, PDO::PARAM_STR);
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
-				if ($link->execute(true))
-				{
-					$this->language = $newLanguage;
-					return true;
-				}
-				else
-					return false;
-			}
-			return false;
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				UPDATE client
+				SET client.language = :language
+				WHERE client.id = :ID');
+			$tmp = DB::toDB($newLanguage);
+			$link->bindParam(':language', $tmp, PDO::PARAM_STR);
+			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+			$link->execute(true);
+			$this->language = $newLanguage;
 		}
 
 		function update($db = null)
@@ -322,6 +293,7 @@
 			$tmpEmail = DB::toDB($this->email);
 			$tmpName = DB::toDB($this->name);
 			$tmpPassword = hash('sha256', $this->password);
+			$tmpLanguage = DB::toDB($this->language);
 			$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
 			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 			$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
@@ -336,7 +308,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException('Something wrong append', Response::UNKNOWN);
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
 			$link->prepare('
 				SELECT client.id AS clientID
 				FROM client
@@ -350,6 +322,42 @@
 				FROM client
 				WHERE client.email = :email');
 			$link->bindParam(':email', $this->email, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Email already in use", Response::EMAILUSED);
+			return true;
+		}
+
+		function checkName($nameToCheck, $db = null)
+		{
+			if ($nameToCheck === $this->name)
+				return true;
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.name = :name');
+			$link->bindParam(':name', $nameToCheck, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Nickname already in use", Response::NICKUSED);
+			return true;
+		}
+		
+		function checkEmail($emailToCheck, $db = null)
+		{
+			if ($emailToCheck === $this->email)
+				return true;
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+			$link->prepare('
+				SELECT client.id AS clientID
+				FROM client
+				WHERE client.email = :email');
+			$link->bindParam(':email', $emailToCheck, PDO::PARAM_STR);
 			$data = $link->fetchAll(true);
 			if ($data)
 				throw new ParametersException("Email already in use", Response::EMAILUSED);
