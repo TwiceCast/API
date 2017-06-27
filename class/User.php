@@ -193,7 +193,7 @@
 			$this->checkEmail($newEmail);
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				UPDATE client
 				SET client.email = :email
@@ -209,7 +209,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				UPDATE client
 				SET client.password = :password
@@ -226,7 +226,7 @@
 			$this->checkName($newName);
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				UPDATE client
 				SET client.name = :name
@@ -242,7 +242,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				UPDATE client
 				SET client.language = :language
@@ -308,7 +308,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				SELECT client.id AS clientID
 				FROM client
@@ -334,7 +334,7 @@
 				return true;
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				SELECT client.id AS clientID
 				FROM client
@@ -352,7 +352,7 @@
 				return true;
 			$link = $this->getLink($db);
 			if (!$link)
-				throw new UnknownException("Something wrong append", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
 				SELECT client.id AS clientID
 				FROM client
@@ -367,17 +367,14 @@
 		function delete($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				$link->prepare('
-					DELETE
-					FROM client
-					WHERE client.id = :ID');
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
-				return $link->execute(true);
-			}
-			else
-				return false;
+			if (!$link)
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$link->prepare('
+				DELETE
+				FROM client
+				WHERE client.id = :ID');
+			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+			return $link->execute(true);
 		}
 	}
 ?>
