@@ -9,8 +9,6 @@
 	try {
 		$post = getPostData();
 		
-		$user = new User();
-
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
 		$authentication = new Authentication();
