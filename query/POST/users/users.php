@@ -10,7 +10,8 @@
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		if (!isset($postdata['name']) or !isset($postdata['password']) or !isset($postdata['email']) or !isset($postdata['language']))
+		if (!isset($postdata['name']) or !isset($postdata['password']) 
+			or !isset($postdata['email']) or !isset($postdata['language']))
 			throw new ParametersException("Missing parameters", Response::MISSPARAM);
 		$newUser = new User();
 		$newUser->setName($postdata['name']);
