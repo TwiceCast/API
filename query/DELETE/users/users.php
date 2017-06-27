@@ -6,27 +6,27 @@
 
 	$response = new Response(Response::OK);
 	try {
-		$auth = new Authentication();
-		$out = null;
-
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		$auth->verify();
-		$user = new User();
-
-		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) === false)
+		$authentication = new Authentication();
+		$authentication->verify();
+		
+		if (!isset($_GET['id']))
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
-		if (($id == "id" && !$auth->isUserID($_GET[$id])) || ($id == "nickname" && !$auth->isUserName($_GET[$id])))
-			throw new RightsException('You can not delete someone else\'s account', Response::NORIGHT);
-		$user = ($id == "id" ? $user->getFromID($_GET[$id]) : $user->getFromNickname($_GET[$id]));
+		$user = $authentication->getUserFromToken();
+		
 		if (!$user)
-			throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
-		if (!$user->delete())
+			throw new UnknownException("Something wrong happened");
+		
+		if ($_GET['id'] != $user->ID) //Add moderator/admin detection here
+			throw new ParametersException("You cannot delete someone else's account", Response::NORIGHT);
+		
+		if ($user->delete())
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
-		$response->setMessage(["message" : "User deleted successfully"], Response::SUCCESS);
+		$response->setMessage("The user has been removed successfully.", Response::SUCCESS);
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {
-		$response.send();
+		$response->send();
 	}
 ?>
