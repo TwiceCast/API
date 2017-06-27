@@ -66,11 +66,6 @@ RewriteRule "^users/" "query/GET/users/users.php"
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^login/" "query/POST/login/login.php"
 
- #-  GET /user/     -#
-
-#RewriteCond %{REQUEST_METHOD} GET
-#RewriteRule "^user/" "query/GET/user/index.php"
-
  #-  POST /users/    -#
 
 RewriteCond %{REQUEST_METHOD} POST
