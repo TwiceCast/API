@@ -2,21 +2,28 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/functions.php');
 
 	$response = new Response(Response::OK);
 	try {
-		$postdata = json_decode(file_get_contents('php://input'));
+		$postdata = getPostData();
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		if (!isset($postdata->name) or !isset($postdata->password)
-			or !isset($postdata->email) or !isset($postdata->language))
+		if (!isset($postdata["name"]) or !isset($postdata["password"]) or !isset($postdata["email"]) or !isset($postdata["language"]))
 			throw new ParametersException("Missing parameters", Response::MISSPARAM);
 		$newUser = new User();
-		$newUser->setName($postdata->name);
-		$newUser->setEmail($postdata->email);
-		$newUser->setPassword($postdata->password);
+		$newUser->setName($postdata["name"]);
+		$newUser->setEmail($postdata["email"]);
+		$newUser->setPassword($postdata["password"]);
 		$newUser->setLanguage($postdata->language->code);
+		// if (isset($_POST['country']))
+			// $newUser->setCountry($_POST['country']);
+		// if (isset($_POST['birthdate']))
+			// $newUser->setBirthdate($_POST['birthdate']);
+		// if (isset($_POST['rank']))
+			// $newUser->setRank($_POST['rank']);
+		// $newUser->checkForCreation();
 		
 		if (!$newUser->create())
 			throw new UnknownException("Something wrong append", Response::UNKNOWN);

@@ -169,24 +169,21 @@
 				}
 				$link->prepare($query);
 				$data = $link->fetchAll(true);
-				if ($data)
-				{
-					$clients = array();
-					foreach ($data as &$entry)
-					{
-						$client = new User(false);
-						$client->setID($entry['clientID']);
-						$client->setEmail(DB::fromDB($entry['clientEmail']));
-						$client->setPassword($entry['clientPassword']);
-						$client->setName(DB::fromDB($entry['clientName']));
-						$client->setRegisterDate($entry['clientRegisterDate']);
-						$client->setLanguage(DB::fromDB($entry['clientLanguage']));
-						$clients[] = $client;
-					}
-					return $clients;
-				}
-				else
+				if ($data === false)
 					return false;
+				$clients = array();
+				foreach ($data as &$entry)
+				{
+					$client = new User(false);
+					$client->setID($entry['clientID']);
+					$client->setEmail(DB::fromDB($entry['clientEmail']));
+					$client->setPassword($entry['clientPassword']);
+					$client->setName(DB::fromDB($entry['clientName']));
+					$client->setRegisterDate($entry['clientRegisterDate']);
+					$client->setLanguage(DB::fromDB($entry['clientLanguage']));
+					$clients[] = $client;
+				}
+				return $clients;
 			}
 			return false;
 		}
@@ -316,34 +313,23 @@
 		function create($db = null)
 		{
 			$link = $this->getLink($db);
-			if ($link)
-			{
-				if ($this->checkForCreation($link) === true)
-				{
-					$link->prepare('
-						INSERT INTO client(email, password, name, language)
-						VALUE (:email, :password, :name, :language)');
-					$tmpEmail = DB::toDB($this->email);
-					$tmpName = DB::toDB($this->name);
-					$tmpPassword = hash('sha256', $this->password);
-					$tmpLanguage = DB::toDB($this->language);
-					$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
-					$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
-					$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
-					$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
-					if ($link->execute(true))
-					{
-						$this->getFromName($this->name);
-						return true;
-					}
-					else
-						return false;
-				}
-				else
-					return false;
-			}
-			else
+			if (!$link)
 				return false;
+			$this->checkForCreation($link);
+			$link->prepare('
+					INSERT INTO client(email, password, name, language)
+					VALUE (:email, :password, :name, :language)');
+			$tmpEmail = DB::toDB($this->email);
+			$tmpName = DB::toDB($this->name);
+			$tmpPassword = hash('sha256', $this->password);
+			$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
+			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
+			$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
+			$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
+			if (!$link->execute(true))
+				return false;
+			$this->getFromName($this->name);
+			return true;
 		}
 
 		function checkForCreation($db = null)

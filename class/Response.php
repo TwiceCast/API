@@ -9,6 +9,7 @@ class Response
 	const DOESNOTEXIST		=	400;
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
+	const NOTFOUND			=	404;
 	const UNKNOWN			=	501;
 	const UNAVAILABLE		=	503;
 	const ORGNAMEUSED		=	410;
@@ -71,8 +72,7 @@ class Response
 		http_response_code($this->code);
 		header('Content-Type: ' . ($this->contentType == 'json' ? 'application/json' : ($this->contentType == "xml" ? 'application/xml' : 'text/html')));
 		
-		$final = ($this->contentType == "json" ? json_encode($this->message) : $this->toXML($this->message));
-		//TODO : Encoding (gzip, deflated, etc...);
+		$final = ($this->contentType == "xml" ? $this->toXML($this->message) : json_encode($this->message));
 		echo $final;
 	}
 	
