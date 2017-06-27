@@ -108,10 +108,7 @@
 							return true;
 					}
 					else
-					{
 						throw new DatabaseException("Query error: ".$this->query->errorInfo(), Response::UNAVAILABLE);
-						return false;				
-					}
 				}
 				else
 					return false;
