@@ -212,7 +212,7 @@
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
-				if ($token->validate($data) === true)
+				if ($token->validate($data) !== true)
 					throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 				$this->getUserFromToken();
 				return true;
