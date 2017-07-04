@@ -28,7 +28,8 @@
 				$this->db = null;
 		}
 		
-		public function __toString() {
+		public function __toString()
+		{
 			return "user";
 		}
 
@@ -262,12 +263,16 @@
 			$link = $this->getLink($db);
 			if (!$link)
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			if (is_object($newLanguage))
+				$tmpLanguage = DB::toDB($newLanguage->code);
+			else
+				$tmpLanguage = DB::toDB($newLanguage);
 			$link->prepare('
 				UPDATE client
 				SET client.language = :language
 				WHERE client.id = :id');
 			$tmp = DB::toDB($newLanguage);
-			$link->bindParam(':language', $tmp, PDO::PARAM_STR);
+			$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
 			$link->bindParam(':id', $this->id, PDO::PARAM_INT);
 			$link->execute(true);
 			$this->setLanguage($newLanguage);
