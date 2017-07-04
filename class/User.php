@@ -62,7 +62,12 @@
 
 		function setLanguage($language)
 		{
-			$this->language = $language;
+			if (is_object($language))
+				$code = $language->code;
+			else
+				$code = $language;
+			$this->language = new stdClass();
+			$this->language->code = $code;
 			return $this;
 		}
 
@@ -251,7 +256,7 @@
 			$link->bindParam(':language', $tmp, PDO::PARAM_STR);
 			$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
 			$link->execute(true);
-			$this->language = $newLanguage;
+			$this->setLanguage($newLanguage);
 		}
 
 		function update($db = null)
@@ -269,7 +274,7 @@
 				$email = DB::toDB($this->email);
 				$password = hash('sha256', $this->password);
 				$name = DB::toDB($this->name);
-				$language = DB::toDB($this->language);
+				$language = DB::toDB($this->language->code);
 				$link->bindParam(':email', $email, PDO::PARAM_STR);
 				$link->bindParam(':password', $password, PDO::PARAM_STR);
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
@@ -285,7 +290,7 @@
 		{
 			$link = $this->getLink($db);
 			if (!$link)
-				return false;
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$this->checkForCreation($link);
 			$link->prepare('
 					INSERT INTO client(email, password, name, language)
@@ -293,7 +298,7 @@
 			$tmpEmail = DB::toDB($this->email);
 			$tmpName = DB::toDB($this->name);
 			$tmpPassword = hash('sha256', $this->password);
-			$tmpLanguage = DB::toDB($this->language);
+			$tmpLanguage = DB::toDB($this->language->code);
 			$link->bindParam(':email', $tmpEmail, PDO::PARAM_STR);
 			$link->bindParam(':password', $tmpPassword, PDO::PARAM_STR);
 			$link->bindParam(':name', $tmpName, PDO::PARAM_STR);
