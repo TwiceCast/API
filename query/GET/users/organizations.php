@@ -19,6 +19,6 @@
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {
-		$response.send();
+		$response->send();
 	}
 ?>
