@@ -15,7 +15,7 @@
 		$authentication->verify(false);
 		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
 		{
-			if (!($id == "id" ? $user->getFromID($_GET["id"]) : $user->getFromName($_GET["nickname"])))
+			if (!($id == "id" ? $user->getFromId($_GET["id"]) : $user->getFromName($_GET["nickname"])))
 				throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
 			$response->setMessage($user);
 		}
