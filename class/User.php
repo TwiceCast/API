@@ -13,7 +13,7 @@
 		var $private;
 		private $db;
 
-		function __construct($db = true, $id = null, $email = null, $password = null, $name = null, $register_date = null, $language = null)
+		function __construct($db = true, $id = null, $email = null, $password = null, $name = null, $register_date = null, $language = null, $private = null)
 		{
 			$this->setId($id);
 			$this->setEmail($email);
@@ -21,6 +21,7 @@
 			$this->setName($name);
 			$this->setRegisterDate($register_date);
 			$this->setLanguage($language);
+			$this->setPrivate($private);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -71,6 +72,12 @@
 			$this->language->code = $code;
 			return $this;
 		}
+		
+		function setPrivate($private)
+		{
+			$this->private = (bool) $private;
+			return $this;
+		}
 
 		function getLink($db)
 		{
@@ -93,7 +100,8 @@
 					client.password AS clientPassword,
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
-					client.language AS clientLanguage
+					client.language AS clientLanguage,
+					client.private AS clientPrivate
 					FROM client
 					WHERE client.id = :id');
 				$link->bindParam(':id', $id, PDO::PARAM_INT);
@@ -106,6 +114,7 @@
 					$this->setName(DB::fromDB($data['clientName']));
 					$this->setRegisterDate($data['clientRegisterDate']);
 					$this->setLanguage(DB::fromDB($data['clientLanguage']));
+					$this->setPrivate($data['clientPrivate']);
 					return true;
 				}
 				else
@@ -126,7 +135,8 @@
 					client.password AS clientPassword,
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
-					client.language AS clientLanguage
+					client.language AS clientLanguage,
+					client.private, AS clientPrivate
 					FROM client
 					WHERE client.name = :name');
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
@@ -139,6 +149,7 @@
 					$this->setName(DB::fromDB($data['clientName']));
 					$this->setRegisterDate($data['clientRegisterDate']);
 					$this->setLanguage(DB::fromDB($data['clientLanguage']));
+					$this->setPrivate($data['clientPrivate']);
 					return true;
 				}
 				else
@@ -159,9 +170,10 @@
 					client.password AS clientPassword,
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
-					client.language AS clientLanguage
+					client.language AS clientLanguage,
+					client.private AS clientPrivate
 					FROM client
-					ORDER BY client.Id';
+					ORDER BY client.id';
 				if ($limit)
 				{
 					$limit = (int) $limit;
@@ -187,6 +199,7 @@
 					$client->setName(DB::fromDB($entry['clientName']));
 					$client->setRegisterDate($entry['clientRegisterDate']);
 					$client->setLanguage(DB::fromDB($entry['clientLanguage']));
+					$client->setPrivate($entry['clientPrivate']);
 					$clients[] = $client;
 				}
 				return $clients;
@@ -258,6 +271,29 @@
 			$link->bindParam(':id', $this->id, PDO::PARAM_INT);
 			$link->execute(true);
 			$this->setLanguage($newLanguage);
+		}
+
+		function changePrivate($newPrivate, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.private = :private
+					WHERE client.id = :id');
+				$link->bindParam(':private', (int) $newPrivate, PDO::PARAM_INT);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setPrivat($newPrivate);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
 		}
 
 		function update($db = null)
