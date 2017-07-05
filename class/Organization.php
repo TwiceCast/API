@@ -180,7 +180,7 @@
 					organization.private AS organizationPrivate
 					FROM client_role
 					LEFT JOIN organization ON client_role.id_target = organization.id
-					WHERE client_role.id_user = :id AND categorie_target = "Organisation"';
+					WHERE client_role.id_client = :id AND categorie_target = "Organisation"';
 				if ($limit)
 				{
 					$limit = (int) $limit;
