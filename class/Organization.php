@@ -168,37 +168,46 @@
 				return false;
 		}
 
-		function getFromUserId($id, $db = null)
+		function getFromUserId($id, $limit = null, $offset = null, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
 			{
-				$link->prepare('
+				$query = '
 					SELECT organization.id AS organizationId,
 					organization.name AS organizationName,
 					organization.language AS organizationLanguage,
 					organization.private AS organizationPrivate
 					FROM client_role
 					LEFT JOIN organization ON client_role.id_target = organization.id
-					WHERE client_role.id_user = :id AND categorie_target = "Organisation"');
+					WHERE client_role.id_user = :id AND categorie_target = "Organisation"';
+				if ($limit)
+				{
+					$limit = (int) $limit;
+					if ($offset)
+					{
+						$offset = (int) $offset;
+						$query .= " LIMIT ".$limit." OFFSET ".$offset;
+					}
+					else
+						$query .= " LIMIT ".$limit;
+				}
+				$link->prepare($query);
 				$link->bindParam(':id', $id, PDO::PARAM_INT);
 				$data = $link->fetchAll(true);
-				if ($data)
-				{
-					$organizations = array();
-					foreach ($data as &$entry)
-					{
-						$organization = new Organization(false);
-						$organization->setId($entry['organizationId']);
-						$organization->setName(DB::fromDB($entry['organizationName']));
-						$organization->setLanguage(DB::fromDB($entry['organizationLanguage']));
-						$organization->setPrivate($entry['organizationPrivate']);
-						$organizations[] = $organization;
-					}
-					return $organizations;
-				}
-				else
+				if ($data === false)
 					return false;
+				$organizations = array();
+				foreach ($data as &$entry)
+				{
+					$organization = new Organization(false);
+					$organization->setId($entry['organizationId']);
+					$organization->setName(DB::fromDB($entry['organizationName']));
+					$organization->setLanguage(DB::fromDB($entry['organizationLanguage']));
+					$organization->setPrivate($entry['organizationPrivate']);
+					$organizations[] = $organization;
+				}
+				return $organizations;
 			}
 			else
 				return false;
