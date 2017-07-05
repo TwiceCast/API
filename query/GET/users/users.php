@@ -2,7 +2,6 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Authentication.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/class/functions.php');
 
 	$response = new Response(Response::OK);
 	try {
