@@ -3,6 +3,7 @@ class Response
 {
 	const SUCCESS			=	200;	
 	const OK				=	200;
+	const BADREQUEST		= 400;
 	const NICKUSED			=	400;
 	const EMAILUSED			=	400;
 	const MISSPARAM			=	400;
@@ -10,6 +11,8 @@ class Response
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
 	const NOTFOUND			=	404;
+	const TOOLARGE			= 413;
+	const UNSUPPORTED		= 415;
 	const UNKNOWN			=	501;
 	const UNAVAILABLE		=	503;
 	const ORGNAMEUSED		=	410;
