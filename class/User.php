@@ -137,7 +137,7 @@
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
-					client.private, AS clientPrivate
+					client.private AS clientPrivate
 					FROM client
 					WHERE client.name = :name');
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
