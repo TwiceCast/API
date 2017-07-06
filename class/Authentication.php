@@ -52,17 +52,17 @@
 			if ($this->token)
 			{
 				$this->user = new User();
-				$this->user->getFromID($this->token->getClaim('uid'));
+				$this->user->getFromId($this->token->getClaim('uid'));
 				return ($this->user);
 			}
 			return false;
 		}
 
-		function isUserID($ID)
+		function isUserId($id)
 		{
 			if (!$this->user)
 				$this->getUserFromToken();
-			return $this->user->ID == $ID;
+			return $this->user->id == $id;
 		}
 
 		function isUserName($name)
@@ -109,7 +109,7 @@
 			if (!$link)
 				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
 			$link->prepare('
-				SELECT client.id AS clientID,
+				SELECT client.id AS clientId,
 				client.email AS clientEmail,
 				client.password AS clientPassword,
 				client.name AS clientName,
@@ -124,7 +124,7 @@
 			if (!$data)
 				throw new ParametersException("Authentication failed", Response::MISSPARAM);
 			$this->user = new User();
-			$this->user->setID($data['clientID']);
+			$this->user->setId($data['clientId']);
 			$this->user->setEmail(DB::fromDB($data['clientEmail']));
 			$this->user->setPassword($data['clientPassword']);
 			$this->user->setName(DB::fromDB($data['clientName']));
@@ -144,7 +144,7 @@
 									->setIssuedAt(time())
 									->setNotBefore(time())
 									->setExpiration(time() + 3600)
-									->set('uid', $this->user->ID)
+									->set('uid', $this->user->id)
 									->sign($signer, $config["token"])
 									->getToken();
 			return $token;
