@@ -19,14 +19,28 @@
 		if (!$user->getFromId($_GET['userid']))
 			throw new NotFoundException("This user id doesn’t exist", Response::NOTFOUND);
 
-		header('Content-Type: image/png');
-		//header('Content-Disposition: attachment; filename="'.$user->id.'.png"');
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].'/avatar/'.$user->id.'.png'))
-			$file = $_SERVER['DOCUMENT_ROOT'].'/avatar/'.$user->id.'.png';
+		$avatars = glob($_SERVER['DOCUMENT_ROOT']."/avatar/".$user->id.".*");
+		if ($avatars === false)
+			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+		else if (empty($avatars))
+		{
+			$avatars = glob($_SERVER['DOCUMENT_ROOT']."/avatar/0.*");
+			if ($avatars === false)
+				throw new UnknownException("Something wrong happenedb", Response::UNKNOWN);
+			else if (empty($avatars))
+				throw new NotFoundException("Avatar not found", Response::NOTFOUND);
+		}
+		$path_parts = pathinfo($avatars[0]);
+		if ($path_parts['extension'] == 'gif')
+			header('Content-Type: image/gif');
+		else if ($path_parts['extension'] == 'jpeg')
+			header('Content-Type: image/jpeg');
+		else if ($path_parts['extension'] == 'png')
+			header('Content-Type: image/png');
 		else
-			$file = $_SERVER['DOCUMENT_ROOT'].'/avatar/0.png';
-		header('Content-Length: '.filesize($file));
-		readfile($file);
+			throw new UnknownException("Something wrong happeneda", Response::UNKNOWN);
+		header('Content-Length: '.filesize($avatars[0]));
+		readfile($avatars[0]);
 		exit();
 	} catch (CustomException $e) {
 		$response->setError($e);
