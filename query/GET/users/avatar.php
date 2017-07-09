@@ -22,9 +22,11 @@
 		header('Content-Type: image/png');
 		//header('Content-Disposition: attachment; filename="'.$user->id.'.png"');
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].'/avatar/'.$user->id.'.png'))
-			readfile($_SERVER['DOCUMENT_ROOT'].'/avatar/'.$user->id.'.png');
+			$file = $_SERVER['DOCUMENT_ROOT'].'/avatar/'.$user->id.'.png';
 		else
-			readfile($_SERVER['DOCUMENT_ROOT'].'/avatar/0.png');
+			$file = $_SERVER['DOCUMENT_ROOT'].'/avatar/0.png';
+		header('Content-Length: '.filesize($file));
+		readfile($file);
 		exit();
 	} catch (CustomException $e) {
 		$response->setError($e);
