@@ -26,10 +26,10 @@ RewriteRule "^users/([0-9]+)/avatar/" "query/GET/users/avatar.php?userid=$1"
 #RewriteCond %{REQUEST_METHOD} GET
 #RewriteRule "^users/([0-9a-zA-Z]+)/avatar/" "query/GET/users/avatar.php?usernickname=$1"
 
- #-  POST /users/:id/avatar/    -#
+ #-  PUT /users/:id/avatar/    -#
 
-RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^users/([0-9]+)/avatar/" "query/POST/users/avatar.php?userid=$1"
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^users/([0-9]+)/avatar/" "query/PUT/users/avatar.php?userid=$1"
 
  #-  PUT /users/:nickname/avatar/    -#
 
