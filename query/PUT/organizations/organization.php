@@ -29,7 +29,7 @@
 		
 		// role 4 == Organization Founder
 		if ($authentication->userHasRights(4, $organization->id) === false)
-			throw new ParametersException("You cannot modify someone else's organization", Response::NORIGHT);
+			throw new RightsException("You cannot modify someone else's organization", Response::NORIGHT);
 		
 		if (!isset($postdata['name']) or !isset($postdata['language']))
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
