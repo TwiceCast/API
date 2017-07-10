@@ -22,10 +22,8 @@
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 		
 		$organization = new Organization;
-		$organization->getFromId($_GET['id']);
-		
-		if (!$organization)
-			throw NotFoundException("This organization does not exist", Response::NOTFOUND);
+		if (!$organization->getFromId($_GET['id']))
+			throw new NotFoundException("This organization does not exist", Response::NOTFOUND);
 		
 		// role 4 == Organization Founder
 		if ($authentication->userHasRights(4, $organization->id) === false)
