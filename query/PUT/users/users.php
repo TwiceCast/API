@@ -28,8 +28,10 @@
 			or !isset($post['email']) or !isset($post['language'])
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 
-		$user->setName($post['name']);
-		$user->setEmail($post['email']);
+		if ($user->checkName($post['name']))
+			$user->setName($post['name']);
+		if ($user->checkEmail($post['email']))
+			$user->setEmail($post['email']);
 		$user->setPassword($post['password']);
 		$user->setLanguage($post['language']['code']);
 

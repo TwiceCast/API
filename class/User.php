@@ -303,8 +303,6 @@
 
 		function update($db = null)
 		{
-			$this->checkEmail($newEmail);
-			$this->checkName($newName);
 			$link = $this->getLink($db);
 			if ($link)
 			{
