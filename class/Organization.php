@@ -75,7 +75,7 @@
 				$link->prepare('
 					SELECT organization.id AS organizationId,
 					organization.name AS organizationName,
-					organization.language, AS organizationLanguage,
+					organization.language AS organizationLanguage,
 					organization.private AS organizationPrivate
 					FROM organization
 					WHERE organization.id = :id');
