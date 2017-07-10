@@ -6,6 +6,7 @@ class Response
 	const BADREQUEST		= 400;
 	const NICKUSED			=	400;
 	const EMAILUSED			=	400;
+	const NAMEUSED			=	400;
 	const MISSPARAM			=	400;
 	const DOESNOTEXIST		=	400;
 	const NOTAUTH			=	401;
