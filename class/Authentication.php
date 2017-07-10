@@ -72,12 +72,28 @@
 			return $this->user->name == $name;
 		}
 
-		function userHasRights($right, $type = "organization")
+		function userHasRights($roleId, $targetId, $type = "organization", $db = null)
 		{
 			if ($type == "organization")
 			{
-				//check for organization right to match $right
-				return true;
+				$link = $this->getLink($db);
+				if (!$link)
+					throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
+				$link->prepare('
+					SELECT 1
+					FROM client_role
+					WHERE client_role.categorie_target = "Organisation"
+					AND client_role.id_target = :org
+					AND client_role.id_client = :user
+					AND client_role.id_role = :role');
+				$link->bindParam(':org', $targetId, PDO::PARAM_INT);
+				$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
+				$link->bindParam(':role', $roleId, PDO::PARAM_INT);
+				$ret = $link->fetch(true);
+				if ($ret)
+					return true;
+				else
+					return false;
 			}
 			else if ($type == "stream")
 			{
