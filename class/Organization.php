@@ -263,6 +263,7 @@
 
 		function changeName($newName, $db = null)
 		{
+			$this->checkName($newName);
 			$link = $this->getLink($db);
 			if ($link)
 			{
@@ -327,6 +328,29 @@
 				return false;
 		}
 
+		function update($db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE organization
+					SET organization.name = :name,
+					organization.language = :language,
+					organization.private = :private
+					WHERE organization.id = :id');
+				$name = DB::toDB($this->name);
+				$language = DB::toDB($this->language->code);
+				$link->bindParam(':name', $name, PDO::PARAM_STR);
+				$link->bindParam(':language', $language, PDO::PARAM_STR);
+				$link->bindParam(':private', $this->private, PDO::PARAM_INT);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				return $link->execute(true);
+			}
+			else
+				return false;
+		}
+		
 		function create($founderId = null, $db = null)
 		{
 			$link = $this->getLink($db);
@@ -361,6 +385,24 @@
 			$data = $link->fetchAll(true);
 			if ($data)
 				throw new ParametersException("Organization name already in use", Response::ORGNAMEUSED);
+		}
+
+		function checkName($nameToCheck, $db = null)
+		{
+			if ($nameToCheck === $this->name)
+				return true;
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$link->prepare('
+				SELECT organization.id AS organizationId
+				FROM organization
+				WHERE organization.name = :name');
+			$link->bindParam(':name', $nameToCheck, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Name already in use", Response::NAMEUSED);
+			return true;
 		}
 
 		/*

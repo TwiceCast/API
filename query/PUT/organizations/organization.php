@@ -34,13 +34,14 @@
 		if (!isset($postdata['name']) or !isset($postdata['language']))
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 
-		$organization->setName($postdata['name']);
+		if ($organization->checkName($postdata['name']))
+			$organization->setName($postdata['name']);
 		$organization->setLanguage($postdata['language']);
 		if (!isset($postdata['private']))
 			$postdata['private'] = false;
 		$organization->setPrivate($postdata['private']);
 		
-		if (!$user->update())
+		if (!$organization->update())
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 		$response->setMessage($organization);
 	} catch (CustomException $e) {
