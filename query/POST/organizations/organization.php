@@ -16,10 +16,10 @@
 		$user = $authentication->getUserFromToken();
 		
 		if (!$user)
-			throw new UnkownException("Something wrong happened");
+			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 		
 		if (!isset($postdata['name']) or !isset($postdata['language']))
-			throw new ParametersException("Missing parameters", Response::MISSPARAM);
+			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 		
 		$organization = new Organization();
 		$organization->setName($postdata['name']);
@@ -29,7 +29,7 @@
 		$organization->setPrivate($postdata['private']);
 		
 		if (!$organization->create($user->id))
-			throw new UnkownException("Something wrong happened", Response::UNKNOWN);
+			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 		
 		$response->setMessage($organization);
 	} catch (CustomException $e) {
