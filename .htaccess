@@ -151,27 +151,27 @@ RewriteRule "^organizations/([0-9]+)/members/" "query/GET/organizations/members.
 
  #-  GET /organizations/:id     -#
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^organizations/([0-9]+)/" "query/GET/organizations/index.php?id=$1"
+RewriteRule "^organizations/([0-9]+)/" "query/GET/organizations/organization.php?id=$1"
 
  #-  DELETE /organizations/:id    -#
 RewriteCond %{REQUEST_METHOD} DELETE
-RewriteRule "^organizations/([0-9]+)/" "query/DELETE/organizations/index.php?id=$1"
+RewriteRule "^organizations/([0-9]+)/" "query/DELETE/organizations/organization.php?id=$1"
 
  #-  PATCH /organizations/:id    -#
 RewriteCond %{REQUEST_METHOD} PATCH
-RewriteRule "^organizations/([0-9]+)/" "query/PATCH/organizations/index.php?id=$1"
+RewriteRule "^organizations/([0-9]+)/" "query/PATCH/organizations/organization.php?id=$1"
 
  #-  PUT /organizations/:id     -#
 RewriteCond %{REQUEST_METHOD} PUT
-RewriteRule "^organizations/([0-9]+)/" "query/PUT/organizations/index.php?id=$1"
+RewriteRule "^organizations/([0-9]+)/" "query/PUT/organizations/organization.php?id=$1"
 
  #-  GET /organizations/      -#
 RewriteCond %{REQUEST_METHOD} GET
-RewriteRule "^organizations/" "query/GET/organizations/index.php"
+RewriteRule "^organizations/" "query/GET/organizations/organization.php"
 
  #-  POST /organizations/     -#
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^organizations/" "query/POST/organizations/index.php"
+RewriteRule "^organizations/" "query/POST/organizations/organization.php"
 
 
     ###  QUERY_STRING  ###
