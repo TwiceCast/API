@@ -11,15 +11,15 @@
 
 		function __construct($host = null, $dbname = null, $user = null, $password = null)
 		{
-			$config = $_SESSION["config"];
+			$config = $_SESSION["config"]["database"];
 			if ($host == null) {
-				$host = $config["db_host"];
-				if (isset($config["db_port"]) && $config["db_port"] != "")
-					$host = $host.":".$config["db_port"];
+				$host = $config["host"];
+				if (isset($config["port"]) && $config["port"] != "")
+					$host = $host.":".$config["port"];
 			}
-			$dbname = $dbname != null ? $dbname : $config["db_name"];
-			$user = $user != null ? $user : $config["db_user"];
-			$password = $password != null ? $password : $config["db_password"];
+			$dbname = $dbname != null ? $dbname : $config["name"];
+			$user = $user != null ? $user : $config["user"];
+			$password = $password != null ? $password : $config["password"];
 			$this->query = null;
 			$this->executed = false;
 			try
@@ -108,7 +108,7 @@
 							return true;
 					}
 					else
-						return false;
+						throw new DatabaseException("Query error: ".$this->query->errorInfo(), Response::UNAVAILABLE);
 				}
 				else
 					return false;

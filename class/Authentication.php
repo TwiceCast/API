@@ -52,17 +52,17 @@
 			if ($this->token)
 			{
 				$this->user = new User();
-				$this->user->getFromID($this->token->getClaim('uid'));
+				$this->user->getFromId($this->token->getClaim('uid'));
 				return ($this->user);
 			}
 			return false;
 		}
 
-		function isUserID($ID)
+		function isUserId($id)
 		{
 			if (!$this->user)
 				$this->getUserFromToken();
-			return $this->user->ID == $ID;
+			return $this->user->id == $id;
 		}
 
 		function isUserName($name)
@@ -109,7 +109,7 @@
 			if (!$link)
 				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
 			$link->prepare('
-				SELECT client.id AS clientID,
+				SELECT client.id AS clientId,
 				client.email AS clientEmail,
 				client.password AS clientPassword,
 				client.name AS clientName,
@@ -124,7 +124,7 @@
 			if (!$data)
 				throw new ParametersException("Authentication failed", Response::MISSPARAM);
 			$this->user = new User();
-			$this->user->setID($data['clientID']);
+			$this->user->setId($data['clientId']);
 			$this->user->setEmail(DB::fromDB($data['clientEmail']));
 			$this->user->setPassword($data['clientPassword']);
 			$this->user->setName(DB::fromDB($data['clientName']));
@@ -134,54 +134,95 @@
 
 		function generateJWT()
 		{
-			$config = $_SESSION["config"];
-			if ($this->connect())
-			{
-				$signer = new Sha256();
-				$token = (new Builder())->setIssuer('http://api.twicecast.com')
-										->setAudience('http://twicecast.com')
-										->setId('4f1g23a12aa')
-										->setIssuedAt(time())
-										->setNotBefore(time())
-										->setExpiration(time() + 3600)
-										->set('uid', $this->user->ID)
-										->sign($signer, $config["token_secret"])
-										->getToken();
-				return $token;
-			}
-			else
+			$config = $_SESSION["config"]["application"];
+			if (!$this->connect())
 				return false;
+			$signer = new Sha256();
+			$token = (new Builder())->setIssuer('http://api.twicecast.com')
+									->setAudience('http://twicecast.com')
+									->setId('4f1g23a12aa')
+									->setIssuedAt(time())
+									->setNotBefore(time())
+									->setExpiration(time() + 3600)
+									->set('uid', $this->user->id)
+									->sign($signer, $config["token"])
+									->getToken();
+			return $token;
 		}
 
-		function verify()
+		function generateChatToken()
+		{
+			$config = $_SESSION["config"]["chat"];
+			$signer = new Sha256();
+			$token = (new Builder())->setIssuer('http://api.twicecast.com')
+									->setAudience('http://twicecast.com')
+									->setId('4f1g23a12aa')
+									->setIssuedAt(time())
+									->setNotBefore(time())
+									->setExpiration(time() + 3600)
+									->set('type', 'chat')
+									->set('username', $this->user->name)
+									->set('streamname', $this->name)
+									->sign($signer, $config["token"])
+									->getToken();
+			return $token;
+		}
+
+		function generateRepositoryToken()
+		{
+			$config = $_SESSION["config"]["repository"];
+			$signer = new Sha256();
+			$token = (new Builder())->setIssuer('http://api.twicecast.com')
+									->setAudience('http://twicecast.com')
+									->setId('4f1g23a12aa')
+									->setIssuedAt(time())
+									->setNotBefore(time())
+									->setExpiration(time() + 3600)
+									->set('type', 'repository')
+									->set('username', $this->user->name)
+									->set('streamname', $this->name)
+									->sign($signer, $config["token"])
+									->getToken();
+			return $token;
+		}
+
+		function verify($forceAuth = true)
 		{
 			$headers = array_change_key_case(getallheaders());
 			if ($headers === false || !isset($headers["authorization"]))
-				throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
+				if ($forceAuth === true)
+					throw new AuthenticationException("Authorization header not found", Response::NOTAUTH);
+				else
+					return true;
 			$jwt = str_replace("Bearer ", "", $headers['authorization']);
-			return $this->verifyJWT($jwt);
+			$this->verifyJWT($jwt);
 		}
 
 		function verifyJWT($token)
 		{
-			$config = $_SESSION["config"];
+			$config = $_SESSION["config"]["application"];
 			$signer = new Sha256();
 			try
 			{
 				$token = (new Parser())->parse((string) $token);
 				$this->token = $token;
-				if (!$token->verify($signer, $config["token_secret"]))
+				if (!$token->verify($signer, $config["token"]))
 					throw new AuthenticationException("Invalid token", Response::NOTAUTH);
 				$data = new ValidationData();
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
-				return $token->validate($data);
+				if ($token->validate($data) !== true)
+					throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
+				$this->getUserFromToken();
+				return true;
 			}
 			catch (Exception $e)
 			{
 				throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 			}
+			if (!$token->validate($data))
+				throw new AuthenticationException("Token is expired", Response::NOTAUTH);
 		}
 	}
 ?>

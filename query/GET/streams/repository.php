@@ -9,7 +9,7 @@
 	try {
 		$stream = new Stream();
 		$auth = new Authentication();
-		$config = $_SESSION["config"]["chat"];
+		$config = $_SESSION["config"]["repository"];
 
 		$auth->verify();
 		if (isset($_GET['accept']))
@@ -21,7 +21,7 @@
 		$url = $config["protocol"].($config["ssl"] ? "s" : "")."://".$config["host"];
 		if ($config["port"] != "")
 			$url .= ":".$config["port"];
-		$token = $auth->generateChatToken();
+		$token = $auth->generateRepositoryToken();
 		$response->setMessage(["url" => $url, "token" => "$token"]);
 		// throw new NotImplementedException("This feature is not implemented yet", 501);
 	} catch (CustomException $e) {

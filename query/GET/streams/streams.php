@@ -18,7 +18,7 @@
 		else
 		{
 			$streams = $stream->getAllStreams();
-			$response->setMessage(["streams" => $streams]);
+			$response->setMessage(["stream_list" => $streams, "stream_total" => count($streams)]);
 		}
 	} catch (CustomException $e) {
 		$response->setError($e);

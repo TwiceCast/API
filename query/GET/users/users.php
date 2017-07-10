@@ -10,24 +10,36 @@
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		$headers = array_change_key_case(getallheaders());
-		if (isset($headers["authorization"])) {
-			$jwt = str_replace("Bearer ", "", $headers['authorization']);
-			$authentication = new Authentication();
-			$authentication->verifyJWT($jwt);
-		}
+		$authentication = new Authentication();
+		$authentication->verify(false);
 		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
 		{
-			if (!($id == "id" ? $user->getFromID($_GET["id"]) : ($authentication && $_GET["nickname"] == "me" ? ($user = $authentication->getUserFromToken()) : $user->getFromName($_GET["nickname"]))))
+			if (!($id == "id" ? $user->getFromId($_GET["id"]) : $user->getFromName($_GET["nickname"])))
 				throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
 			$response->setMessage($user);
 		}
 		else
 		{
-			$users = $user->getAllUsers();
+			if (isset($_GET['limit']))
+			{
+				if (isset($_GET['start']))
+					$users = $user->getAllUsers($_GET['limit'], $_GET['start']);
+				else
+					$users = $user->getAllUsers($_GET['limit']);
+			}
+			else
+				$users = $user->getAllUsers();
 			$rep = new stdClass();
-			$rep->user_list = $users;
-			$rep->user_total = count($users);
+			if ($users === false)
+			{
+				$rep->user_list = null;
+				$rep->user_total = 0;
+			}
+			else
+			{
+				$rep->user_list = $users;
+				$rep->user_total = count($users);
+			}
 			$response->setMessage($rep);
 		}
 	} catch (CustomException $e) {
