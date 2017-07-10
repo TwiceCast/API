@@ -225,12 +225,13 @@
 					client.email AS clientEmail,
 					client.password AS clientPassword,
 					client.name AS clientName,
-					client.register_data AS clientRegisterDate,
+					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
 					client.private AS clientPrivate
-					FROM or_user_role
+					FROM client_role
 					LEFT JOIN client ON client_role.id_client = client.id
-					WHERE client_role.id_organization = :id AND categorie_target = "Organisation"');
+					WHERE client_role.id_target = :id
+					AND client_role.categorie_target = "Organisation"');
 					// Possibilité d'ajouter
 					// LEFT JOIN or_role ON or_user_role.id_role = or_role.id
 					// pour avoir le rôle de chaque user en même temps.
@@ -250,8 +251,8 @@
 						$client->setPassword($entry['clientPassword']);
 						$client->setName(DB::fromDB($entry['clientName']));
 						$client->setRegisterDate($entry['clientRegisterDate']);
-						$client->setLanguage(DB::fromDB($data['clientLanguage']));
-						$client->setPrivate($data['clientPrivate']);
+						$client->setLanguage(DB::fromDB($entry['clientLanguage']));
+						$client->setPrivate($entry['clientPrivate']);
 						$clients[] = $client;
 					}
 					return $clients;
