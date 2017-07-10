@@ -327,7 +327,7 @@
 				return false;
 		}
 
-		function create($db = null)
+		function create($founderId = null, $db = null)
 		{
 			$link = $this->getLink($db);
 			if (!$link)
@@ -343,6 +343,8 @@
 			if (!$link->execute(true))
 				return false;
 			$this->getFromId($link->link->lastInsertId());
+			if ($founderId)
+				$this->addUserRole(4, $founderId, $link);			
 			return true;
 		}
 
