@@ -574,7 +574,7 @@
 				FROM client_role
 				WHERE client_role.categorie_target = "Organisation" AND client_role.id_target = :id');
 			$link->bindParam(':id', $this->id, PDO::PARAM_INT);
-			$link->execute(true);
+			return $link->execute(true);
 		}
 	}
 ?>
