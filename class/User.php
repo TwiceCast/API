@@ -67,6 +67,8 @@
 		{
 			if (is_object($language))
 				$code = $language->code;
+			else if (is_array($language))
+				$code = $language['code'];
 			else
 				$code = $language;
 			$this->language = new stdClass();
@@ -265,6 +267,8 @@
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			if (is_object($newLanguage))
 				$tmpLanguage = DB::toDB($newLanguage->code);
+			else if (is_array($newLanguage))
+				$tmpLanguage = DB::toDB($newLanguage['code']);
 			else
 				$tmpLanguage = DB::toDB($newLanguage);
 			$link->prepare('
@@ -291,7 +295,7 @@
 				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
 				if ($link->execute(true))
 				{
-					$this->setPrivat($newPrivate);
+					$this->setPrivate($newPrivate);
 					return true;
 				}
 				else
