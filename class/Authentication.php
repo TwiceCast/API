@@ -72,7 +72,7 @@
 			return $this->user->name == $name;
 		}
 
-		function userHasRights($roleId, $targetId, $type = "organization", $db = null)
+		function userHasRights($roleIds, $targetId, $type = "organization", $db = null)
 		{
 			if ($type == "organization")
 			{
@@ -80,18 +80,24 @@
 				if (!$link)
 					throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
 				$link->prepare('
-					SELECT 1
+					SELECT client_role.id_role AS clientRole
 					FROM client_role
 					WHERE client_role.categorie_target = "Organisation"
 					AND client_role.id_target = :org
-					AND client_role.id_client = :user
-					AND client_role.id_role = :role');
+					AND client_role.id_client = :user');
 				$link->bindParam(':org', $targetId, PDO::PARAM_INT);
 				$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
-				$link->bindParam(':role', $roleId, PDO::PARAM_INT);
 				$ret = $link->fetch(true);
 				if ($ret)
-					return true;
+				{
+					if (is_array($roleIds))
+						return in_array($ret, $roleIds);
+					else
+					{
+						if ($roleIds == $ret['clientRole'])
+							return true;
+					}
+				}
 				else
 					return false;
 			}
