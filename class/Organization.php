@@ -512,6 +512,19 @@
 			if (!$link)
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
+				SELECT 1
+				FROM client_role
+				WHERE client_role.categorie_target = "Organisation"
+				AND client_role.id_target = :org
+				AND client_role.id_client = :user
+				AND client_role.id_role = :role');
+			$link->bindParam(':org', $this->id, PDO::PARAM_INT);
+			$link->bindParam(':user', $userId, PDO::PARAM_INT);
+			$link->bindParam(':role', $roleId, PDO::PARAM_INT);
+			$ret = $link->fetch(true);
+			if ($ret)
+				throw new DatabaseException("This user already have this role", 400);
+			$link->prepare('
 				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
 				VALUE(:user, :role, "Organisation", :org)');
 			$link->bindParam(':user', $userId, PDO::PARAM_INT);
