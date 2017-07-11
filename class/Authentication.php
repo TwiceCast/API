@@ -91,7 +91,7 @@
 				if ($ret)
 				{
 					if (is_array($roleIds))
-						return in_array($ret, $roleIds);
+						return in_array($ret['clientRole'], $roleIds);
 					else
 					{
 						if ($roleIds == $ret['clientRole'])
