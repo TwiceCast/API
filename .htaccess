@@ -145,6 +145,10 @@ RewriteRule "^organizations/([0-9]+)/streams/" "query/GET/organizations/streams.
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^organizations/([0-9]+)/streams/" "query/POST/organizations/streams.php?id=$1"
 
+ #- POST /organizations/:id/members  -#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^organizations/([0-9]+)/members/" "query/POST/organizations/members.php?id=$1"
+
  #-  GET /organizations/:id/members   -#
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^organizations/([0-9]+)/members/" "query/GET/organizations/members.php?id=$1"
