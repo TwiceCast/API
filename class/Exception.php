@@ -34,4 +34,5 @@
 	class ParametersException extends CustomException {}
 	class RightsException extends CustomException {}
 	class NotFoundException extends CustomException {}
+	class UploadException extends CustomException {}
 ?>

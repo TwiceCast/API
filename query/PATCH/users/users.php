@@ -21,7 +21,7 @@
 		if (!$user)
 			throw new UnknownException("Something wrong happened");
 		
-		if ($_GET['id'] != $user->ID) //add moderator/admin detection here
+		if ($_GET['id'] != $user->id) //add moderator/admin detection here
 			throw new ParametersException("You cannot modify someone else's account", Response::NORIGHT);
 		
 		if (isset($post['email']))
