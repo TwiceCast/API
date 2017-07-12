@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6
--- https://www.phpmyadmin.net/
+-- version 4.5.2
+-- http://www.phpmyadmin.net
 --
--- Client :  localhost
--- Généré le :  Mar 28 Février 2017 à 23:17
--- Version du serveur :  10.1.21-MariaDB
--- Version de PHP :  7.1.1
+-- Client :  127.0.0.1
+-- Généré le :  Mer 12 Juillet 2017 à 10:11
+-- Version du serveur :  5.7.9
+-- Version de PHP :  7.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -20,79 +20,75 @@ SET time_zone = "+00:00";
 -- Base de données :  `twicecast`
 --
 
-CREATE DATABASE IF NOT EXISTS twicecast;
+-- --------------------------------------------------------
 
-USE twicecast;
+--
+-- Structure de la table `blocks`
+--
+
+DROP TABLE IF EXISTS `blocks`;
+CREATE TABLE IF NOT EXISTS `blocks` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `categorie_target` varchar(15) DEFAULT NULL,
+  `id_target` bigint(20) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `client`
 --
 
-CREATE TABLE `client` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `client`;
+CREATE TABLE IF NOT EXISTS `client` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
   `password` char(64) NOT NULL,
-  `email` varchar(254) NOT NULL,
-  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `email` varchar(255) NOT NULL,
+  `register_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `language` varchar(5) NOT NULL,
+  `private` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `gl_client_role`
+-- Structure de la table `client_role`
 --
 
-CREATE TABLE `gl_client_role` (
+DROP TABLE IF EXISTS `client_role`;
+CREATE TABLE IF NOT EXISTS `client_role` (
   `id_client` bigint(20) UNSIGNED NOT NULL,
-  `id_role` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id_role` bigint(20) UNSIGNED NOT NULL,
+  `categorie_target` varchar(15) DEFAULT NULL,
+  `id_target` bigint(20) UNSIGNED DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `gl_privilege`
+-- Structure de la table `followers`
 --
 
-CREATE TABLE `gl_privilege` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(15) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `followers`;
+CREATE TABLE IF NOT EXISTS `followers` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `categorie_target` varchar(15) DEFAULT NULL,
+  `id_target` bigint(20) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `gl_role`
+-- Structure de la table `friends`
 --
 
-CREATE TABLE `gl_role` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(15) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `gl_role_privilege`
---
-
-CREATE TABLE `gl_role_privilege` (
-  `id_role` bigint(20) NOT NULL,
-  `id_privilege` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `gl_user_role`
---
-
-CREATE TABLE `gl_user_role` (
-  `id_user` bigint(20) UNSIGNED NOT NULL,
-  `id_role` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `friends`;
+CREATE TABLE IF NOT EXISTS `friends` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `id_friend` bigint(20) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -100,70 +96,47 @@ CREATE TABLE `gl_user_role` (
 -- Structure de la table `organization`
 --
 
-CREATE TABLE `organization` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(15) CHARACTER SET utf8 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `or_client_role`
---
-
-CREATE TABLE `or_client_role` (
-  `id_client` bigint(20) UNSIGNED NOT NULL,
-  `id_role` bigint(20) UNSIGNED NOT NULL,
-  `id_organization` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `or_privilege`
---
-
-CREATE TABLE `or_privilege` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `organization`;
+CREATE TABLE IF NOT EXISTS `organization` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `language` varchar(5) NOT NULL,
+  `private` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `or_role`
+-- Structure de la table `role`
 --
 
-CREATE TABLE `or_role` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE IF NOT EXISTS `role` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `id_organization` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `or_role_privilege`
---
-
-CREATE TABLE `or_role_privilege` (
-  `id_role` bigint(20) UNSIGNED NOT NULL,
-  `id_privilege` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+  `categorie` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
--- Structure de la table `or_user_role`
+-- Contenu de la table `role`
 --
 
-CREATE TABLE `or_user_role` (
-  `id_user` bigint(20) UNSIGNED NOT NULL,
-  `id_role` bigint(20) UNSIGNED NOT NULL,
-  `id_organization` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `role` (`id`, `name`, `description`, `categorie`) VALUES
+(1, 'Administrator', 'The highest role', NULL),
+(2, 'Moderator', 'In charge of compliance with the TwiceCast''s charter', NULL),
+(3, 'Guest', 'Normal user', NULL),
+(4, 'Founder', 'The creator of the organization', 'Organisation'),
+(5, 'Moderator', 'In charge of the respect of the rules of the organization', 'Organisation'),
+(6, 'Streamer', 'Member authorized to use the organization''s streams to broadcast content', 'Organisation'),
+(7, 'Guest', 'Member of the organization having special rights for access to the organization''s streams if it is private', 'Organisation'),
+(8, 'Founder', 'The creator of the stream', 'Stream'),
+(9, 'Co-Streamer', 'A user authorized to use this stream as his own', 'Stream'),
+(10, 'Moderator', 'User in charge of the respect of the rules of the stream, especially in the chat', 'Stream'),
+(11, 'Contributor', 'Honorific rank for a viewer having contributed to the stream by proposing helpful code', 'Stream'),
+(12, 'Guest', 'User having special rights for access to the stream if it''s private', 'Stream');
 
 -- --------------------------------------------------------
 
@@ -171,15 +144,17 @@ CREATE TABLE `or_user_role` (
 -- Structure de la table `server`
 --
 
-CREATE TABLE `server` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `server`;
+CREATE TABLE IF NOT EXISTS `server` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(31) NOT NULL,
   `password` varchar(64) NOT NULL,
   `ipv4` varchar(15) DEFAULT NULL,
   `ipv6` varchar(45) DEFAULT NULL,
   `port` smallint(5) UNSIGNED NOT NULL,
-  `type` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `type` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -187,116 +162,26 @@ CREATE TABLE `server` (
 -- Structure de la table `stream`
 --
 
-CREATE TABLE `stream` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(15) CHARACTER SET utf8 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_client_role`
---
-
-CREATE TABLE `st_client_role` (
-  `id_client` bigint(20) NOT NULL,
-  `id_role` bigint(20) NOT NULL,
-  `id_stream` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_follower`
---
-
-CREATE TABLE `st_follower` (
-  `id_client` bigint(20) NOT NULL,
-  `id_stream` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_organization_role`
---
-
-CREATE TABLE `st_organization_role` (
-  `id_role` bigint(20) NOT NULL,
-  `id_stream` bigint(20) NOT NULL,
-  `id_organization` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_privilege`
---
-
-CREATE TABLE `st_privilege` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `stream`;
+CREATE TABLE IF NOT EXISTS `stream` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `private` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `st_role`
+-- Structure de la table `subscribe`
 --
 
-CREATE TABLE `st_role` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(15) CHARACTER SET utf8 NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `id_stream` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_role_privilege`
---
-
-CREATE TABLE `st_role_privilege` (
-  `id_role` bigint(20) UNSIGNED NOT NULL,
-  `id_privilege` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_subscribe`
---
-
-CREATE TABLE `st_subscribe` (
-  `id_client` int(11) NOT NULL,
-  `id_stream` int(11) NOT NULL,
-  `end` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_tag`
---
-
-CREATE TABLE `st_tag` (
-  `id_stream` bigint(20) NOT NULL,
-  `id_tag` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `st_user_role`
---
-
-CREATE TABLE `st_user_role` (
-  `id_user` bigint(20) NOT NULL,
-  `id_role` bigint(20) NOT NULL,
-  `id_stream` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `subscribe`;
+CREATE TABLE IF NOT EXISTS `subscribe` (
+  `id_client` bigint(20) UNSIGNED NOT NULL,
+  `categorie_target` varchar(15) DEFAULT NULL,
+  `id_target` bigint(20) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -304,12 +189,14 @@ CREATE TABLE `st_user_role` (
 -- Structure de la table `tag`
 --
 
-CREATE TABLE `tag` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE IF NOT EXISTS `tag` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
   `short_description` varchar(255) NOT NULL,
-  `full_description` varchar(1023) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `full_description` varchar(1023) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -317,129 +204,12 @@ CREATE TABLE `tag` (
 -- Structure de la table `tag_linked`
 --
 
-CREATE TABLE `tag_linked` (
+DROP TABLE IF EXISTS `tag_linked`;
+CREATE TABLE IF NOT EXISTS `tag_linked` (
   `id_tag_a` bigint(20) UNSIGNED NOT NULL,
   `id_tag_b` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Index pour les tables exportées
---
-
---
--- Index pour la table `client`
---
-ALTER TABLE `client`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `gl_privilege`
---
-ALTER TABLE `gl_privilege`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `gl_role`
---
-ALTER TABLE `gl_role`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `organization`
---
-ALTER TABLE `organization`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `or_privilege`
---
-ALTER TABLE `or_privilege`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `or_role`
---
-ALTER TABLE `or_role`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `server`
---
-ALTER TABLE `server`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `stream`
---
-ALTER TABLE `stream`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `st_privilege`
---
-ALTER TABLE `st_privilege`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- Index pour la table `tag`
---
-ALTER TABLE `tag`
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- AUTO_INCREMENT pour les tables exportées
---
-
---
--- AUTO_INCREMENT pour la table `client`
---
-ALTER TABLE `client`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `gl_privilege`
---
-ALTER TABLE `gl_privilege`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `gl_role`
---
-ALTER TABLE `gl_role`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `organization`
---
-ALTER TABLE `organization`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `or_privilege`
---
-ALTER TABLE `or_privilege`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `or_role`
---
-ALTER TABLE `or_role`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `server`
---
-ALTER TABLE `server`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `stream`
---
-ALTER TABLE `stream`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `st_privilege`
---
-ALTER TABLE `st_privilege`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `tag`
---
-ALTER TABLE `tag`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
