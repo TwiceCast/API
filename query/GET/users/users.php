@@ -11,7 +11,6 @@
 
 		if (isset($_GET['accept']))
 			$response->setContentType($_GET['accept']);
-		$_GET["nickname"] = checkTokenMe($_GET["nickname"]);
 		$authentication = new Authentication();
 		$authentication->verify(false);
 		if (($id = (isset($_GET['id']) ? 'id' : (isset($_GET['nickname']) ? 'nickname' : false))) !== false)
