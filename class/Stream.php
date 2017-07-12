@@ -1,6 +1,8 @@
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/DB.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
 
 	class Stream
 	{
@@ -76,7 +78,7 @@
 					$this->setID($data['streamID']);
 					$this->setTitle($data['streamTitle']);
 					$user = new User(false);
-					$user->setID($data['userID']);
+					$user->setId($data['userID']);
 					$user->setEmail(DB::fromDB($data['userEmail']));
 					$user->setName(DB::fromDB($data['userNickname']));
 					$user->setRegisterDate($data['userRegisterDate']);
@@ -101,23 +103,27 @@
 				client.id AS userID,
 				client.email AS userEmail,
 				client.name AS userNickname,
-				client.register_date AS userRegisterDate
+				client.register_date AS userRegisterDate,
+				client.language AS userLanguage,
+				client.private AS userPrivate
 				FROM stream
 				LEFT JOIN client_role ON stream.id = client_role.id_target
 				LEFT JOIN client ON client_role.id_client = client.id
 				WHERE stream.name = :title AND client.id = :ID');
-			$link->bindParam(':title', $title, PDO::PARAM_STR);
-			$link->bindParam(':ID', $this->owner->ID, PDO::PARAM_STR);
+			$link->bindParam(':title', DB::toDB($title), PDO::PARAM_STR);
+			$link->bindParam(':ID', $this->owner->id, PDO::PARAM_INT);
 			$data = $link->fetch(true);
-			if (!$data)
+			if ($data === false)
 				return false;
 			$this->setID($data['streamID']);
 			$this->setTitle($data['streamTitle']);
 			$user = new User(false);
-			$user->setID($data['userID']);
+			$user->setId($data['userID']);
 			$user->setEmail(DB::fromDB($data['userEmail']));
 			$user->setName(DB::fromDB($data['userNickname']));
 			$user->setRegisterDate($data['userRegisterDate']);
+			$user->setLanguage($entry['userLanguage']);
+			$user->setPrivate($entry['userPrivate']);
 			$this->setOwner($user);
 			return true;
 		}
@@ -149,7 +155,7 @@
 					$stream->setID($entry['streamID']);
 					$stream->setTitle($entry['streamTitle']);
 					$user = new User(false);
-					$user->setID($entry['userID']);
+					$user->setId($entry['userID']);
 					$user->setEmail(DB::fromDB($entry['userEmail']));
 					$user->setPassword($entry['userPassword']);
 					$user->setNickname(DB::fromDB($entry['userNickname']));
@@ -240,7 +246,9 @@
 				client.id AS userID,
 				client.email AS userEmail,
 				client.name AS userNickname,
-				client.register_date AS userRegisterDate
+				client.register_date AS userRegisterDate,
+				client.language AS userLanguage,
+				client.private AS userPrivate
 				FROM stream
 				LEFT JOIN client_role ON stream.id = client_role.id_target
 				LEFT JOIN client ON client_role.id_client = client.id
@@ -256,12 +264,14 @@
 				$stream->setID($entry['streamID']);
 				$stream->setTitle($entry['streamTitle']);
 				$user = new User(false);
-				$user->setID($entry['userID']);
+				$user->setId($entry['userID']);
 				$user->setEmail(DB::fromDB($entry['userEmail']));
 				// $user->setPassword($entry['userPassword']);
 				$user->setName(DB::fromDB($entry['userNickname']));
 				// $user->setBirthdate($entry['userBirthdate']);
 				$user->setRegisterDate($entry['userRegisterDate']);
+				$user->setLanguage($entry['userLanguage']);
+				$user->setPrivate($entry['userPrivate']);
 				// $user->setLastVisitDate($entry['userLastVisitDate']);
 				// $country = new Country(false);
 				// $country->setID($entry['countryID']);
@@ -289,7 +299,7 @@
 					WHERE stream.id = :ID');
 				$tmp = DB::toDB($newTitle);
 				$link->bindParam(':title', $tmp, PDO::PARAM_STR);
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+				$link->bindParam(':ID', $this->id, PDO::PARAM_INT);
 				if ($link->execute(true))
 				{
 					$this->title = $newTitle;
@@ -301,9 +311,11 @@
 			else
 				return false;
 		}
-
+		
 		function create($db = null)
 		{
+			if ($this->getFromTitle($this->title))
+				throw new ParametersException("You already have a stream with this name", Response::MISSPARAMS);
 			$link = $this->getLink($db);
 			if (!$link)
 				return false;
@@ -312,11 +324,11 @@
 				INSERT INTO stream(name)
 				VALUE(:title);
 				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
-				VALUE(:id_user, (SELECT id FROM role WHERE name = "Guest" AND categorie = "Stream"), "Stream", LAST_INSERT_ID());
-				COMMIT
+				VALUE(:id_user, (SELECT id FROM role WHERE name = "Founder" AND categorie = "Stream"), "Stream", LAST_INSERT_ID());
+				COMMIT;
 				');
 			$link->bindParam(':title', DB::toDB($this->title), PDO::PARAM_STR);
-			$link->bindParam(':id_user', $this->owner->ID, PDO::PARAM_INT);
+			$link->bindParam(':id_user', $this->owner->id, PDO::PARAM_INT);
 			if (!$link->execute(true))
 				return false;
 			$this->getFromTitle($this->title);
@@ -332,7 +344,7 @@
 					DELETE
 					FROM stream
 					WHERE stream.id = :ID');
-				$link->bindParam(':ID', $this->ID, PDO::PARAM_INT);
+				$link->bindParam(':ID', $this->id, PDO::PARAM_INT);
 				return $link->execute(true);
 			}
 			else

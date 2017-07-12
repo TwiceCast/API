@@ -61,7 +61,7 @@ RewriteRule "^users/([0-9]+)/$" "query/GET/users/users.php?id=$1"
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/$" "query/GET/users/users.php"
 
- #-  POST /login     -#
+ #-  POST /login/     -#
 
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^login/$" "query/POST/login/login.php"
