@@ -150,7 +150,7 @@
 			return $token;
 		}
 
-		function generateChatToken()
+		function generateChatToken($stream)
 		{
 			$config = $_SESSION["config"]["chat"];
 			$signer = new Sha256();
@@ -162,13 +162,13 @@
 									->setExpiration(time() + 3600)
 									->set('type', 'chat')
 									->set('username', $this->user->name)
-									->set('streamname', $this->name)
+									->set('room', $stream->owner->name + "/" + $stream->title)
 									->sign($signer, $config["token"])
 									->getToken();
 			return $token;
 		}
 
-		function generateRepositoryToken()
+		function generateRepositoryToken($stream)
 		{
 			$config = $_SESSION["config"]["repository"];
 			$signer = new Sha256();
@@ -180,7 +180,8 @@
 									->setExpiration(time() + 3600)
 									->set('type', 'repository')
 									->set('username', $this->user->name)
-									->set('streamname', $this->name)
+									->set('streamername', $stream->owner->name)
+									->set('streamname', $stream->title)
 									->sign($signer, $config["token"])
 									->getToken();
 			return $token;
@@ -212,7 +213,7 @@
 				$data->setIssuer('http://api.twicecast.com');
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
-				if ($token->validate($data) === true)
+				if ($token->validate($data) !== true)
 					throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
 				$this->getUserFromToken();
 				return true;

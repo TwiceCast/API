@@ -21,7 +21,7 @@
 		$url = $config["protocol"].($config["ssl"] ? "s" : "")."://".$config["host"];
 		if ($config["port"] != "")
 			$url .= ":".$config["port"];
-		$token = $auth->generateChatToken();
+		$token = $auth->generateChatToken($stream);
 		$response->setMessage(["url" => $url, "token" => "$token"]);
 		// throw new NotImplementedException("This feature is not implemented yet", 501);
 	} catch (CustomException $e) {

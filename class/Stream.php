@@ -4,14 +4,14 @@
 
 	class Stream
 	{
-		var $ID;
+		var $id;
 		var $title;
 		var $owner;
 		private $db;
 
-		function __construct($db = true, $ID = null, $title = null, $owner = null)
+		function __construct($db = true, $id = null, $title = null, $owner = null)
 		{
-			$this->setID($ID);
+			$this->setID($id);
 			$this->setTitle($title);
 			$this->setOwner($owner);
 			if ($db)
@@ -25,9 +25,9 @@
 			return "stream";
 		}
 
-		function setID($ID)
+		function setID($id)
 		{
-			$this->ID = $ID;
+			$this->id = $id;
 			return $this;
 		}
 
@@ -53,7 +53,7 @@
 				return false;
 		}
 
-		function getFromID($ID, $db = null)
+		function getFromID($id, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
@@ -69,7 +69,7 @@
 					LEFT JOIN client_role ON stream.id = client_role.id_target
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE stream.id = :ID');
-				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
+				$link->bindParam(':ID', $id, PDO::PARAM_INT);
 				$data = $link->fetch(true);
 				if ($data)
 				{
@@ -122,7 +122,7 @@
 			return true;
 		}
 
-		function getFromUserID($ID, $db = null)
+		function getFromUserID($id, $db = null)
 		{
 			$link = $this->getLink($db);
 			if ($link)
@@ -138,7 +138,7 @@
 					LEFT JOIN client_role ON stream.id = client_role.id_target
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE client.id = :ID');
-				$link->bindParam(':ID', $ID, PDO::PARAM_INT);
+				$link->bindParam(':ID', $id, PDO::PARAM_INT);
 				$data = $link->fetchAll(true);
 				if ($data === false)
 					return false;
