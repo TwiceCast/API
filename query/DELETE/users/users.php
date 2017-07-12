@@ -19,7 +19,7 @@
 			throw new UnknownException("Something wrong happened");
 		
 		if ($_GET['id'] != $user->id) //Add moderator/admin detection here
-			throw new ParametersException("You cannot delete someone else's account", Response::NORIGHT);
+			throw new RightsException("You cannot delete someone else's account", Response::NORIGHT);
 		
 		if (!$user->delete())
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);

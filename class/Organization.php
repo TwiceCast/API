@@ -44,6 +44,8 @@
 		{
 			if (is_object($language))
 				$code = $language->code;
+			else if (is_array($language))
+				$code = $language['code'];
 			else
 				$code = $language;
 			$this->language = new stdClass();
@@ -75,7 +77,7 @@
 				$link->prepare('
 					SELECT organization.id AS organizationId,
 					organization.name AS organizationName,
-					organization.language, AS organizationLanguage,
+					organization.language AS organizationLanguage,
 					organization.private AS organizationPrivate
 					FROM organization
 					WHERE organization.id = :id');
@@ -223,12 +225,13 @@
 					client.email AS clientEmail,
 					client.password AS clientPassword,
 					client.name AS clientName,
-					client.register_data AS clientRegisterDate,
+					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
 					client.private AS clientPrivate
-					FROM or_user_role
+					FROM client_role
 					LEFT JOIN client ON client_role.id_client = client.id
-					WHERE client_role.id_organization = :id AND categorie_target = "Organisation"');
+					WHERE client_role.id_target = :id
+					AND client_role.categorie_target = "Organisation"');
 					// Possibilité d'ajouter
 					// LEFT JOIN or_role ON or_user_role.id_role = or_role.id
 					// pour avoir le rôle de chaque user en même temps.
@@ -248,8 +251,8 @@
 						$client->setPassword($entry['clientPassword']);
 						$client->setName(DB::fromDB($entry['clientName']));
 						$client->setRegisterDate($entry['clientRegisterDate']);
-						$client->setLanguage(DB::fromDB($data['clientLanguage']));
-						$client->setPrivate($data['clientPrivate']);
+						$client->setLanguage(DB::fromDB($entry['clientLanguage']));
+						$client->setPrivate($entry['clientPrivate']);
 						$clients[] = $client;
 					}
 					return $clients;
@@ -263,6 +266,7 @@
 
 		function changeName($newName, $db = null)
 		{
+			$this->checkName($newName);
 			$link = $this->getLink($db);
 			if ($link)
 			{
@@ -292,6 +296,8 @@
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			if (is_object($newLanguage))
 				$tmpLanguage = DB::toDB($newLanguage->code);
+			else if (is_array($newLanguage))
+				$tmpLanguage = DB::toDB($newLanguage['code']);
 			else
 				$tmpLanguage = DB::toDB($newLanguage);
 			$link->prepare('
@@ -327,7 +333,30 @@
 				return false;
 		}
 
-		function create($db = null)
+		function update($db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE organization
+					SET organization.name = :name,
+					organization.language = :language,
+					organization.private = :private
+					WHERE organization.id = :id');
+				$name = DB::toDB($this->name);
+				$language = DB::toDB($this->language->code);
+				$link->bindParam(':name', $name, PDO::PARAM_STR);
+				$link->bindParam(':language', $language, PDO::PARAM_STR);
+				$link->bindParam(':private', $this->private, PDO::PARAM_INT);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				return $link->execute(true);
+			}
+			else
+				return false;
+		}
+		
+		function create($founderId = null, $db = null)
 		{
 			$link = $this->getLink($db);
 			if (!$link)
@@ -343,6 +372,8 @@
 			if (!$link->execute(true))
 				return false;
 			$this->getFromId($link->link->lastInsertId());
+			if ($founderId)
+				$this->addUserRole(4, $founderId, $link);			
 			return true;
 		}
 
@@ -359,6 +390,24 @@
 			$data = $link->fetchAll(true);
 			if ($data)
 				throw new ParametersException("Organization name already in use", Response::ORGNAMEUSED);
+		}
+
+		function checkName($nameToCheck, $db = null)
+		{
+			if ($nameToCheck === $this->name)
+				return true;
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$link->prepare('
+				SELECT organization.id AS organizationId
+				FROM organization
+				WHERE organization.name = :name');
+			$link->bindParam(':name', $nameToCheck, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Name already in use", Response::NAMEUSED);
+			return true;
 		}
 
 		/*
@@ -463,6 +512,19 @@
 			if (!$link)
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			$link->prepare('
+				SELECT 1
+				FROM client_role
+				WHERE client_role.categorie_target = "Organisation"
+				AND client_role.id_target = :org
+				AND client_role.id_client = :user
+				AND client_role.id_role = :role');
+			$link->bindParam(':org', $this->id, PDO::PARAM_INT);
+			$link->bindParam(':user', $userId, PDO::PARAM_INT);
+			$link->bindParam(':role', $roleId, PDO::PARAM_INT);
+			$ret = $link->fetch(true);
+			if ($ret)
+				throw new DatabaseException("This user already have this role", 400);
+			$link->prepare('
 				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
 				VALUE(:user, :role, "Organisation", :org)');
 			$link->bindParam(':user', $userId, PDO::PARAM_INT);
@@ -526,7 +588,7 @@
 				FROM client_role
 				WHERE client_role.categorie_target = "Organisation" AND client_role.id_target = :id');
 			$link->bindParam(':id', $this->id, PDO::PARAM_INT);
-			$link->execute(true);
+			return $link->execute(true);
 		}
 	}
 ?>

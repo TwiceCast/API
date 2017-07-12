@@ -21,7 +21,7 @@
 			throw new UnknownException("Something wrong happened");
 
 		if ($_GET['userid'] != $user->id) //Add moderator/admin detection here
-			throw new ParametersException("You cannot modify someone else's account", Response::NORIGHT);
+			throw new RightsException("You cannot modify someone else's account", Response::NORIGHT);
 
 		// Here test max width and max length
 		$filetmp = $_SERVER['DOCUMENT_ROOT']."/avatar/tmp/".$user->id;
