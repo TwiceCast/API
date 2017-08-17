@@ -177,6 +177,31 @@ RewriteRule "^organizations/$" "query/GET/organizations/organization.php"
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^organizations/$" "query/POST/organizations/organization.php"
 
+    ###  TAGS  ###
+
+ #-  GET /tags/   -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^tags/$" "query/GET/tags/tags.php"
+
+ #- POST /tags/ -#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^tags/$" "query/POST/tags/tags.php"
+
+ #- GET /tags/:id/ -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^tags/([0-9]+)/$" "query/GET/tags/tags.php?id=$1"
+
+ #- PUT /tags/:id/ -#
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^tags/([0-9]+)/$" "query/PUT/tags/tags.php?id=$1"
+
+ #- PATCH /tags/:id/ -#
+RewriteCond %{REQUEST_METHOD} PATCH
+RewriteRule "^tags/([0-9]+)/$" "query/PATCH/tags/tags.php?id=$1"
+
+ #- DELETE /tags/:id/ -#
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^tags/([0-9]+)/$" "query/DELETE/tags/tags.php?id=$1"
 
     ###  QUERY_STRING  ###
 
