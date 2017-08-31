@@ -68,7 +68,7 @@
 					client.name AS userNickname,
 					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE stream.id = :ID');
 				$link->bindParam(':ID', $id, PDO::PARAM_INT);
@@ -107,7 +107,7 @@
 				client.language AS userLanguage,
 				client.private AS userPrivate
 				FROM stream
-				LEFT JOIN client_role ON stream.id = client_role.id_target
+				LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 				LEFT JOIN client ON client_role.id_client = client.id
 				WHERE stream.name = :title AND client.id = :ID');
 			$link->bindParam(':title', DB::toDB($title), PDO::PARAM_STR);
@@ -141,7 +141,7 @@
 					client.name AS userNickname,
 					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE client.id = :ID');
 				$link->bindParam(':ID', $id, PDO::PARAM_INT);
@@ -193,7 +193,7 @@
 					client.name AS userNickname,
 					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN client_role ON stream.id = client_role.id_target
+					LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE client.name = :nickname');
 				$link->bindParam(':nickname', $nickname, PDO::PARAM_INT);
@@ -250,7 +250,7 @@
 				client.language AS userLanguage,
 				client.private AS userPrivate
 				FROM stream
-				LEFT JOIN client_role ON stream.id = client_role.id_target
+				LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 				LEFT JOIN client ON client_role.id_client = client.id
 				ORDER BY stream.id
 				');
@@ -345,7 +345,18 @@
 					FROM stream
 					WHERE stream.id = :ID');
 				$link->bindParam(':ID', $this->id, PDO::PARAM_INT);
-				return $link->execute(true);
+				if ($link->execute(true))
+				{
+					$link->prepare('
+						DELETE
+						FROM client_role
+						WHERE id_target = :ID
+						AND categorie_target = "stream"');
+					$link->bindParam(':ID', $this->id, PDO::PARAM_INT);
+					return $link->execute(true);
+				}
+				else
+					return false;
 			}
 			else
 				return false;
