@@ -103,8 +103,30 @@
 			}
 			else if ($type == "stream")
 			{
-				//check for stream right to match $right
-				return true;
+				$link = $this->getLink($db);
+				if (!$link)
+					throw new DatabaseException("Unabled to connect to the database", Response::UNAVAILABLE);
+				$link->prepare('
+					SELECT client_role.id_role AS clientRole
+					FROM client_role
+					WHERE client_role.categorie_target = "Stream"
+					AND client_role.id_target = :stream
+					AND client_role.id_client = :user');
+				$link->bindParam(':stream', $targetId, PDO::PARAM_INT);
+				$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
+				$ret = $link->fetch(true);
+				if ($ret)
+				{
+					if (is_array($roleIds))
+						return in_array($ret['clientRole'], $roleIds);
+					else
+					{
+						if ($roleIds == $ret['clientRole'])
+							return true;
+					}
+				}
+				else
+					 return false;
 			}
 			else if ($type == "site")
 			{
