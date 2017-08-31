@@ -127,6 +127,10 @@ RewriteRule "^streams/([0-9]+)/repository/$" "query/GET/streams/repository.php?i
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/$" "query/GET/streams/streams.php?id=$1"
 
+ #-  DELETE /streams/:id -#
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^streams/([0-9]+)/$" "query/DELETE/streams/streams.php?id=$1"
+
  #-  GET /streams/    -#
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/$" "query/GET/streams/streams.php"
