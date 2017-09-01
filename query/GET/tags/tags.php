@@ -39,7 +39,7 @@
 			else
 			{
 				$rep->tag_list = $tags;
-				$rep->tag_totla = count($tags);
+				$rep->tag_total = count($tags);
 			}
 			$response->setMessage($rep);
 		}
