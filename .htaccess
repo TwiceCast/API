@@ -2,6 +2,7 @@ RewriteEngine on
 Options FollowSymLinks
 
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ".*" "$0/"
 
     ###  USERS  ###
