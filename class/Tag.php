@@ -297,8 +297,8 @@
 			$link = $this->getLink($db);
 			if (!$link)
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
-			$this->checkName($this->name);
-			$link->preapre('
+			$this->checkForCreation($this->name);
+			$link->prepare('
 				INSERT INTO tag(name, short_description, full_description)
 				VALUE (:name, :short_description, :full_description)');
 			$tmpName = DB::toDB($this->name);
@@ -310,6 +310,56 @@
 			if (!$link->execute(true))
 				return false;
 			$this->getFromId($link->link->lastInsertId());
+			$this->createLinked($link);
+			return true;
+		}
+		
+		function createLinked($db = null)
+		{
+			if (is_array($this->linkedtag))
+			{
+				$link = $this->getLink($db);
+				if (!$link)
+					throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+				$query = '
+					SELECT tag.id AS tagId,
+					tag.name AS tagName,
+					tag.short_description AS tagShortDescription,
+					tag.full_description AS tagFullDescription
+					FROM tag
+					WHERE tag.name IN ("'.implode('","', $this->linkedtag).'")';
+				$link->prepare($query);
+				$data = $link->fetchAll(true);
+				if ($data)
+				{
+					foreach ($data as &$row)
+					{
+						$link->prepare('
+							INSERT INTO tag_linked(id_tag_a, id_tag_b)
+							VALUE (:a, :b)');
+						$link->bindParam(':a', $this->id, PDO::PARAM_INT);
+						$link->bindParam(':b', $row['tagId'], PDO::PARAM_INT);
+						if (!$link->execute(true))
+							return false;
+					}
+				}
+			}
+		}
+		
+		function checkForCreation($db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$link->prepare('
+				SELECT tag.id AS tagId
+				FROM tag
+				WHERE tag.name = :name');
+			$tmp = DB::toDB($this->name);
+			$link->bindParam(':name', $tmp, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Tag name already in use", Response::NICKUSED);
 			return true;
 		}
 
@@ -323,8 +373,9 @@
 			$link->prepare('
 				SELECT tag.id AS tagId
 				FROM tag
-				WHERE tag.name = :tag');
-			$link->bindParam(':name', $nameToCheck, PDO::PARAM_STR);
+				WHERE tag.name = :name');
+			$tmp = DB::toDB($nameToCheck);
+			$link->bindParam(':name', $tmp, PDO::PARAM_STR);
 			$data = $link->fetchAll(true);
 			if ($data)
 				throw new ParametersException("Tag name already in use", Response::NICKUSED);
