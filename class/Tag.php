@@ -297,6 +297,7 @@
 			$link = $this->getLink($db);
 			if (!$link)
 				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$this->checkName($this->name);
 			$link->preapre('
 				INSERT INTO tag(name, short_description, full_description)
 				VALUE (:name, :short_description, :full_description)');
@@ -309,6 +310,24 @@
 			if (!$link->execute(true))
 				return false;
 			$this->getFromId($link->link->lastInsertId());
+			return true;
+		}
+
+		function checkName($nameToCheck, $db = null)
+		{
+			if ($nameToCheck === $this->name)
+				return true;
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
+			$link->prepare('
+				SELECT tag.id AS tagId
+				FROM tag
+				WHERE tag.name = :tag');
+			$link->bindParam(':name', $nameToCheck, PDO::PARAM_STR);
+			$data = $link->fetchAll(true);
+			if ($data)
+				throw new ParametersException("Tag name already in use", Response::NICKUSED);
 			return true;
 		}
 
