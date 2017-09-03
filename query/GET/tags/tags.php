@@ -17,7 +17,14 @@
 		{
 			if (!$tag->getFromId($_GET['id']))
 				throw new ParametersException("This tag does not exist", Response::DOESNOTEXIST);
-			$response->setMessage($tag);
+			$tmp = [];
+			$tmp['id'] = $tag->id;
+			$tmp['name'] = $tag->name;
+			$tmp['broadcasting'] = $tag->broadcasting;
+			$tmp['short_description'] = $tag->short_description;
+			$tmp['full_description'] = $tag->full_description;
+			$tmp['linked-tag'] = $tag->getLinkedTags();
+			$response->setMessage($tmp);
 		}
 		else
 		{
@@ -38,8 +45,20 @@
 			}
 			else
 			{
-				$rep->tag_list = $tags;
-				$rep->tag_total = count($tags);
+				$rep->tag_list = array();
+				$rep->tag_total = 0;
+				foreach ($tags as &$tag)
+				{
+					$tmp = [];
+					$tmp['id'] = $tag->id;
+					$tmp['name'] = $tag->name;
+					$tmp['broadcasting'] = $tag->broadcasting;
+					$tmp['short_description'] = $tag->short_description;
+					$tmp['full_description'] = $tag->full_description;
+					$tmp['linked-tag'] = $tag->getLinkedTags();
+					$rep->tag_list[] = $tmp;
+					$rep->tag_total++;
+				}
 			}
 			$response->setMessage($rep);
 		}
