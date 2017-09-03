@@ -73,6 +73,11 @@
 			return $this;
 		}
 
+		function getLinkedTags()
+		{
+			return $this->linkedtag;
+		}
+
 		function getLink($db)
 		{
 			if ($this->db)
@@ -98,7 +103,7 @@
 					WHERE tag_linked.id_tag_a = :id');
 				$link->bindParam(':id', $id, PDO::PARAM_INT);
 				$data = $link->fetchAll(true);
-				if ($data)
+				if ($data !== false)
 				{
 					foreach ($data as &$entry)
 					{
