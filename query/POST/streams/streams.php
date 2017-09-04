@@ -21,6 +21,8 @@
 		if ($stream->getFromTitle($postdata["title"]))
 			throw new ParametersException("You already have a stream with this name", Response::MISSPARAM);
 		$stream->setTitle($postdata["title"]);
+		if ($postdata["short_description"])
+			$stream->setShortDescription($postdata["short_description"]);
 		if (!$stream->create())
 			throw new UnknownException("Stream cannot be created", Response::UNKNOWN);
 		$response->setMessage($stream);

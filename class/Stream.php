@@ -8,13 +8,15 @@
 	{
 		var $id;
 		var $title;
+		var $short_description;
 		var $owner;
 		private $db;
 
-		function __construct($db = true, $id = null, $title = null, $owner = null)
+		function __construct($db = true, $id = null, $title = null, $short_description = null, $owner = null)
 		{
 			$this->setID($id);
 			$this->setTitle($title);
+			$this->setShortDescription($short_description);
 			$this->setOwner($owner);
 			if ($db)
 				$this->db = new DB();
@@ -36,6 +38,12 @@
 		function setTitle($title)
 		{
 			$this->title = $title;
+			return $this;
+		}
+
+		function setShortDescription($short_description)
+		{
+			$this->short_description = $short_description;
 			return $this;
 		}
 
@@ -63,6 +71,7 @@
 				$link->prepare('
 					SELECT stream.id AS streamID,
 					stream.name AS streamTitle,
+					stream.short_description AS streamShortDescription,
 					client.id AS userID,
 					client.email AS userEmail,
 					client.name AS userNickname,
@@ -76,7 +85,8 @@
 				if ($data)
 				{
 					$this->setID($data['streamID']);
-					$this->setTitle($data['streamTitle']);
+					$this->setTitle(DB::fromDB($data['streamTitle']));
+					$this->setShortDescription(DB::fromDB($data['streamShortDescription']));
 					$user = new User(false);
 					$user->setId($data['userID']);
 					$user->setEmail(DB::fromDB($data['userEmail']));
@@ -100,6 +110,7 @@
 			$link->prepare('
 				SELECT stream.id AS streamID,
 				stream.name AS streamTitle,
+				stream.short_description AS streamShortDescription,
 				client.id AS userID,
 				client.email AS userEmail,
 				client.name AS userNickname,
@@ -116,7 +127,8 @@
 			if ($data === false)
 				return false;
 			$this->setID($data['streamID']);
-			$this->setTitle($data['streamTitle']);
+			$this->setTitle(DB::toDB($data['streamTitle']));
+			$this->setShortDescription(DB::toDB($data['streamShortDescription']));
 			$user = new User(false);
 			$user->setId($data['userID']);
 			$user->setEmail(DB::fromDB($data['userEmail']));
@@ -136,6 +148,7 @@
 				$link->prepare('
 					SELECT stream.id AS streamID,
 					stream.name AS streamTitle,
+					stream.short_description AS streamShortDescription,
 					client.id AS userID,
 					client.email AS userEmail,
 					client.name AS userNickname,
@@ -153,7 +166,8 @@
 				{
 					$stream = new Stream(false);
 					$stream->setID($entry['streamID']);
-					$stream->setTitle($entry['streamTitle']);
+					$stream->setTitle(DB::toDB($entry['streamTitle']));
+					$stream->setShortDescription(DB::toDB($entry['streamShortDescription']));
 					$user = new User(false);
 					$user->setId($entry['userID']);
 					$user->setEmail(DB::fromDB($entry['userEmail']));
@@ -188,6 +202,7 @@
 				$link->prepare('
 					SELECT stream.id AS streamID,
 					stream.name AS streamTitle,
+					stream.short_description AS streamShortDescription,
 					client.id AS userID,
 					client.email AS userEmail,
 					client.name AS userNickname,
@@ -205,7 +220,8 @@
 					{
 						$stream = new Stream(false);
 						$stream->setID($entry['streamID']);
-						$stream->setTitle($entry['streamTitle']);
+						$stream->setTitle(DB::toDB($entry['streamTitle']));
+						$stream->setShortDescription(DB::toDB($entry['streamShortDescription']));
 						$user = new User(false);
 						$user->setID($entry['userID']);
 						$user->setEmail(DB::fromDB($entry['userEmail']));
@@ -243,6 +259,7 @@
 			$link->prepare('
 				SELECT stream.id AS streamID,
 				stream.name AS streamTitle,
+				stream.short_description AS streamShortDescription,
 				client.id AS userID,
 				client.email AS userEmail,
 				client.name AS userNickname,
@@ -262,7 +279,8 @@
 			{
 				$stream = new Stream(false);
 				$stream->setID($entry['streamID']);
-				$stream->setTitle($entry['streamTitle']);
+				$stream->setTitle(DB::toDB($entry['streamTitle']));
+				$stream->setShortDescription(DB::toDB($entry['streamShortDescription']));
 				$user = new User(false);
 				$user->setId($entry['userID']);
 				$user->setEmail(DB::fromDB($entry['userEmail']));
@@ -321,13 +339,14 @@
 				return false;
 			$link->prepare('
 				BEGIN;
-				INSERT INTO stream(name)
-				VALUE(:title);
+				INSERT INTO stream(name, short_description)
+				VALUE(:title, :short_description);
 				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
 				VALUE(:id_user, (SELECT id FROM role WHERE name = "Founder" AND categorie = "Stream"), "Stream", LAST_INSERT_ID());
 				COMMIT;
 				');
 			$link->bindParam(':title', DB::toDB($this->title), PDO::PARAM_STR);
+			$link->bindParam(':short_description', DB::toDB($this->short_description), PDO::PARAM_STR);
 			$link->bindParam(':id_user', $this->owner->id, PDO::PARAM_INT);
 			if (!$link->execute(true))
 				return false;
