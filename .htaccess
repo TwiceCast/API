@@ -3,7 +3,7 @@ Options FollowSymLinks
 
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ".*" "$0/"
+RewriteRule ".*[^/]" "$0/"
 
     ###  USERS  ###
 
@@ -212,11 +212,11 @@ RewriteRule "^tags/([0-9]+)/$" "query/DELETE/tags/tags.php?id=$1"
 
 RewriteCond %{HTTP_ACCEPT} "application/json"
 RewriteCond %{QUERY_STRING} !accept
-RewriteRule ".*" $0?%{QUERY_STRING}&accept=json
+RewriteRule "query/.*" $0?%{QUERY_STRING}&accept=json
 
 RewriteCond %{HTTP_ACCEPT} "application/xml"
 RewriteCond %{QUERY_STRING} !accept
-RewriteRule ".*" $0?%{QUERY_STRING}&accept=xml
+RewriteRule "query/.*" $0?%{QUERY_STRING}&accept=xml
 
 Header always set Access-Control-Allow-Origin "*"
 Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
