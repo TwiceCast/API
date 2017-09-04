@@ -166,6 +166,7 @@ DROP TABLE IF EXISTS `stream`;
 CREATE TABLE IF NOT EXISTS `stream` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
+  `short_description` varchar(255) DEFAULT NULL,
   `private` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
