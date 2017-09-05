@@ -33,7 +33,7 @@
 		$path_parts = pathinfo($avatars[0]);
 		if ($path_parts['extension'] == 'gif')
 			header('Content-Type: image/gif');
-		else if ($path_parts['extension'] == 'jpeg')
+		else if ($path_parts['extension'] == 'jpeg' or $path_parts['extension'] == 'jpg')
 			header('Content-Type: image/jpeg');
 		else if ($path_parts['extension'] == 'png')
 			header('Content-Type: image/png');
