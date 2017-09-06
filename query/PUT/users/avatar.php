@@ -35,7 +35,6 @@
 		
 		while ($data = fread($putdata, 1024))
 		{
-			var_dump($data);
 			fwrite($fp, $data);
 		}
 		
@@ -55,7 +54,6 @@
 				$file .= '.png';
 				break;
 			default:
-				var_dump($imgType);
 				throw new ParametersException("We only support gif, jpeg and png", Response::UNSUPPORTED);
 				break;
 		}
