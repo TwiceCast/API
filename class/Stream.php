@@ -3,6 +3,7 @@
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/User.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Exception.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Response.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/class/Tag.php');
 
 	class Stream
 	{
@@ -10,14 +11,16 @@
 		var $title;
 		var $short_description;
 		var $owner;
+		var $tags;
 		private $db;
 
-		function __construct($db = true, $id = null, $title = null, $short_description = null, $owner = null)
+		function __construct($db = true, $id = null, $title = null, $short_description = null, $owner = null, $tags = array())
 		{
 			$this->setID($id);
 			$this->setTitle($title);
 			$this->setShortDescription($short_description);
 			$this->setOwner($owner);
+			$this->setTags($tags);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -53,12 +56,59 @@
 			return $this;
 		}
 
+		function setTags($tags)
+		{
+			$this->tags = $tags;
+			return $this;
+		}
+
+		function addTag($tag)
+		{
+			$this->tags[] = $tag;
+			return $this;
+		}
+		
 		function getLink($db)
 		{
 			if ($this->db)
 				return $this->db;
 			else if ($db)
 				return $db;
+			else
+				return false;
+		}
+
+		function getTags($db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					SELECT tag.id AS tagId,
+					tag.name AS tagName,
+					tag.short_description AS tagShortDescription,
+					tag.full_description AS tagFullDescription
+					FROM st_tag
+					LEFT JOIN tag ON st_tag.tagid = tag.id
+					WHERE st_tag.streamid = :id');
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				$data = $link->fetchAll(true);
+				if ($data !== false)
+				{
+					foreach ($data as &$entry)
+					{
+						$tag = new Tag(false);
+						$tag->setId(DB::fromDB($entry['tagId']));
+						$tag->setName(DB::fromDB($entry['tagName']));
+						$tag->setShortDescription(DB::fromDB($entry['tagShortDescription']));
+						$tag->setFullDescription(DB::fromDB($entry['tagFullDescription']));
+						$this->addTag($tag);
+					}
+					return true;
+				}
+				else
+					return false;
+			}
 			else
 				return false;
 		}
@@ -93,6 +143,7 @@
 					$user->setName(DB::fromDB($data['userNickname']));
 					$user->setRegisterDate($data['userRegisterDate']);
 					$this->setOwner($user);
+					$this->getTags($link);
 					return true;
 				}
 				else
@@ -137,6 +188,7 @@
 			$user->setLanguage($entry['userLanguage']);
 			$user->setPrivate($entry['userPrivate']);
 			$this->setOwner($user);
+			$this->getTags($link);
 			return true;
 		}
 
@@ -186,6 +238,7 @@
 					$rank->setTitle(DB::fromDB($entry['rankTitle']));
 					$user->setRank($rank);
 					$stream->setOwner($user);
+					$stream->getTags($link);
 					$streams[] = $stream;
 				}
 				return $streams;
@@ -240,6 +293,7 @@
 						$rank->setTitle(DB::fromDB($entry['rankTitle']));
 						$user->setRank($rank);
 						$stream->setOwner($user);
+						$stream->setTags($link);
 						$streams[] = $stream;
 					}
 					return $streams;
@@ -301,6 +355,7 @@
 				// $rank->setTitle(DB::fromDB($entry['rankTitle']));
 				// $user->setRank($rank);
 				$stream->setOwner($user);
+				$stream->getTags($link);
 				$streams[] = $stream;
 			}
 			return $streams;
