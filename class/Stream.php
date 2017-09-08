@@ -390,6 +390,8 @@
 			$link = $this->getLink($db);
 			if (!$link)
 				return false;
+			if (!$this->checkAlreadyTagged($tagId, $link))
+				throw new ParametersException("This stream is already linked to this tag", Response::MISSPARAM);
 			$link->prepare('
 				INSERT INTO st_tag(streamid, tagid)
 				VALUE(:streamid, :tagid)');
@@ -400,10 +402,21 @@
 			return true;
 		}
 
+		function checkAlreadyTagged($tagId, $db = null)
+		{
+			$this->getTags($db);
+			foreach ($this->tags as &$tag)
+			{
+				if ($tag->id == $tagId)
+					return false;
+			}
+			return true;
+		}
+
 		function create($db = null)
 		{
 			if ($this->getFromTitle($this->title))
-				throw new ParametersException("You already have a stream with this name", Response::MISSPARAMS);
+				throw new ParametersException("You already have a stream with this name", Response::MISSPARAM);
 			$link = $this->getLink($db);
 			if (!$link)
 				return false;
