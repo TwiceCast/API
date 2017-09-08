@@ -384,7 +384,22 @@
 			else
 				return false;
 		}
-		
+
+		function addTagToDB($tagId, $db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				return false;
+			$link->prepare('
+				INSERT INTO st_tag(streamid, tagid)
+				VALUE(:streamid, :tagid)');
+			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
+			$link->bindParam(':tagid', $tagId, PDO::PARAM_INT);
+			if (!$link->execute(true))
+				return false;
+			return true;
+		}
+
 		function create($db = null)
 		{
 			if ($this->getFromTitle($this->title))
