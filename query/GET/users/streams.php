@@ -15,7 +15,7 @@
 		$streams = $stream->getFromUserID($_GET['userid']);
 		if (!$streams)
 			throw new ParametersException("This user does not exist", Response::DOESNOTEXIST);
-		$response->setMessage(["streams" => $streams]);
+		$response->setMessage($streams);
 	} catch (CustomException $e) {
 		$response->setError($e);
 	} finally {
