@@ -310,7 +310,7 @@
 			$link = $this->getLink($db);
 			if (!$link)
 				return false;
-			$query = '
+			$link->prepare('
 				SELECT stream.id AS streamID,
 				stream.name AS streamTitle,
 				stream.short_description AS streamShortDescription,
@@ -324,12 +324,7 @@
 				LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
 				LEFT JOIN client ON client_role.id_client = client.id
 				ORDER BY stream.id
-				';
-			if ($userid && $userid != null)
-				$query += " WHERE client.id = :id";
-			$link->prepare($query);
-			if ($userid && $userid != null)
-				$link->bindParam(":id", $userid, PDO::PARAM_INT);
+				');
 			$data = $link->fetchAll(true);
 			if ($data === false)
 				return false;

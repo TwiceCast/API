@@ -17,7 +17,7 @@
 		}
 		else
 		{
-			$streams = $stream->getAllStreams($_GET['userid']);
+			$streams = $stream->getAllStreams();
 			$response->setMessage(["stream_list" => $streams, "stream_total" => count($streams)]);
 		}
 	} catch (CustomException $e) {
