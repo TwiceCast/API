@@ -137,6 +137,38 @@
 				return false;
 		}
 
+		function getUserRights($targetId, $type = "Organisation", $db = null)
+		{
+			if ($type == "organization")
+				$type = "Organisation";
+			else if ($type == "stream")
+				$type = "Stream";
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new DatabaseException("Unable to connect to the database", Response::UNAVAILABLE);
+			$link->prepare('
+				SELECT client_role.id_role AS clientRole
+				FROM client_role
+				WHERE client_role.categorie_target = :type
+				AND client_role.id_target = :target
+				AND client_role.id_client = :user');
+			$link->bindParam(':type', $type, PDO::PARAM_STR);
+			$link->bindParam(':target', $targetId, PDO::PARAM_INT);
+			$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
+			$ret = $link->fetchAll(true);
+			if ($ret)
+			{
+				$rights = array();
+				foreach ($ret as &$entry)
+				{
+					$rights[] = $entry['clientRole'];
+				}
+				return $rights;
+			}
+			else
+				return array();
+		}
+
 		function getLink($db = null)
 		{
 			if ($this->db)
@@ -197,6 +229,7 @@
 		function generateChatToken($stream)
 		{
 			$config = $_SESSION["config"]["chat"];
+			$rights = $this->getUserRights($stream->id, "Stream");
 			$signer = new Sha256();
 			$token = (new Builder())->setIssuer('http://api.twicecast.com')
 									->setAudience('http://twicecast.com')
@@ -206,6 +239,7 @@
 									->set('type', 'chat')
 									->set('username', $this->user->name)
 									->set('room', $stream->owner->name + "/" + $stream->title)
+									->set('rights', $rights)
 									->sign($signer, $config["token"])
 									->getToken();
 			return $token;
