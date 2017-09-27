@@ -25,6 +25,28 @@
 			$stream->setShortDescription($postdata["short_description"]);
 		if (!$stream->create())
 			throw new UnknownException("Stream cannot be created", Response::UNKNOWN);
+		if (isset($postdata["tags"]))
+		{
+			if (is_array($postdata["tags"]))
+			{
+				foreach ($postdata["tags"] as &$entry)
+				{
+					$tag = new Tag();
+					if ($tag->getFromId($entry))
+					{
+						try
+						{
+							var_dump("adding tag : ".$entry);
+							$stream->addTagToDB($entry);
+						}
+						catch (ParametersException $e)
+						{
+							
+						}
+					}
+				}
+			}
+		}
 		$response->setMessage($stream);
 	} catch (CustomException $e) {
 		$response->setError($e);
