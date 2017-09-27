@@ -80,6 +80,7 @@
 
 		function getTags($db = null)
 		{
+			$this->setTags(array());
 			$link = $this->getLink($db);
 			if ($link)
 			{
