@@ -108,9 +108,9 @@ RewriteRule "^users/([0-9]+)/$" "query/PUT/users/users.php?id=$1"
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/tags/$" "query/GET/streams/tags.php?id=$1"
 	
- #-  POST /streams/:id/tag  -#
+ #-  POST /streams/:id/tags  -#
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^streams/([0-9]+)/tag/$" "query/POST/streams/tag.php?id=$1"
+RewriteRule "^streams/([0-9]+)/tags/$" "query/POST/streams/tag.php?id=$1"
 
  #-  GET /streams/:id/replays -#
 RewriteCond %{REQUEST_METHOD} GET
