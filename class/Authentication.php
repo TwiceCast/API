@@ -169,6 +169,42 @@
 				return array();
 		}
 
+		function getUserBann($streamId, $db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new DatabaseException("Unabled to connect to the database", Response::UNAVAILABLE);
+			$link->prepare('
+				SELECT st_bann.end AS bannEnd
+				FROM st_bann
+				WHERE st_bann.userid = :user AND st_bann.streamid = :stream');
+			$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
+			$link->bindParam(':stream', $streamId, PDO::PARAM_INT);
+			$data = $link->fetch(true);
+			if ($data)
+				return $data['bannEnd'];
+			else
+				return null;
+		}
+
+		function getUserMute($streamId, $db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new DatabaseException("Unabled to connect to the database", Response::UNAVAILABLE);
+			$link->prepare('
+				SELECT st_mute.end AS muteEnd
+				FROM st_mute
+				WHERE st_mute.userid = :user AND st_mute.streamid = :stream');
+			$link->bindParam(':user', $this->user->id, PDO::PARAM_INT);
+			$link->bindParam(':stream', $streamId, PDO::PARAM_INT);
+			$data = $link->fetch(true);
+			if ($data)
+				return $data['bannEnd'];
+			else
+				return null;
+		}
+		
 		function getLink($db = null)
 		{
 			if ($this->db)
@@ -230,6 +266,8 @@
 		{
 			$config = $_SESSION["config"]["chat"];
 			$rights = $this->getUserRights($stream->id, "Stream");
+			$bann = $this->getUserBann($stream->id);
+			$mute = $this->getUserMute($stream->id);
 			$signer = new Sha256();
 			$token = (new Builder())->setIssuer('http://api.twicecast.com')
 									->setAudience('http://twicecast.com')
@@ -240,6 +278,8 @@
 									->set('username', $this->user->name)
 									->set('room', $stream->owner->name + "/" + $stream->title)
 									->set('rights', $rights)
+									->set('bannedUntil', $bann)
+									->set('mutedUntil', $mute)
 									->sign($signer, $config["token"])
 									->getToken();
 			return $token;
