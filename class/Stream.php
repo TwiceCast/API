@@ -397,6 +397,17 @@
 			$link->bindParam(':end', $time, PDO::PARAM_INT);
 			return $link->execute(true);
 		}
+		
+		function getBann($userId, $db = null) {
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnkownException("Something wrong happened", Response::UNKNOWN);
+			
+			$link->prepare('SELECT userid, streamid, end FROM st_bann WHERE userid = :userid AND streamid = :streamid;');
+			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
+			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
+			return $link->fetchAll(true);
+		}
 
 		function muteUser($userId, $time = 300, $db = null) // 5 mins by default
 		{

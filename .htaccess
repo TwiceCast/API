@@ -136,6 +136,10 @@ RewriteRule "^streams/([0-9]+)/chat/mute/([0-9]+)/$" "query/GET/streams/mute.php
 RewriteCond %{REQUEST_METHOD} POST
 RewriteRule "^streams/([0-9]+)/chat/ban/$" "query/POST/streams/bann.php?id=$1"
 
+ #-  GET /streams/:id/chat/ban/:userid  -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/([0-9]+)/chat/ban/([0-9]+)/$" "query/GET/streams/bann.php?id=$1&userid=$2"
+
  #-  GET /streams/:id/chat  -#
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/chat/$" "query/GET/streams/chat.php?id=$1"
