@@ -36,7 +36,7 @@
 		$ret = $stream->getMute($_GET['userid']);
 		if (!$ret)
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
-		$response->setMessage("", 204);
+		$response->setMessage($ret);
 	}
 	catch (CustomException $e)
 	{
