@@ -419,7 +419,7 @@
 
 			$link->prepare('
 				INSERT INTO st_mute(userid, streamid, end)
-				VALUE(:userid, :streamid, NOW() + INTERVAL :end SECOND)');
+				VALUE(:userid, :streamid, ADDDATE(NOW() + INTERVAL :end SECOND))');
 			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
 			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
 			$link->bindParam(':end', $time, PDO::PARAM_INT);
