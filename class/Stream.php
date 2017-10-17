@@ -423,7 +423,7 @@
 			$link->prepare('SELECT userid, streamid, end FROM st_mute WHERE userid = :userid AND streamid = :streamid;');
 			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
 			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
-			return $link->execute(true);
+			return $link->fetchAll(true);
 		}
 
 		function create($db = null)
