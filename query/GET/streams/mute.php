@@ -32,10 +32,7 @@
 		$user = new User();
 		if (!$user->getFromId($_GET['userid']))
 			throw new ParametersException("User not found", Response::NOTFOUND);
-
-		if ($authentication->userHasRights(array(8, 9, 10), $stream->id, "stream") === false)
-			throw new RightsException("You don't have enough rights to modify this stream", Response::NORIGHT);
-
+		
 		$ret = $stream->getMute($_GET['userid']);
 		if (!$ret)
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
