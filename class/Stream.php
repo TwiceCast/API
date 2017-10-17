@@ -391,7 +391,7 @@
 				
 			$link->prepare('
 				INSERT INTO st_bann(userid, streamid, end)
-				VALUE(:userid, :streamid, ADDDATE(UTC_TIME(), INTERVAL :end SECOND))');
+				VALUE(:userid, :streamid, ADDDATE(UTC_TIMESTAMP(), INTERVAL :end SECOND))');
 			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
 			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
 			$link->bindParam(':end', $time, PDO::PARAM_INT);
@@ -419,7 +419,7 @@
 
 			$link->prepare('
 				INSERT INTO st_mute(userid, streamid, end)
-				VALUE(:userid, :streamid, ADDDATE(UTC_TIME(), INTERVAL :end SECOND))');
+				VALUE(:userid, :streamid, ADDDATE(UTC_TIMESTAMP(), INTERVAL :end SECOND))');
 			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
 			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
 			$link->bindParam(':end', $time, PDO::PARAM_INT);
