@@ -12,6 +12,8 @@
 		$postdata = getPostData();
 		$authentication = new Authentication();
 		$authentication->verify();
+		if (!$authentication->getUserFromToken())
+			throw new UnknowException("Something wrong happened", Response::UNKNOWN);
 		if (!isset($postdata["title"]) || !isset($postdata["lang"]) || !isset($postdata["private"]))
 			throw new ParametersException("Parameters missing to proceed", Response::MISSPARAM);
 		if ($postdata["private"] === true)
