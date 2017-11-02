@@ -20,6 +20,8 @@
 			throw new RightsException("You don't have the rights to create a private stream", Response::NORIGHT);
 		$stream = new Stream();
 		$stream->setOwner($authentication->getUserFromToken());
+		if ($stream->getFromUserID($stream->owner->id) != false)
+			throw new ParametersException("You already have a stream live", Response::MISSPARAM);
 		if ($stream->getFromTitle($postdata["title"]))
 			throw new ParametersException("You already have a stream with this name", Response::MISSPARAM);
 		$stream->setTitle($postdata["title"]);

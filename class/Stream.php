@@ -179,8 +179,8 @@
 			if ($data === false)
 				return false;
 			$this->setID($data['streamID']);
-			$this->setTitle(DB::toDB($data['streamTitle']));
-			$this->setShortDescription(DB::toDB($data['streamShortDescription']));
+			$this->setTitle(DB::fromDB($data['streamTitle']));
+			$this->setShortDescription(DB::fromDB($data['streamShortDescription']));
 			$user = new User(false);
 			$user->setId($data['userID']);
 			$user->setEmail(DB::fromDB($data['userEmail']));
@@ -439,6 +439,9 @@
 
 		function create($db = null)
 		{
+			var_dump($this->getFromUserID($this->owner->id));
+			if ($this->getFromUserID($this->owner->id) != false)
+				throw new ParametersException("You already have a stream live", Response::MISSPARAM);
 			if ($this->getFromTitle($this->title))
 				throw new ParametersException("You already have a stream with this name", Response::MISSPARAM);
 			$link = $this->getLink($db);
