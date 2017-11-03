@@ -398,7 +398,8 @@
 			return $link->execute(true);
 		}
 		
-		function getBann($userId, $db = null) {
+		function getBann($userId, $db = null)
+		{
 			$link = $this->getLink($db);
 			if (!$link)
 				throw new UnkownException("Something wrong happened", Response::UNKNOWN);
@@ -426,7 +427,8 @@
 			return $link->execute(true);
 		}
 		
-		function getMute($userId, $db = null) {
+		function getMute($userId, $db = null)
+		{
 			$link = $this->getLink($db);
 			if (!$link)
 				throw new UnkownException("Something wrong happened", Response::UNKNOWN);
@@ -437,9 +439,41 @@
 			return $link->fetchAll(true);
 		}
 
+		function addRole($userId, $roleId, $db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnkownException("Something wrong happened", Response::UNKNOWN);
+
+			$link->prepare('
+				INSERT INTO client_role(id_client, id_role, categorie_target, id_target)
+				VALUE(:userid, :roleid, "Stream", :streamid)');
+			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
+			$link->bindParam(':roleid', $roleId, PDO::PARAM_INT);
+			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
+			return $link->execute(true);
+		}
+
+		function removeRole($userId, $roleId, $db = null)
+		{
+			$link = $this->getLink($db);
+			if (!$link)
+				throw new UnkownException("Something wrong happened", Response::UNKNOWN);
+
+			$link->prepare('
+				DELETE from client_role
+				WHERE id_client = :userid
+				AND id_role = :roleid
+				AND categorie_target = "Stream"
+				AND id_target = :streamid');
+			$link->bindParam(':userid', $userId, PDO::PARAM_INT);
+			$link->bindParam(':roleid', $roleId, PDO::PARAM_INT);
+			$link->bindParam(':streamid', $this->id, PDO::PARAM_INT);
+			return $link->execute(true);
+		}
+
 		function create($db = null)
 		{
-			var_dump($this->getFromUserID($this->owner->id));
 			if ($this->getFromUserID($this->owner->id) != false)
 				throw new ParametersException("You already have a stream live", Response::MISSPARAM);
 			if ($this->getFromTitle($this->title))

@@ -104,6 +104,19 @@ RewriteRule "^users/([0-9]+)/$" "query/PUT/users/users.php?id=$1"
 
     ###  STREAMS  ###
 
+ #-  GET /streams/:id/rights/:uid  -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/([0-9]+)/rights/([0-9]+)/$" "query/GET/streams/rights.php?id=$1&uid=$2"
+
+ #-  POST /streams/:id/rights/:uid  -#
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule "^streams/([0-9]+)/rights/([0-9]+)/$" "query/POST/streams/rights.php?id=$1&uid=$2"
+
+ #-  DELETE /streams/:id/rights/:uid  -#
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^streams/([0-9]+)/rights/([0-9]+)/$" "query/DELETE/streams/rights.php?id=$1&uid=$2"
+
+
  #-  GET /streams/:id/tags  -#
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^streams/([0-9]+)/tags/$" "query/GET/streams/tags.php?id=$1"
