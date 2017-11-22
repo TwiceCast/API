@@ -128,7 +128,9 @@
 					client.name AS userNickname,
 					client.register_date AS userRegisterDate
 					FROM stream
-					LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
+					LEFT JOIN client_role ON stream.id = client_role.id_target
+					AND client_role.categorie_target = "stream"
+					AND client_role.id_role = 8
 					LEFT JOIN client ON client_role.id_client = client.id
 					WHERE stream.id = :ID');
 				$link->bindParam(':ID', $id, PDO::PARAM_INT);
@@ -300,7 +302,9 @@
 				client.language AS userLanguage,
 				client.private AS userPrivate
 				FROM stream
-				LEFT JOIN client_role ON stream.id = client_role.id_target AND client_role.categorie_target = "stream"
+				LEFT JOIN client_role ON stream.id = client_role.id_target
+				AND client_role.categorie_target = "stream"
+				AND client_role.id_role = 8
 				LEFT JOIN client ON client_role.id_client = client.id
 				ORDER BY stream.id
 				');

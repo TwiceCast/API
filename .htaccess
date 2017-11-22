@@ -116,6 +116,13 @@ RewriteRule "^streams/([0-9]+)/rights/([0-9]+)/$" "query/POST/streams/rights.php
 RewriteCond %{REQUEST_METHOD} DELETE
 RewriteRule "^streams/([0-9]+)/rights/([0-9]+)/$" "query/DELETE/streams/rights.php?id=$1&uid=$2"
 
+ #- GET /streams/:id/cover -#
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^streams/([0-9]+)/cover/$" "query/GET/streams/cover.php?id=$1"
+
+ #- PUT /streams/:id/cover -#
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^streams/([0-9]+)/cover/$" "query/PUT/streams/cover.php?id=$1"
 
  #-  GET /streams/:id/tags  -#
 RewriteCond %{REQUEST_METHOD} GET

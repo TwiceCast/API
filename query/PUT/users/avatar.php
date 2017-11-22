@@ -27,7 +27,7 @@
 		$filetmp = $_SERVER['DOCUMENT_ROOT']."/avatar/tmp/".$user->id;
 		$file = $_SERVER['DOCUMENT_ROOT']."/avatar/".$user->id;
 		
-		if (!$putdata  = fopen("php://input", "rb"))
+		if (!$putdata = fopen("php://input", "rb"))
 			throw new UnknownException("Unable to read body", Response::UNKNOWN);
 
 		if (!$fp = fopen($filetmp, "wb+"))
@@ -67,7 +67,4 @@
 	} finally {
 		$response->send();
 	}
-
-	
-	// echo "PUT/USERS/ID/AVATAR";
 ?>

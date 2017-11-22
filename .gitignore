@@ -43,7 +43,8 @@ Temporary Items
 .apdisk
 
 avatar/*
-
+cover/*
+tests/*
 *.old
 
 config.ini*

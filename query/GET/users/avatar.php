@@ -26,7 +26,7 @@
 		{
 			$avatars = glob($_SERVER['DOCUMENT_ROOT']."/avatar/0.*");
 			if ($avatars === false)
-				throw new UnknownException("Something wrong happenedb", Response::UNKNOWN);
+				throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 			else if (empty($avatars))
 				throw new NotFoundException("Avatar not found", Response::NOTFOUND);
 		}
@@ -38,7 +38,7 @@
 		else if ($path_parts['extension'] == 'png')
 			header('Content-Type: image/png');
 		else
-			throw new UnknownException("Something wrong happeneda", Response::UNKNOWN);
+			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
 		header('Content-Length: '.filesize($avatars[0]));
 		readfile($avatars[0]);
 		exit();
