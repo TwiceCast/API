@@ -32,6 +32,16 @@
 			$user->changeName($post['name']);
 		if (isset($post['language']))
 			$user->changeLanguage($post['language']['code']);
+		if (isset($post['gender']))
+			$user->changeGender($post['gender']);
+		if (isset($post['birthdate']))
+			$user->changeBirthdate($post['birhtdate']);
+		if (isset($post['biography']))
+			$user->changeBiography($post['biography']);
+		if (isset($post['github']))
+			$user->changeGithub($post['github']);
+		if (isset($post['linkdin']))
+			$user->changeLinkdin($post['linkdin']);
 		
 		$response->setMessage($user);
 	} catch (CustomException $e) {

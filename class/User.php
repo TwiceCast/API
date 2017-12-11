@@ -11,9 +11,14 @@
 		var $register_date;
 		var $language;
 		var $private;
+		var $gender;
+		var $birthdate;
+		var $biography;
+		var $github;
+		var $linkdin;
 		private $db;
 
-		function __construct($db = true, $id = null, $email = null, $password = null, $name = null, $register_date = null, $language = null, $private = null)
+		function __construct($db = true, $id = null, $email = null, $password = null, $name = null, $register_date = null, $language = null, $private = null, $gender = null, $birthdate = null, $biography = null, $github = null, $linkdin = null)
 		{
 			$this->setId($id);
 			$this->setEmail($email);
@@ -22,6 +27,11 @@
 			$this->setRegisterDate($register_date);
 			$this->setLanguage($language);
 			$this->setPrivate($private);
+			$this->setGender($gender);
+			$this->setBirthdate($birthdate);
+			$this->setBiography($biography);
+			$this->setGithub($github);
+			$this->setLinkdin($linkdin);
 			if ($db)
 				$this->db = new DB();
 			else
@@ -82,6 +92,39 @@
 			return $this;
 		}
 
+		function setGender($gender)
+		{
+			if ($gender === null)
+				$this->gender = $gender;
+			else
+				$this->gender = (bool) $gender;
+			return $this;
+		}
+
+		function setBirthdate($birthdate)
+		{
+			$this->birthdate = $birthdate;
+			return $this;
+		}
+
+		function setBiography($biography)
+		{
+			$this->biography;
+			return $this;
+		}
+
+		function setGithub($github)
+		{
+			$this->github = $github;
+			return $this;
+		}
+
+		function setLinkdin($linkdin)
+		{
+			$this->linkdin = $linkdin;
+			return $this;
+		}
+
 		function getLink($db)
 		{
 			if ($this->db)
@@ -104,7 +147,11 @@
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
-					client.private AS clientPrivate
+					client.private AS clientPrivate,
+					client.gender AS clientGender,
+					client.biography AS clientBiography,
+					client.github AS clientGithub,
+					client.linkdin AS clientLinkdin
 					FROM client
 					WHERE client.id = :id');
 				$link->bindParam(':id', $id, PDO::PARAM_INT);
@@ -118,6 +165,11 @@
 					$this->setRegisterDate($data['clientRegisterDate']);
 					$this->setLanguage(DB::fromDB($data['clientLanguage']));
 					$this->setPrivate($data['clientPrivate']);
+					$this->setGender($data['clientGender']);
+					$this->setBirthdate($data['clientBirthdate']);
+					$this->setBiography($data['clientBiographt']);
+					$this->setGithub($data['clientGithub']);
+					$this->setLinkdin($data['clientLinkdin']);
 					return true;
 				}
 				else
@@ -139,7 +191,12 @@
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
-					client.private AS clientPrivate
+					client.private AS clientPrivate,
+					client.gender AS clientGender,
+					client.birthdate AS clientBirthdate,
+					client.biography AS clientBiography,
+					client.github AS clientGithub,
+					client.linkdin AS clientLinkdin
 					FROM client
 					WHERE client.name = :name');
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
@@ -153,6 +210,11 @@
 					$this->setRegisterDate($data['clientRegisterDate']);
 					$this->setLanguage(DB::fromDB($data['clientLanguage']));
 					$this->setPrivate($data['clientPrivate']);
+					$this->setGender($data['clientGender']);
+					$this->setBirthdate($data['clientBirthdate']);
+					$this->setBiography($data['clientBiography']);
+					$this->setGithub($data['clientGithub']);
+					$this->setLinkdin($data['clientLinkdin']);
 					return true;
 				}
 				else
@@ -174,7 +236,12 @@
 					client.name AS clientName,
 					client.register_date AS clientRegisterDate,
 					client.language AS clientLanguage,
-					client.private AS clientPrivate
+					client.private AS clientPrivate,
+					client.gender AS clientGender,
+					client.birthdate AS clientBirthdate,
+					client.biography AS clientBiography,
+					client.github AS clientGithub,
+					client.linkdin AS clientLinkdin
 					FROM client
 					ORDER BY client.id';
 				if ($limit)
@@ -203,6 +270,11 @@
 					$client->setRegisterDate($entry['clientRegisterDate']);
 					$client->setLanguage(DB::fromDB($entry['clientLanguage']));
 					$client->setPrivate($entry['clientPrivate']);
+					$client->setGender($entry['clientGender']);
+					$client->setBirthdate($entry['clientBirthdate']);
+					$client->setBiography($entry['clientBiography']);
+					$client->setGithub($entry['clientGithub']);
+					$client->setLinkdin($entry['clientLinkdin']);
 					$clients[] = $client;
 				}
 				return $clients;
@@ -275,7 +347,6 @@
 				UPDATE client
 				SET client.language = :language
 				WHERE client.id = :id');
-			$tmp = DB::toDB($newLanguage);
 			$link->bindParam(':language', $tmpLanguage, PDO::PARAM_STR);
 			$link->bindParam(':id', $this->id, PDO::PARAM_INT);
 			$link->execute(true);
@@ -305,6 +376,124 @@
 				return false;
 		}
 
+		function changeGender($newGender, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.gender = :gender
+					WHERE client.id = :id');
+				$link->bindParam(':gender', (int) $newGender, PDO::PARAM_INT);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setGender($newGender);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function changeBirthdate($newBirthdate, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.birthdate = :birthdate
+					WHERE client.id = :id');
+				$link->bindParam(':birthdate', $newBirthdate, PDO::PARAM_STR);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setBirthdate($newBirthdate);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function changeBiography($newBiography, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.biography = :biography
+					WHERE client.id = :id');
+				$tmp = DB::toDB($newBiography);
+				$link->bindParam(':biography', $tmp, PDO::PARAM_STR);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setBiography($newBiography);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function changeGithub($newGithub, $db = true)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.github = :github
+					WHERE client.id = :id');
+				$tmp = DB::toDB($newGithub);
+				$link->bindParam(':github', $tmp, PDO::PARAM_STR);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setGithub($newGithub);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function changeLinkdin($newLinkdin, $db = true)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					UPDATE client
+					SET client.linkdin = :linkdin
+					WHERE client.id = :id');
+				$tmp = DB::toDB($newLinkdin);
+				$link->bindParam(':linkdin', $tmp, PDO::PARAM_STR);
+				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
+				if ($link->execute(true))
+				{
+					$this->setLinkdin($newLinkdin);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
 		function update($db = null)
 		{
 			$link = $this->getLink($db);
@@ -315,16 +504,29 @@
 					SET client.email = :email,
 					client.password = :password,
 					client.name = :name,
-					client.language = :language
+					client.language = :language,
+					client.gender = :gender,
+					client.birthdate = :birthdate,
+					client.biography = :biography,
+					client.github = :github,
+					client.linkdin = :linkdin
 					WHERE client.id = :id');
 				$email = DB::toDB($this->email);
 				$password = hash('sha256', $this->password);
 				$name = DB::toDB($this->name);
 				$language = DB::toDB($this->language->code);
+				$biography = DB::toDB($this->biography);
+				$github = DB::toDB($this->github);
+				$linkdin = DB::toDB($this->linkdin);
 				$link->bindParam(':email', $email, PDO::PARAM_STR);
 				$link->bindParam(':password', $password, PDO::PARAM_STR);
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
 				$link->bindParam(':language', $language, PDO::PARAM_STR);
+				$link->bindParam(':gender', (int) $this->gender, PDO::PARAM_INT);
+				$link->bindParam(':birthdate', $this->birthdate, PDO::PARAM_INT);
+				$link->bindParam(':biography', $biography, PDO::PARAM_STR);
+				$link->bindParam(':github', $github, PDO::PARAM_STR);
+				$link->bindParam(':linkdin', $linkdin, PDO::PARAM_STR);
 				$link->bindParam(':id', $this->id, PDO::PARAM_INT);
 				return $link->execute(true);
 			}

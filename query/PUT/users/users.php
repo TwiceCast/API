@@ -26,6 +26,9 @@
 
 		if (!isset($post['name']) or !isset($post['password'])
 			or !isset($post['email']) or !isset($post['language'])
+			or !isset($post['gender']) or !isset($post['birthdate'])
+			or !isset($post['biography']) or !isset($post['github'])
+			or !isset($post['linkdin']))
 			throw new ParametersException("Missing parameters to proceed", Response::MISSPARAM);
 
 		if ($user->checkName($post['name']))
@@ -34,6 +37,11 @@
 			$user->setEmail($post['email']);
 		$user->setPassword($post['password']);
 		$user->setLanguage($post['language']['code']);
+		$user->setGender($post['gender']);
+		$user->setBirthdate($post['birthdate']);
+		$user->setBiography($post['biography']);
+		$user->setGithub($post['github']);
+		$user->setLinkdin($post['linkdin']);
 
 		if (!$user->update())
 			throw new UnknownException("Something wrong happened", Response::UNKNOWN);
