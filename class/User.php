@@ -149,6 +149,7 @@
 					client.language AS clientLanguage,
 					client.private AS clientPrivate,
 					client.gender AS clientGender,
+					client.birthdate AS clientBirthdate,
 					client.biography AS clientBiography,
 					client.github AS clientGithub,
 					client.linkdin AS clientLinkdin
@@ -167,7 +168,7 @@
 					$this->setPrivate($data['clientPrivate']);
 					$this->setGender($data['clientGender']);
 					$this->setBirthdate($data['clientBirthdate']);
-					$this->setBiography($data['clientBiographt']);
+					$this->setBiography($data['clientBiography']);
 					$this->setGithub($data['clientGithub']);
 					$this->setLinkdin($data['clientLinkdin']);
 					return true;
@@ -200,6 +201,51 @@
 					FROM client
 					WHERE client.name = :name');
 				$link->bindParam(':name', $name, PDO::PARAM_STR);
+				$data = $link->fetch(true);
+				if ($data)
+				{
+					$this->setId($data['clientId']);
+					$this->setEmail(DB::fromDB($data['clientEmail']));
+					$this->setPassword($data['clientPassword']);
+					$this->setName(DB::fromDB($data['clientName']));
+					$this->setRegisterDate($data['clientRegisterDate']);
+					$this->setLanguage(DB::fromDB($data['clientLanguage']));
+					$this->setPrivate($data['clientPrivate']);
+					$this->setGender($data['clientGender']);
+					$this->setBirthdate($data['clientBirthdate']);
+					$this->setBiography($data['clientBiography']);
+					$this->setGithub($data['clientGithub']);
+					$this->setLinkdin($data['clientLinkdin']);
+					return true;
+				}
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		function getFromEmail($email, $db = null)
+		{
+			$link = $this->getLink($db);
+			if ($link)
+			{
+				$link->prepare('
+					SELECT client.id AS clientId,
+					client.email AS clientEmail,
+					client.password AS clientPassword,
+					client.name AS clientName,
+					client.register_date as clientRegisterDate,
+					client.language AS clientLanguage,
+					client.private AS clientPrivate,
+					client.gender AS clientGender,
+					client.birthdate AS clientBirthdate,
+					client.biography AS clientBiography,
+					client.github AS clientGithub,
+					client.linkdin AS clientLinkdin
+					FROM client
+					WHERE client.email = :email');
+				$link->bindParam(':email', $email, PDO::PARAM_INT);
 				$data = $link->fetch(true);
 				if ($data)
 				{
