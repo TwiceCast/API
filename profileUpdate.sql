@@ -1,0 +1,1 @@
+ALTER TABLE `client` ADD `gender` TINYINT NULL DEFAULT NULL AFTER `private`, ADD `birthdate` DATE NULL DEFAULT NULL AFTER `gender`, ADD `biography` TEXT NULL DEFAULT NULL AFTER `birthdate`, ADD `github` VARCHAR(255) NULL DEFAULT NULL AFTER `biography`, ADD `linkdin` VARCHAR(255) NULL DEFAULT NULL AFTER `github`;
