@@ -262,6 +262,22 @@
 			return $token;
 		}
 
+		function generateResetToken($user)
+		{
+			$config = $_SESSION["config"]["application"];
+			$signer = new Sha256();
+			$token = (new Builder())->setIssuer('http://api.twicecast.com')
+									->setAudience('http://twicacast.com')
+									->setId('4f1g23a12aa')
+									->setIssuedAt(time())
+									->setNotBefore(time())
+									->setExpiration(time() + 600)
+									->set('resetid', $user->id)
+									->sign($signer, $config["token"])
+									->getToken();
+			return $token;
+		}
+
 		function generateChatToken($stream)
 		{
 			$config = $_SESSION["config"]["chat"];
