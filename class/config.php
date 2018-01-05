@@ -29,6 +29,12 @@
 				"host"			=>	"localhost",
 				"port"			=>	"",
 				"token"		=>	"secret"
+			],
+			"mail"				=> [
+				"username"	=> "mail@mail.com",
+				"password"	=> "password",
+				"host"			=> "smtp.gmail.com",
+				"port"			=> "465"
 			]
 		];
 	$_SESSION["config"] = $config;
