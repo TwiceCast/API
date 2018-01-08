@@ -52,7 +52,15 @@
 			if ($this->token)
 			{
 				$this->user = new User();
-				$this->user->getFromId($this->token->getClaim('uid'));
+				if ($this->token->hasClaim('uid'))
+					$this->user->getFromId($this->token->getClaim('uid'));
+				else
+				{
+					if ($this->token->hasClaim('resetid'))
+						$this->user->getFromId($this->token->getClaim('resetid'));
+					else
+						return false;
+				}
 				return ($this->user);
 			}
 			return false;
@@ -267,7 +275,7 @@
 			$config = $_SESSION["config"]["application"];
 			$signer = new Sha256();
 			$token = (new Builder())->setIssuer('http://api.twicecast.com')
-									->setAudience('http://twicacast.com')
+									->setAudience('http://twicecast.com')
 									->setId('4f1g23a12aa')
 									->setIssuedAt(time())
 									->setNotBefore(time())
@@ -346,7 +354,7 @@
 				$data->setAudience('http://twicecast.com');
 				$data->setId('4f1g23a12aa');
 				if ($token->validate($data) !== true)
-					throw new AuthenticationException("Invalid token", Response::NOTAUTH, $e);
+					throw new AuthenticationException("Invalid token", Response::NOTAUTH);
 				$this->getUserFromToken();
 				return true;
 			}
