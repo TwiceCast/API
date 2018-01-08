@@ -14,7 +14,7 @@
         if (isset($_GET['accept']))
            $response->setContentType($_GET['accept']);
         if (!isset($postdata['email']))
-            throw new ParametersException("Missing parameters", Response::MISSARAM);
+            throw new ParametersException("Missing parameters", Response::MISSPARAM);
         $user = new User();
         if (!$user->getFromEmail($postdata['email']))
             throw new NotFoundException("Unknown email");
