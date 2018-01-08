@@ -103,7 +103,7 @@ RewriteRule "^users/passwordreset/$" "query/POST/users/askpasswordreset.php"
 
  #-  POST /users/passwordreset/:resetToken/
 RewriteCond %{REQUEST_METHOD} POST
-RewriteRule "^users/passwordreset/([0-9a-zA-Z]+)/$" "query/POST/users/passwordreset.php?reset=$1"
+RewriteRule "^users/passwordreset/([0-9a-zA-Z.-]+)/$" "query/POST/users/passwordreset.php?reset=$1"
 
  #-  PUT /users/:nickname/    -#
 
