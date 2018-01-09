@@ -245,7 +245,7 @@
 					client.linkdin AS clientLinkdin
 					FROM client
 					WHERE client.email = :email');
-				$link->bindParam(':email', $email, PDO::PARAM_INT);
+				$link->bindParam(':email', $email, PDO::PARAM_STR);
 				$data = $link->fetch(true);
 				if ($data)
 				{
