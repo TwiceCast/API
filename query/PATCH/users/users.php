@@ -35,7 +35,7 @@
 		if (isset($post['gender']))
 			$user->changeGender($post['gender']);
 		if (isset($post['birthdate']))
-			$user->changeBirthdate($post['birhtdate']);
+			$user->changeBirthdate($post['birthdate']);
 		if (isset($post['biography']))
 			$user->changeBiography($post['biography']);
 		if (isset($post['github']))

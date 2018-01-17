@@ -109,7 +109,7 @@
 
 		function setBiography($biography)
 		{
-			$this->biography;
+			$this->biography = $biography;
 			return $this;
 		}
 
