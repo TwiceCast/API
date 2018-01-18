@@ -3,7 +3,9 @@ class Response
 {
 	const SUCCESS			=	200;	
 	const OK				=	200;
-	const BADREQUEST		= 400;
+	const CREATED			=	201;
+	const NOCONTENT			=	204;
+	const BADREQUEST		=	400;
 	const NICKUSED			=	400;
 	const EMAILUSED			=	400;
 	const NAMEUSED			=	400;
@@ -12,8 +14,8 @@ class Response
 	const NOTAUTH			=	401;
 	const NORIGHT			=	403;
 	const NOTFOUND			=	404;
-	const TOOLARGE			= 413;
-	const UNSUPPORTED		= 415;
+	const TOOLARGE			=	413;
+	const UNSUPPORTED		=	415;
 	const UNKNOWN			=	501;
 	const UNAVAILABLE		=	503;
 	const ORGNAMEUSED		=	410;
@@ -77,7 +79,8 @@ class Response
 		header('Content-Type: ' . ($this->contentType == 'json' ? 'application/json' : ($this->contentType == "xml" ? 'application/xml' : 'text/html')));
 		
 		$final = ($this->contentType == "xml" ? $this->toXML($this->message) : json_encode($this->message));
-		echo $final;
+		if ($this->code != Response::NOCONTENT)
+			echo $final;
 	}
 	
 	function arrayToXML($data, &$xml_data)
