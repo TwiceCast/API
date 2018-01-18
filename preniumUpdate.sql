@@ -1,0 +1,1 @@
+ALTER TABLE `client` ADD `preniumuntil` DATE NULL DEFAULT NULL AFTER `linkdin`;
