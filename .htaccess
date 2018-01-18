@@ -62,6 +62,21 @@ RewriteRule "^users/([0-9]+)/$" "query/GET/users/users.php?id=$1"
 RewriteCond %{REQUEST_METHOD} GET
 RewriteRule "^users/$" "query/GET/users/users.php"
 
+ #-  GET /users/prenium/add/     -#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^users/prenium/add/$" "query/GET/users/addPrenium.php"
+
+ #-  GET /users/prenium/refound/     -#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^users/prenium/refound/$" "query/GET/users/refoundPrenium.php"
+
+ #-  GET /users/:id/prenium/     -#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^users/([0-9]+)/prenium/$" "query/GET/users/prenium.php?id=$1"
+
  #-  POST /login/     -#
 
 RewriteCond %{REQUEST_METHOD} POST
