@@ -92,6 +92,21 @@ RewriteRule "^users/([0-9]+)/friends/([0-9]+)/$" "query/PUT/users/friends.php?id
 RewriteCond %{REQUEST_METHOD} DELETE
 RewriteRule "^users/([0-9]+)/friends/([0-9]+)/$" "query/DELETE/users/friends.php?id=$1&friend=$2"
 
+ #-  GET /users/:id/blocks/     -#
+
+RewriteCond %{REQUEST_METHOD} GET
+RewriteRule "^users/([0-9]+)/blocks/$" "query/GET/users/blocks.php?id=$1"
+
+ #-  PUT /users/:id/blocks/:block/     -#
+
+RewriteCond %{REQUEST_METHOD} PUT
+RewriteRule "^users/([0-9]+)/blocks/([0-9]+)/$" "query/PUT/users/blocks.php?id=$1&block=$2"
+
+ #-  DELETE /users/:id/blocks/:block/     -#
+
+RewriteCond %{REQUEST_METHOD} DELETE
+RewriteRule "^users/([0-9]+)/blocks/([0-9]+)/$" "query/DELETE/users/blocks.php?id=$1&block=$2"
+
  #-  POST /login/     -#
 
 RewriteCond %{REQUEST_METHOD} POST
