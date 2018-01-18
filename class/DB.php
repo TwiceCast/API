@@ -156,6 +156,13 @@
 			return true;
 		}
 
+		function getNow()
+		{
+			$this->prepare('SELECT DATE(NOW())');
+			$now = $this->fetch(true);
+			return $now[0];
+		}
+
 		static function fromDB($str)
 		{
 			return nl2br(DB::entities($str));
